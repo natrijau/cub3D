@@ -180,10 +180,9 @@ int main(int ac, char **av)
 	print_map(data.map, FALSE);
     if (init_cub3d(&data) == -1
         || create_minimap(&data) == -1)
-		return (1);/* 
-    mlx_hook(data.win, 2, 1L<<0, key_hook, NULL); */
-    mlx_key_hook(data.win, key_hook, &data);
+		return (1);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
+    mlx_hook(data.win, 2, 1L<<0, key_hook, &data);
 	mlx_loop(data.mlx);
     cub_close(&data);
     return (0);

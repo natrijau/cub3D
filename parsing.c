@@ -109,7 +109,8 @@ int	parsing(t_data *data, char *file)
     char    **map_off;
 
     map_off = get_map(file);
-    if (!map_off || get_start_xy(map_off, &data->x, &data->y) == -1)
+	data->angle = get_start_xy(map_off, &data->x, &data->y);
+    if (!map_off || data->angle == -1)
     {
         printf("Error\n");
         return (-1);

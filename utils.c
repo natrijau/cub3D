@@ -21,12 +21,27 @@ int  map_len(char *file)
     return (len);
 }
 
+int	get_angle(char direction)
+{
+	if (direction == 'E')
+		return (0);
+	if (direction == 'N')
+		return (90);
+	if (direction == 'W')
+		return (180);
+	if (direction == 'S')
+		return (270);
+	return (-1);
+}
+
 int	get_start_xy(char **map, int *x, int *y)
 {
 	int	i;
 	int	j;
 
 	i = 0;
+	if (!map)
+		return (-1);
 	while (map[i])
 	{
 		j = 0;
@@ -36,7 +51,7 @@ int	get_start_xy(char **map, int *x, int *y)
 			{
 				*x = i;
 				*y = j;
-				return (0);
+				return (get_angle(map[i][j]));
 			}
 			++j;
 		}

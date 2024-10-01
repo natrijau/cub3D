@@ -9,7 +9,9 @@
 # include "minilibx-linux/mlx_int.h"
 
 # define BUFFER_SIZE 100
-# define CASE 32
+# define CASE 12
+# define WIDTH 1920
+# define HEIGHT 1080
 # define TRUE 1
 # define FALSE 0
 
@@ -36,6 +38,7 @@ typedef struct	s_data
 	void		*mlx;
 	void		*win;
 	t_minimap	minimap;
+	double		angle;
 	int			x;
 	int			y;
 }				t_data;
