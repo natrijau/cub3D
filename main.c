@@ -95,14 +95,13 @@ void	moove(t_data *data, int x, int y)
     int new_x;
     int new_y;
 
-    x *= 2;
-    y *= 2;
+    x *= 4;
+    y *= 4;
     new_x = data->x + x;
     new_y = data->y + y;
-    if (data->map[new_x / CASE][new_y / CASE] == ' '
-        || data->map[(new_x + CASE - 1) / CASE][new_y / CASE] == ' '
-        || data->map[new_x / CASE][(new_y + CASE - 1) / CASE] == ' '
-        || data->map[(new_x + CASE - 1) / CASE][(new_y + CASE - 1) / CASE] == ' ')
+    if ((x < 0 || y < 0) && data->map[new_x / CASE][new_y / CASE] == ' ')
+        return ;
+    else if ((x >= 0 && y >= 0) && data->map[(new_x + CASE - 1) / CASE][(new_y + CASE - 1) / CASE] == ' ')
         return ;
     data->x = new_x;
     data->y = new_y;
@@ -113,27 +112,44 @@ void	moove(t_data *data, int x, int y)
 
 int	key_hook(int keycode, t_data *data)
 {
+    static int azerty;
+
+    if (keycode == 114)
+    {
+        if (azerty == TRUE)
+            azerty = FALSE;
+        else
+            azerty = TRUE;
+    }
+    
     // ESKAPE
     if (keycode == 65307)
         cub_close(data);
-    // WASD
-    /* if (keycode == 119)
-		moove(data, -1, 0);
-    if (keycode == 115)
-		moove(data, 1, 0);
-    if (keycode == 100)
-		moove(data, 0, 1);
-    if (keycode == 97)
-		moove(data, 0, -1); */
-    // ZQSD
-    if (keycode == 122)
-		moove(data, -1, 0);
-    if (keycode == 115)
-		moove(data, 1, 0);
-    if (keycode == 100)
-		moove(data, 0, 1);
-    if (keycode == 113)
-		moove(data, 0, -1);
+
+    if (azerty == TRUE)
+    {
+        // WASD
+        if (keycode == 119)
+	    	moove(data, -1, 0);
+        if (keycode == 115)
+	    	moove(data, 1, 0);
+        if (keycode == 100)
+	    	moove(data, 0, 1);
+        if (keycode == 97)
+	    	moove(data, 0, -1);
+    }
+    else
+    {
+        // ZQSD
+        if (keycode == 122)
+    		moove(data, -1, 0);
+        if (keycode == 115)
+    		moove(data, 1, 0);
+        if (keycode == 100)
+    		moove(data, 0, 1);
+        if (keycode == 113)
+    		moove(data, 0, -1);
+    }
     // VISION
     if (keycode == 65363)
         printf("VISION RIGHT\n");
