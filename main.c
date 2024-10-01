@@ -97,13 +97,15 @@ void	moove(t_data *data, int x, int y)
 
     new_x = data->x + x;
     new_y = data->y + y;
-    if (data->map[new_x][new_y] == ' ')
+    if ((x < 0 || y < 0) && data->map[new_x / CASE][new_y / CASE] == ' ')
+        return ;
+    else if ((x >= 0 && y >= 0) && data->map[(new_x + CASE - 1) / CASE][(new_y + CASE - 1) / CASE] == ' ')
         return ;
     data->x = new_x;
     data->y = new_y;
     mlx_clear_window(data->mlx, data->win);
     mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-    mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y * CASE, data->x * CASE);
+    mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y, data->x);
 }
 
 int	key_hook(int keycode, t_data *data)
@@ -145,7 +147,7 @@ int	create_minimap(t_data *data)
     data->minimap.space = init_space(data);
     data->minimap.character = init_character(data->mlx);
     mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-    mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y * CASE, data->x * CASE);
+    mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y, data->x);
 	return (0);
 }
 
@@ -163,6 +165,7 @@ int    init_cub3d(t_data *data)
     data->win = mlx_new_window(data->mlx, width, height, "Cub3D");
     if (!data->win)
         return (-1);
+    
     return (0);
 }
 

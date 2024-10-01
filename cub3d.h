@@ -9,7 +9,7 @@
 # include "minilibx-linux/mlx_int.h"
 
 # define BUFFER_SIZE 100
-# define CASE 12
+# define CASE 32
 # define WIDTH 1920
 # define HEIGHT 1080
 # define TRUE 1

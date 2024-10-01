@@ -116,7 +116,7 @@ int	parsing(t_data *data, char *file)
         return (-1);
     }
 	data->map = init_map(map_off);
-	if (!data->map || pars_map(map_off, data->map, data->x, data->y) == -1)
+	if (!data->map || pars_map(map_off, data->map, data->x / CASE, data->y / CASE) == -1)
 	{
 		printf("Error\n");
 		map_clear(map_off);

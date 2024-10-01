@@ -49,8 +49,8 @@ int	get_start_xy(char **map, int *x, int *y)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				*x = i;
-				*y = j;
+				*x = i * CASE;
+				*y = j * CASE;
 				return (get_angle(map[i][j]));
 			}
 			++j;
