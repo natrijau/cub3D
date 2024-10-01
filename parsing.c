@@ -1,6 +1,25 @@
 
 #include "cub3d.h"
 
+int		get_max_tab_len(char **map)
+{
+	int	max_len;
+	int	tmp_len;
+	int	i;
+
+	i = 0;
+	tmp_len = 0;
+	max_len = ft_strlen(map[i]);
+	while (map[i])
+	{
+		tmp_len = ft_strlen(map[i]);
+		if (tmp_len > max_len)
+			max_len = tmp_len;		
+		i++;
+	}
+	return (max_len);
+}
+
 char    **get_map(char *file)
 {
     int     fd;
@@ -35,21 +54,23 @@ char	**init_map(char **map_off)
 	char	**map;
 	int		i;
 	int		j;
+	int		max_len;
 
+	max_len = get_max_tab_len(map_off);
 	map = malloc(sizeof(char *) * (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
 	i = 0;
 	while (map_off[i])
 	{
-		map[i] = malloc(sizeof(char) * (ft_strlen(map_off[i]) + 1));
+		map[i] = malloc(sizeof(char) * (max_len + 1));
 		if (!map[i])
 		{
 			map_clear(map);
 			return (NULL);
 		}
 		j = -1;
-		while (map_off[i][++j])
+		while (++j < max_len)
 			map[i][j] = ' ';
 		map[i][j] = '\0';
 		++i;
