@@ -2,23 +2,23 @@
 
 int  map_len(char *file)
 {
-    int     fd;
-    char    *line;
-    int     len;
+	int	 fd;
+	char	*line;
+	int	 len;
 
-    fd = open(file, O_RDONLY);
-    if (fd < 0)
-        return (-1);
-    len = 0;
-    line = get_next_line(fd);
-    while (line)
-    {
-        len++;
-        free(line);
-        line = get_next_line(fd);
-    }
-    close(fd);
-    return (len);
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	len = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		len++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (len);
 }
 
 int	get_angle(char direction)

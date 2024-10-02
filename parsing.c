@@ -20,33 +20,33 @@ int		get_max_tab_len(char **map)
 	return (max_len);
 }
 
-char    **get_map(char *file)
+char	**get_map(char *file)
 {
-    int     fd;
-    char    **map;
-    char    *line;
-    int     i;
+	int	 fd;
+	char	**map;
+	char	*line;
+	int	 i;
 
-    fd = open(file, O_RDONLY);
-    if (fd < 0)
-        return (NULL);
-    map = malloc(sizeof(char *) * (map_len(file) + 1));
-    if (!map)
-    {
-        close(fd);
-        return (NULL);
-    }
-    i = 0;
-    line = get_next_line(fd);
-    map[i] = line;
-    while (line)
-    {
-        map[i][ft_strlen(map[i]) - 1] = '\0';
-        line = get_next_line(fd);
-        map[++i] = line;
-    }
-    close(fd);
-    return (map);
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (NULL);
+	map = malloc(sizeof(char *) * (map_len(file) + 1));
+	if (!map)
+	{
+		close(fd);
+		return (NULL);
+	}
+	i = 0;
+	line = get_next_line(fd);
+	map[i] = line;
+	while (line)
+	{
+		map[i][ft_strlen(map[i]) - 1] = '\0';
+		line = get_next_line(fd);
+		map[++i] = line;
+	}
+	close(fd);
+	return (map);
 }
 
 char	**init_map(char **map_off)
@@ -106,15 +106,15 @@ int	pars_map(char **map, char **space, int k, int i)
 
 int	parsing(t_data *data, char *file)
 {
-    char    **map_off;
+	char	**map_off;
 
-    map_off = get_map(file);
+	map_off = get_map(file);
 	data->angle = get_start_xy(map_off, &data->x, &data->y);
-    if (!map_off || data->angle == -1)
-    {
-        printf("Error\n");
-        return (-1);
-    }
+	if (!map_off || data->angle == -1)
+	{
+		printf("Error\n");
+		return (-1);
+	}
 	data->map = init_map(map_off);
 	if (!data->map || pars_map(map_off, data->map, data->x / CASE, data->y / CASE) == -1)
 	{

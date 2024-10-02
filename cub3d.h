@@ -4,6 +4,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <math.h>
 # include "libft/libft.h"
 # include "minilibx-linux/mlx.h"
 # include "minilibx-linux/mlx_int.h"
@@ -43,10 +44,10 @@ typedef struct	s_data
 	int			y;
 }				t_data;
 
-char    **get_map(char *file);
+char	**get_map(char *file);
 int		parsing(t_data *data, char *file);
 void	print_map(char **map, int erase_bool);
-int  	map_len(char *file);
+int		map_len(char *file);
 int		get_start_xy(char **map, int *x, int *y);
 void	map_clear(char **map);
 int		ft_strtablen(char **map);
