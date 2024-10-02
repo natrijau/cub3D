@@ -62,13 +62,13 @@ t_image	init_character(void *mlx)
     int     i;
     int     j;
 
-	img.img = mlx_new_image(mlx, CASE, CASE);
+	img.img = mlx_new_image(mlx, CASE / 2, CASE / 2);
 	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
     i = 0;
-    while (i < CASE)
+    while (i < CASE / 2)
     {
         j = 0;
-        while (j < CASE)
+        while (j < CASE / 2)
         {
             ft_mlx_pixel_put(&img, i, j, 0x00FF0000);
             ++j;
@@ -99,9 +99,10 @@ void	moove(t_data *data, int x, int y)
     y *= 4;
     new_x = data->x + x;
     new_y = data->y + y;
-    if ((x < 0 || y < 0) && data->map[new_x / CASE][new_y / CASE] == ' ')
-        return ;
-    else if ((x >= 0 && y >= 0) && data->map[(new_x + CASE - 1) / CASE][(new_y + CASE - 1) / CASE] == ' ')
+    if (data->map[new_x / CASE][new_y / CASE] == ' '
+        || data->map[(new_x + CASE - 1) / CASE][new_y / CASE] == ' '
+        || data->map[new_x / CASE][(new_y + CASE - 1) / CASE] == ' '
+        || data->map[(new_x + CASE - 1) / CASE][(new_y + CASE - 1) / CASE] == ' ')
         return ;
     data->x = new_x;
     data->y = new_y;
@@ -117,16 +118,21 @@ int	key_hook(int keycode, t_data *data)
     if (keycode == 114)
     {
         if (azerty == TRUE)
+        {
             azerty = FALSE;
+            printf("Keyboard config set to QWERTY\n");
+        }
         else
+        {
             azerty = TRUE;
+            printf("Keyboard config set to AZERTY\n");
+        }
     }
-    
     // ESKAPE
     if (keycode == 65307)
         cub_close(data);
 
-    if (azerty == TRUE)
+    if (azerty == FALSE)
     {
         // WASD
         if (keycode == 119)
@@ -183,7 +189,6 @@ int    init_cub3d(t_data *data)
     data->win = mlx_new_window(data->mlx, width, height, "Cub3D");
     if (!data->win)
         return (-1);
-    
     return (0);
 }
 
