@@ -10,6 +10,9 @@
 # include "minilibx-linux/mlx_int.h"
 
 # define BUFFER_SIZE 100
+# define MOOVE_SPEED 4
+# define ROTATE_SPEED 0.1
+# define FOV 60
 # define CASE 32
 # define WIDTH 1920
 # define HEIGHT 1080
@@ -40,6 +43,7 @@ typedef struct	s_data
 	void		*win;
 	t_minimap	minimap;
 	double		angle;
+	double		fov_rad;
 	int			x;
 	int			y;
 }				t_data;
@@ -48,7 +52,7 @@ char	**get_map(char *file);
 int		parsing(t_data *data, char *file);
 void	print_map(char **map, int erase_bool);
 int		map_len(char *file);
-int		get_start_xy(char **map, int *x, int *y);
+int		init_start(char **map, t_data *data);
 void	map_clear(char **map);
 int		ft_strtablen(char **map);
 

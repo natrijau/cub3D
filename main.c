@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/02 14:06:19 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/10/04 15:17:03 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,10 +107,18 @@ void	moove(t_data *data, int x, int y)
 	int new_x;
 	int new_y;
 
-	x *= 4;
-	y *= 4;
-	new_x = data->x + x;
-	new_y = data->y + y;
+	new_x = data->x;
+	new_y = data->y;
+	if (x != 0)
+	{
+		new_x = data->x + (cos(data->angle) * MOOVE_SPEED) * x;
+		new_y = data->y + (sin(data->angle) * MOOVE_SPEED) * x;
+	}
+	else if (y != 0)
+	{
+		new_x = data->x + (cos(data->angle + M_PI / 2) * MOOVE_SPEED) * y;
+		new_y = data->y + (sin(data->angle + M_PI / 2) * MOOVE_SPEED) * y;
+	}
 	if (data->map[new_x / CASE][new_y / CASE] == ' '
 		|| data->map[(new_x + CASE - 1) / CASE][new_y / CASE] == ' '
 		|| data->map[new_x / CASE][(new_y + CASE - 1) / CASE] == ' '
@@ -118,7 +126,7 @@ void	moove(t_data *data, int x, int y)
 		return ;
 	data->x = new_x;
 	data->y = new_y;
-	mlx_clear_window(data->mlx, data->win);
+	// mlx_clear_window(data->mlx, data->win);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y, data->x);
 }
@@ -170,9 +178,9 @@ int	key_hook(int keycode, t_data *data)
 	}
 	// VISION
 	if (keycode == 65363)
-		printf("VISION RIGHT\n");
+		data->angle -= ROTATE_SPEED;
 	if (keycode == 65361)
-		printf("VISION LEFT\n");
+		data->angle += ROTATE_SPEED;
 	return (0);
 }
 

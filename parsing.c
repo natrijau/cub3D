@@ -60,8 +60,8 @@ char	**init_map(char **map_off)
 	map = malloc(sizeof(char *) * (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
-	i = 0;
-	while (map_off[i])
+	i = -1;
+	while (map_off[++i])
 	{
 		map[i] = malloc(sizeof(char) * (max_len + 1));
 		if (!map[i])
@@ -73,7 +73,6 @@ char	**init_map(char **map_off)
 		while (++j < max_len)
 			map[i][j] = ' ';
 		map[i][j] = '\0';
-		++i;
 	}
 	map[i] = NULL;
 	return (map);
@@ -91,7 +90,7 @@ int	pars_map(char **map, char **space, int k, int i)
 	}
 	map[k][i] = '1';
 	space[k][i] = '0';/* 
-	print_map(map, TRUE);
+	print_map(map, TRUE); 
 	print_map(space, TRUE); */
 	if (map[k][i + 1] && map[k][i + 1] != '1')
 		pars_map(map, space, k, i + 1);
@@ -109,8 +108,7 @@ int	parsing(t_data *data, char *file)
 	char	**map_off;
 
 	map_off = get_map(file);
-	data->angle = get_start_xy(map_off, &data->x, &data->y);
-	if (!map_off || data->angle == -1)
+	if (!map_off || init_start(map_off, data) == -1)
 	{
 		printf("Error\n");
 		return (-1);

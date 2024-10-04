@@ -21,20 +21,20 @@ int  map_len(char *file)
 	return (len);
 }
 
-int	get_angle(char direction)
+double	get_angle(char direction)
 {
-	if (direction == 'E')
-		return (0);
 	if (direction == 'N')
-		return (90);
-	if (direction == 'W')
-		return (180);
+		return (2 * M_PI);
+	if (direction == 'E')
+		return (3 * M_PI / 2);
 	if (direction == 'S')
-		return (270);
+		return (M_PI);
+	if (direction == 'W')
+		return (M_PI / 2);
 	return (-1);
 }
 
-int	get_start_xy(char **map, int *x, int *y)
+int	init_start(char **map, t_data *data)
 {
 	int	i;
 	int	j;
@@ -49,9 +49,11 @@ int	get_start_xy(char **map, int *x, int *y)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				*x = i * CASE;
-				*y = j * CASE;
-				return (get_angle(map[i][j]));
+				data->x = i * CASE;
+				data->y = j * CASE;
+				data->angle = get_angle(map[i][j]);
+				data->fov_rad = (FOV * M_PI) / 180;
+				return (0);
 			}
 			++j;
 		}
