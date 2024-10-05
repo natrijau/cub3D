@@ -19,6 +19,18 @@
 # define TRUE 1
 # define FALSE 0
 
+typedef struct s_inter
+{
+	double	distance;
+	double	angle;
+	double	x;
+	double	y;
+	double	x_step;
+	double	y_step;
+	int		pixel;
+	struct s_data	*data;
+}	t_inter;
+
 typedef struct s_image
 {
 	void	*img;
@@ -34,6 +46,7 @@ typedef struct	s_minimap
 	int		width;
 	t_image	space;
 	t_image	character;
+	t_image	raycast;
 }				t_minimap;
 
 typedef struct	s_data
