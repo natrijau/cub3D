@@ -12,24 +12,16 @@
 # define BUFFER_SIZE 100
 # define MOOVE_SPEED 4
 # define ROTATE_SPEED 0.1
-# define FOV 60
+# define FOV 80
 # define CASE 32
 # define WIDTH 1920
 # define HEIGHT 1080
 # define TRUE 1
 # define FALSE 0
-
-typedef struct s_inter
-{
-	double	distance;
-	double	angle;
-	double	x;
-	double	y;
-	double	x_step;
-	double	y_step;
-	int		pixel;
-	struct s_data	*data;
-}	t_inter;
+# define N (2 * M_PI)
+# define E (3 * M_PI / 2)
+# define S (M_PI)
+# define W (M_PI / 2)
 
 typedef struct s_image
 {
@@ -39,6 +31,19 @@ typedef struct s_image
 	int		line_len;
 	int		endian;
 }	t_image;
+
+typedef struct s_ray
+{
+	char	**map;
+	double	angle;
+	double	x;
+	double	y;
+	double	x_step;
+	double	y_step;
+	int		x_multi;
+	int		y_multi;
+	double	distance;
+}	t_ray;
 
 typedef struct	s_minimap
 {
