@@ -98,8 +98,8 @@ int	cub_close(t_data *data)
 {
 	mlx_clear_window(data->mlx, data->win);
 	mlx_destroy_window(data->mlx, data->win);
-	mlx_destroy_image(data->mlx, data->minimap.space.img);
-	mlx_destroy_image(data->mlx, data->minimap.raycast.img);
+	mlx_destroy_image(data->mlx, data->minimap.space.img);/* 
+	mlx_destroy_image(data->mlx, data->minimap.raycast.img); */
 	mlx_destroy_image(data->mlx, data->minimap.character.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
@@ -107,23 +107,25 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-int	wall_hit(t_inter ray)
+int	wall_hit(t_inter ray, char c)
 {
-	int	x;
-	int	y;
-
-	x = ray.x / CASE;
-	y = ray.y / CASE;
-	if (x >= ray.data->minimap.width
-		|| y >= ray.data->minimap.height
-		|| x < 0 || y < 0)
+	if (c == 'h')
+		ray.y -= ray.pixel;
+	else
+		ray.x -= ray.pixel;
+	if (ray.x >= ray.data->minimap.width * CASE
+		|| ray.y >= ray.data->minimap.height * CASE
+		|| ray.x < 0 || ray.y < 0)
 		return (1);
-	if (ray.data->map[y][x] == ' ')
+	if (ray.data->map[(int)ray.y / CASE][(int)ray.x / CASE] == ' '
+		|| ray.data->map[(int)(ray.y + CASE - 1) / CASE][(int)(ray.x + CASE - 1) / CASE] == ' '
+		|| ray.data->map[(int)ray.y / CASE][(int)(ray.x + CASE - 1) / CASE] == ' '
+		|| ray.data->map[(int)(ray.y + CASE - 1) / CASE][(int)ray.x / CASE] == ' ')
 		return (1);
 	return (0);
 }
 
-double	get_h_inter(t_inter ray, double *x, double *y)
+t_inter	get_h_inter(t_inter ray)
 {
 	ray.y_step = CASE;
 	ray.x_step = CASE / tan(ray.angle);
@@ -141,22 +143,23 @@ double	get_h_inter(t_inter ray, double *x, double *y)
 		&& ray.x_step > 0) || (ray.x_step < 0
 		&& !(ray.angle > (M_PI / 2) && ray.angle < (3 * M_PI) / 2)))
 		ray.x_step *= -1;
-	while (!wall_hit(ray))
+	while (!wall_hit(ray, 'h'))
 	{
+		if (!(ray.x < 0 || ray.y < 0 || ray.x > ray.data->minimap.width * CASE || ray.y > ray.data->minimap.height * CASE))
+			ft_mlx_pixel_put(&ray.data->minimap.space, ray.x, ray.y, 0x0000FF00);
 		ray.x += ray.x_step;
 		ray.y += ray.y_step;
 	}
-	*x = ray.x;
-	*y = ray.y;
-	return (sqrt(pow(ray.x - ray.data->x, 2) + pow(ray.y - ray.data->y, 2)));
+	ray.distance = sqrt(pow(ray.x - ray.data->x, 2) + pow(ray.y - ray.data->y, 2));
+	return (ray);
 }
 
-double	get_v_inter(t_inter ray, double *x, double *y)
+t_inter	get_v_inter(t_inter ray)
 {
 	ray.x_step = CASE;
 	ray.y_step = CASE * tan(ray.angle);
-	ray.x = floor(ray.data->x / CASE) * CASE;
-	ray.pixel = 1;
+	ray.x = (ray.data->x / CASE) * CASE;
+	ray.y_multi = 1;
 	if (ray.angle > (M_PI / 2) && ray.angle < (3 * M_PI) / 2)
 	{
 		ray.x += CASE;
@@ -169,17 +172,15 @@ double	get_v_inter(t_inter ray, double *x, double *y)
 		&& ray.y_step < 0) || (ray.y_step > 0
 		&& !(ray.angle > M_PI && ray.angle < 2 * M_PI)))
 		ray.y_step *= -1;
-	while (!wall_hit(ray))
+	while (!wall_hit(ray, 'v'))
 	{
+		if (!(ray.x < 0 || ray.y < 0 || ray.x > ray.data->minimap.width * CASE || ray.y > ray.data->minimap.height * CASE))
+			ft_mlx_pixel_put(&ray.data->minimap.space, ray.x, ray.y, 0x0000FF00);
 		ray.x += ray.x_step;
 		ray.y += ray.y_step;
 	}
-	if (sqrt(pow(*x - ray.data->x, 2) + pow(*y - ray.data->y, 2)) >= sqrt(pow(ray.x - ray.data->x, 2) + pow(ray.y - ray.data->y, 2)))
-	{
-		*x = ray.x;
-		*y = ray.y;
-	}
-	return (sqrt(pow(ray.x - ray.data->x, 2) + pow(ray.y - ray.data->y, 2)));
+	ray.distance = sqrt(pow(ray.x - ray.data->x, 2) + pow(ray.y - ray.data->y, 2));
+	return (ray);
 }
 
 void	fill_img(t_image *img, int color)
@@ -198,59 +199,79 @@ void	fill_img(t_image *img, int color)
 		}
 		++i;
 	}
-}/* 
+}
 // PAS DUTOUT FONCTIONNEL !!!
-void	draw_ray(t_data *data, t_image *img, t_inter ray)
+void	draw_ray(t_data *data, t_inter ray)
 {
 	int		x;
 	int		y;
-	int		max_x;
-	int		max_y;
+	int		i;
+	int		x_multi;
+	int		y_multi;
 
-	if (data->x - ray.x <= 0 || data->y - ray.y <= 0)
-		return ;
-	max_x = data->x + (data->x - ray.x);
-	max_y = data->y + (data->y - ray.y);
-	x = data->y;
+	x_multi = 1;
+	if (ray.x < data->x)
+		x_multi = -1;
+	y_multi = 1;
+	if (ray.y < data->y)
+		y_multi = -1;
+	x = data->x;
 	y = data->y;
-	while (x <= max_x || y <= max_y)
+	ray.x_step = (x_multi * -1 * data->x + ray.x * x_multi);
+	ray.y_step = (y_multi * -1 * data->y + ray.y * y_multi);
+	printf("step: x = %f, y = %f\n", ray.x_step, ray.y_step);
+	i = 0;
+	while (i < (ray.x_step * ray.y_step))
 	{
-		if (x < img->line_len && y < img->bpp / 8)
-			ft_mlx_pixel_put(img, x, y, 0x000000FF);
-		y += (max_y - data->y) / (max_x - data->x);
-		x += (max_x - data->x) / (max_y - data->y);
+		if (x != ray.x)
+        	x += ray.x_step / (ray.x_step * ray.y_step);
+		if (y != ray.y)
+        	y += ray.y_step / (ray.x_step * ray.y_step);
+		if (x < 0 || y < 0 || x > data->minimap.width * CASE || y > data->minimap.height * CASE)
+			return ;
+		ft_mlx_pixel_put(&data->minimap.space, x, y, 0x0000FF00);/* 
+		printf("incr: x = %f, y = %f\n", (x_multi * -1 * data->x - ray.x * x_multi) / (y_multi * -1 * data->y - ray.y * y_multi), (y_multi * -1 * data->y - ray.y * y_multi) / (x_multi * -1 * data->x - ray.x * x_multi));
+		printf("plyr: x = %d, y = %d\n", data->x, data->y);
+		printf("x = %d, y = %d\n", x, y);
+		printf("ray: x = %f, y = %f\n", ray.x, ray.y); */
+		++i;
 	}
-} */
-
-t_image	render_raycast(t_data *data)
-{
-	t_image	img;
-	t_inter	ray;
-	double	h_inter;
-	double	v_inter;
-	int		i_ray;
-
-	img.img = mlx_new_image(data->mlx, data->minimap.width * CASE, data->minimap.height * CASE);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	fill_img(&img, 0xFF000000); // ne fonctionne pas (fond transparent)
-	ray.angle = data->angle - data->fov_rad / 2;
-	ray.data = data;
-	i_ray = 0;
-	while(i_ray < data->minimap.width * CASE)
-	{
-		h_inter = get_h_inter(ray, &ray.x, &ray.y);
-		v_inter = get_v_inter(ray, &ray.x, &ray.y);
-		ray.distance = h_inter;
-		if (h_inter >= v_inter)
-			ray.distance = v_inter;
-		//draw_ray(data, &img, ray);
-		++i_ray;
-		ray.angle += data->fov_rad / data->minimap.width * CASE;
-	}
-	return (img);
 }
 
-void	moove(t_data *data, int x, int y)
+void	render_raycast(t_data *data)
+{/* 
+	t_image	img; */
+	t_inter	ray;
+	t_inter	h_ray;
+	t_inter	v_ray;
+	int		i_ray;
+
+	/* img.img = mlx_new_image(data->mlx, data->minimap.width * CASE, data->minimap.height * CASE);
+	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	fill_img(&img, 0xFF000000); // ne fonctionne pas (fond transparent) */
+	ray.angle = data->angle - (data->fov_rad / 2);
+	ray.data = data;
+	i_ray = 0;
+	while(i_ray < 80)
+	{
+		h_ray = get_h_inter(ray);
+		v_ray = get_v_inter(ray);
+		ray = v_ray;
+		if (h_ray.distance < v_ray.distance)
+			ray = h_ray;
+		// draw_ray(data, ray);
+		if (!(ray.x < 0 || ray.y < 0 || ray.x > data->minimap.width * CASE || ray.y > data->minimap.height * CASE))
+			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x00FFFFFF);
+		++i_ray;
+		ray.angle += (data->fov_rad / 80);
+		if (ray.angle > 3 * M_PI)
+			ray.angle -= 2 * M_PI;
+		if (ray.angle < 0)
+			ray.angle += 2 * M_PI;
+	}
+}
+
+void	moove(t_data *data, int y, int x)
 {
 	int new_x;
 	int new_y;
@@ -261,11 +282,12 @@ void	moove(t_data *data, int x, int y)
 	new_y += (sin(data->angle + M_PI / 2) * MOOVE_SPEED) * y;
 	data->x += new_x;
 	data->y += new_y;
-	mlx_destroy_image(data->mlx, data->minimap.raycast.img);
-	data->minimap.raycast = render_raycast(data);
+	mlx_destroy_image(data->mlx, data->minimap.space.img);
+	data->minimap.space = init_space(data);
+	/* data->minimap.raycast =  */render_raycast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->y, data->x);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x, data->y);
 }
 
 int	key_hook(int keycode, t_data *data)
@@ -318,6 +340,12 @@ int	key_hook(int keycode, t_data *data)
 		data->angle -= ROTATE_SPEED;
 	if (keycode == 65361)
 		data->angle += ROTATE_SPEED;
+	if (data->angle > 3 * M_PI)
+		data->angle -= 2 * M_PI;
+	if (data->angle < 0)
+		data->angle += 2 * M_PI;
+	if (keycode == 65363 || keycode == 65361)
+		moove(data, 0, 0);
 	return (0);
 }
 
@@ -326,7 +354,7 @@ int	create_minimap(t_data *data)
 	data->minimap.height = ft_strtablen(data->map);
 	data->minimap.width = ft_strlen(data->map[0]);
 	data->minimap.space = init_space(data);
-	data->minimap.raycast = render_raycast(data);
+	render_raycast(data);
 	data->minimap.character = init_character(data->mlx);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
