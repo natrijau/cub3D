@@ -112,10 +112,7 @@ int	key_hook(int keycode, t_data *data)
 		data->angle -= ROTATE_SPEED;
 	if (keycode == 65363)
 		data->angle += ROTATE_SPEED;
-	if (data->angle > N)
-		data->angle -= N;
-	else if (data->angle < 0)
-		data->angle += N;
+	data->angle = fmod(data->angle, N);
 	if (keycode == 65361 || keycode == 65363)
 		moove(data, 0, 0);
 	return (0);
