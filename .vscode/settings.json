@@ -1,5 +1,7 @@
 {
-    "files.associations": {
-        "math.h": "c"
-    }
+    "C_Cpp.default.compilerPath": "/usr/bin/gcc", // Change si nécessaire
+    "C_Cpp.default.intelliSenseMode": "gcc-x64",
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**"
+    ]
 }
