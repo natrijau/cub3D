@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/04 15:17:03 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/10/08 10:04:37 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,68 +32,6 @@ void	print_map(char **map, int erase_bool)
 	}
 }
 
-void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
-	*(unsigned int *)dst = color;
-}
-
-t_image	init_space(t_data *data)
-{
-	t_image	img;
-	int		color;
-	int		x, y, i, j;
-
-	img.img = mlx_new_image(data->mlx, data->minimap.width * CASE, data->minimap.height * CASE);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	color = 0x00FFFFFF;
-	y = -1;
-	while (++y < data->minimap.height)
-	{
-		x = -1;
-		while (++x < data->minimap.width && data->map[y][x])
-		{
-			if (data->map[y][x] == '0')
-			{
-				i = -1;
-				while (++i < CASE)
-				{
-					j = -1;
-					while (++j < CASE)
-						ft_mlx_pixel_put(&img, x * CASE + i, y * CASE + j, color);
-				}
-			}
-		}
-	}
-	return (img);
-}
-
-t_image	init_character(void *mlx)
-{
-	t_image	img;
-	int		color;
-	int		i;
-	int		j;
-
-	img.img = mlx_new_image(mlx, CASE, CASE);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	color = 0x00FF0000;
-	i = 0;
-	while (i < CASE)
-	{
-		j = 0;
-		while (j < CASE)
-		{
-			ft_mlx_pixel_put(&img, i, j, color);
-			++j;
-		}
-		++i;
-	}
-	return (img);
-}	
-
 int	cub_close(t_data *data)
 {
 	mlx_clear_window(data->mlx, data->win);
@@ -106,89 +44,6 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-void	ray_setup(t_ray *ray)
-{
-	ray->x_multi = -1;
-	if (ray->angle > S && ray->angle < N)
-		ray->x_multi = 1;
-	ray->y_multi = 1;
-	if (ray->angle < E && ray->angle > W)
-		ray->y_multi = -1;
-}
-
-t_ray	get_h_ray(t_data *data, t_ray ray)
-{
-	ray.x_step = (CASE / tan(ray.angle)) * ray.x_multi;
-	ray.y_step = CASE * ray.y_multi;
-	ray.y = (data->y / CASE) * CASE;
-	if (ray.y_multi == -1)
-		ray.y += CASE;
-	ray.x = data->x + (ray.y - data->y) / tan(ray.angle);
-	while (TRUE)
-	{
-		if (ray.y < 0 || ray.y > data->minimap.height * CASE
-			|| ray.x < 0 || ray.x > data->minimap.width * CASE)
-			break ;
-		ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);
-		if (data->map[(int)(ray.y - ray.y_multi) / CASE][(int)ray.x / CASE] == ' ')
-			break ;
-		ray.y += ray.y_step;
-		ray.x += ray.x_step;
-	}
-	ray.distance = sqrt(pow(data->x - ray.x, 2) + pow(data->y - ray.y, 2));
-	return (ray);
-}
-
-t_ray	get_v_ray(t_data *data, t_ray ray)
-{
-	ray.x_step = CASE * ray.x_multi;
-	ray.y_step = (CASE * tan(ray.angle)) * ray.y_multi;
-	ray.x = (data->x / CASE) * CASE;
-	if (ray.x_multi == -1)
-		ray.x += CASE;
-	ray.y = data->y + (ray.x - data->x) * tan(ray.angle);
-	while (TRUE)
-	{
-		if (ray.y <= 0 || ray.y >= data->minimap.height * CASE
-			|| ray.x <= 0 || ray.x >= data->minimap.width * CASE)
-			break ;
-		ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);
-		if (data->map[(int)ray.y / CASE][(int)(ray.x - ray.x_multi) / CASE] == ' ')
-			break ;
-		ray.y += ray.y_step;
-		ray.x += ray.x_step;
-	}
-	ray.distance = sqrt(pow(data->x - ray.x, 2) + pow(data->y - ray.y, 2));
-	return (ray);
-}
-
-void	ray_cast(t_data *data)
-{
-	t_ray	ray;
-	t_ray	h_ray;
-	t_ray	v_ray;
-	int		i_ray;
-
-	ray.angle = data->angle - data->fov_rad / 2;
-	if (ray.angle < 0)
-		ray.angle += N;
-	ray.map = data->map;
-	i_ray = 0;
-	while (i_ray < data->minimap.width * CASE)
-	{
-		ray_setup(&ray);
-		h_ray = get_h_ray(data, ray);
-		v_ray = get_v_ray(data, ray);
-		ray = v_ray;
-		if (h_ray.distance < v_ray.distance)
-			ray = h_ray;
-		// draw_ray_on_minimap(data, ray);
-		// draw_wall(data, ray);
-		++i_ray;
-		ray.angle += data->fov_rad / (data->minimap.width * CASE);
-	}
-}
-
 void	moove(t_data *data, int y, int x)
 {
 	int new_x;
@@ -196,15 +51,15 @@ void	moove(t_data *data, int y, int x)
 
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
-	new_x += (cos(data->angle + M_PI / 2) * MOOVE_SPEED) * y;
-	new_y += (sin(data->angle + M_PI / 2) * MOOVE_SPEED) * y;
+	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	data->x += new_x;
 	data->y += new_y;
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	data->minimap.space = init_space(data);
 	ray_cast(data); // ne fonctionne pas encore, mais c un debut...
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x, data->y);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
 int	key_hook(int keycode, t_data *data)
@@ -261,20 +116,8 @@ int	key_hook(int keycode, t_data *data)
 		data->angle -= N;
 	else if (data->angle < 0)
 		data->angle += N;
-	/* if (keycode == 65361 || keycode == 65363)
-		moove(data, 0, 0); */
-	return (0);
-}
-
-int	create_minimap(t_data *data)
-{
-	data->minimap.height = ft_strtablen(data->map);
-	data->minimap.width = ft_strlen(data->map[0]);
-	data->minimap.space = init_space(data);
-	data->minimap.character = init_character(data->mlx);
-	ray_cast(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x, data->y);
+	if (keycode == 65361 || keycode == 65363)
+		moove(data, 0, 0);
 	return (0);
 }
 

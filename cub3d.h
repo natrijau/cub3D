@@ -67,6 +67,10 @@ typedef struct	s_data
 }				t_data;
 
 char	**get_map(char *file);
+void	ray_cast(t_data *data);
+t_image	init_space(t_data *data);
+int		create_minimap(t_data *data);
+void	ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 int		parsing(t_data *data, char *file);
 void	print_map(char **map, int erase_bool);
 int		map_len(char *file);

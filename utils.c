@@ -49,8 +49,8 @@ int	init_start(char **map, t_data *data)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				data->x = j * CASE;
-				data->y = i * CASE;
+				data->x = j * CASE + CASE / 2;
+				data->y = i * CASE + CASE / 2;
 				data->angle = get_angle(map[i][j]);
 				data->fov_rad = (FOV * M_PI) / 180;
 				return (0);
