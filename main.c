@@ -57,7 +57,7 @@ void	moove(t_data *data, int y, int x)
 	data->y += new_y;
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	data->minimap.space = init_space(data);
-	ray_cast(data); // ne fonctionne pas encore, mais c un debut...
+	ray_cast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
@@ -99,13 +99,13 @@ int	key_hook(int keycode, t_data *data)
 	{
 		// ZQSD
 		if (keycode == 122)
-			moove(data, -1, 0);
+			moove(data, -1, 0); // z
 		if (keycode == 115)
-			moove(data, 1, 0);
+			moove(data, 1, 0); // s
 		if (keycode == 100)
-			moove(data, 0, 1);
+			moove(data, 0, 1); // d
 		if (keycode == 113)
-			moove(data, 0, -1);
+			moove(data, 0, -1); // q
 	}
 	// VISION
 	if (keycode == 65361)
