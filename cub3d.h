@@ -11,7 +11,7 @@
 
 # define BUFFER_SIZE 100
 # define MOOVE_SPEED 4
-# define ROTATE_SPEED 0.1
+# define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
 # define WIDTH 1920
