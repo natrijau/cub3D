@@ -2,31 +2,46 @@
 
 int  map_len(char *file)
 {
-    int     fd;
-    char    *line;
-    int     len;
+	int	 fd;
+	char	*line;
+	int	 len;
 
-    fd = open(file, O_RDONLY);
-    if (fd < 0)
-        return (-1);
-    len = 0;
-    line = get_next_line(fd);
-    while (line)
-    {
-        len++;
-        free(line);
-        line = get_next_line(fd);
-    }
-    close(fd);
-    return (len);
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	len = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		len++;
+		free(line);
+		line = get_next_line(fd);
+	}
+	close(fd);
+	return (len);
 }
 
-int	get_start_xy(char **map, int *x, int *y)
+double	get_angle(char direction)
+{
+	if (direction == 'N')
+		return (2 * M_PI);
+	if (direction == 'E')
+		return (3 * M_PI / 2);
+	if (direction == 'S')
+		return (M_PI);
+	if (direction == 'W')
+		return (M_PI / 2);
+	return (-1);
+}
+
+int	init_start(char **map, t_data *data)
 {
 	int	i;
 	int	j;
 
 	i = 0;
+	if (!map)
+		return (-1);
 	while (map[i])
 	{
 		j = 0;
@@ -34,8 +49,10 @@ int	get_start_xy(char **map, int *x, int *y)
 		{
 			if (ft_strchr("NSEW", map[i][j]))
 			{
-				*x = i;
-				*y = j;
+				data->x = j * CASE + CASE / 2;
+				data->y = i * CASE + CASE / 2;
+				data->angle = get_angle(map[i][j]);
+				data->fov_rad = (FOV * M_PI) / 180;
 				return (0);
 			}
 			++j;
