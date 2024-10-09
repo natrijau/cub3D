@@ -56,8 +56,11 @@ void	moove(t_data *data, int y, int x)
 	data->x += new_x;
 	data->y += new_y;
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
+	mlx_destroy_image(data->mlx, data->minimap.raycast.img);
 	data->minimap.space = init_space(data);
+	data->minimap.raycast = init_ray_cast(data->mlx);
 	ray_cast(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
@@ -120,16 +123,10 @@ int	key_hook(int keycode, t_data *data)
 
 int	init_cub3d(t_data *data)
 {
-	int height;
-	int width;
-
-	height = ft_strtablen(data->map) * CASE;
-	width = ft_strlen(data->map[0]) * CASE;
-
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return (-1);
-	data->win = mlx_new_window(data->mlx, width, height, "Cub3D");
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");
 	if (!data->win)
 		return (-1);
 	return (0);

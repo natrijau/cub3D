@@ -13,7 +13,7 @@
 # define MOOVE_SPEED 4
 # define ROTATE_SPEED 0.1
 # define FOV 80
-# define CASE 32
+# define CASE 12
 # define WIDTH 1920
 # define HEIGHT 1080
 # define TRUE 1
@@ -69,6 +69,7 @@ typedef struct	s_data
 char	**get_map(char *file);
 void	ray_cast(t_data *data);
 t_image	init_space(t_data *data);
+t_image	init_ray_cast(void *mlx);
 int		create_minimap(t_data *data);
 void	ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 int		parsing(t_data *data, char *file);

@@ -62,13 +62,24 @@ t_image	init_character(void *mlx)
 	return (img);
 }
 
+t_image	init_ray_cast(void *mlx)
+{
+	t_image	img;
+
+	img.img = mlx_new_image(mlx, WIDTH, HEIGHT);
+	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	return (img);
+}
+
 int	create_minimap(t_data *data)
 {
 	data->minimap.height = ft_strtablen(data->map);
 	data->minimap.width = ft_strlen(data->map[0]);
 	data->minimap.space = init_space(data);
 	data->minimap.character = init_character(data->mlx);
+	data->minimap.raycast = init_ray_cast(data->mlx);
 	ray_cast(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 	return (0);

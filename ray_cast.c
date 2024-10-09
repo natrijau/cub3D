@@ -9,10 +9,14 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->y = data->y;
 	ray->x_multi = -1;
 	if (ray->angle > W && ray->angle < E)
-		ray->x_multi = -1;
+		ray->x_multi = 1;
 	ray->y_multi = 1;
 	if (!(ray->angle < N && ray->angle > S))
 		ray->y_multi = -1;
+	ray->x_step = cos(ray->angle) * ray->x_multi;
+	ray->y_step = sin(ray->angle) * ray->x_multi;
+	ray->x_step += cos(ray->angle + W) * ray->y_multi;
+	ray->y_step += sin(ray->angle + W) * ray->y_multi;
 }
 
 int	ray_cast_protection(t_data *data, t_ray ray)
@@ -28,6 +32,22 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 	return (0);
 }
 
+void	draw_wall(t_data *data, t_ray ray, int x)
+{
+	int		y;
+	double	distance;
+
+	ray.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
+	distance = (CASE / ray.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));
+	y = (HEIGHT / 2) - distance / 2;
+	while (y < (HEIGHT / 2) + distance / 2)
+	{
+		if (y >= 0 && y <= HEIGHT)
+			ft_mlx_pixel_put(&data->minimap.raycast, x, y, 0x00FFFFFF);
+		++y;
+	}
+}
+
 void	ray_cast(t_data *data)
 {
 	t_ray	ray;
@@ -35,23 +55,20 @@ void	ray_cast(t_data *data)
 
 	ray.angle = data->angle - (data->fov_rad / 2.0) + M_PI / 4;
 	i_ray = 0;
-	while (i_ray < data->minimap.width * CASE)
+	while (i_ray < WIDTH)
 	{
 		ray_setup(data, &ray);
 		while (TRUE)
 		{
-			ray.x_step = (cos(ray.angle) * MOOVE_SPEED) * ray.x_multi;
-			ray.y_step = (sin(ray.angle) * MOOVE_SPEED) * ray.x_multi;
-			ray.x_step += (cos(ray.angle + W) * MOOVE_SPEED) * ray.y_multi;
-			ray.y_step += (sin(ray.angle + W) * MOOVE_SPEED) * ray.y_multi;
 			ray.x += ray.x_step;
 			ray.y += ray.y_step;
 			if (ray_cast_protection(data, ray) == -1)
 				break ;
 			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);
 		}
-		// draw_wall(data, ray);
+		ray.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
+		draw_wall(data, ray, i_ray);
 		++i_ray;
-		ray.angle += data->fov_rad / (data->minimap.width * CASE);
+		ray.angle += data->fov_rad / WIDTH;
 	}
 }
