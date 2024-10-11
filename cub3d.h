@@ -62,8 +62,8 @@ typedef struct	s_data
 	t_minimap	minimap;
 	double		angle;
 	double		fov_rad;
-	float			x;
-	float			y;
+	double			x;
+	double			y;
 }				t_data;
 
 char	**get_map(char *file);

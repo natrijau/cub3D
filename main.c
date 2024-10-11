@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/11 14:42:49 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:48:36 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ int	cub_close(t_data *data)
 // Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
-	//! Passe en float pour plus de precision dans les deplacements
-	float new_x;
-	float new_y;
+	//! Passe en float pour plus de precision dans les deplacements ?
+	double new_x;
+	double new_y;
 
 	// new positions based on angle and speed of movement
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
