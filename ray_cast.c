@@ -20,36 +20,53 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
 }
 
-/*
-vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ?
-*/
+/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
 int	ray_cast_protection(t_data *data, t_ray ray)
 {
 	// Vérifie si le rayon sort de la carte ou rencontre un mur
 	if (ray.y < 0 || ray.y > data->minimap.height * CASE
 		|| ray.x < 0 || ray.x > data->minimap.width * CASE)
 		return (-1);
-	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == ' ')
+	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1'
+		|| data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '3')
 		return (-1);
 	return (0);
+}
+
+int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
+{
+	char	*dst;
+
+	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	return (*(unsigned int *)dst);
 }
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
-	int		y;
-	double	distance;
+	t_raycast	raycast;
+	double		y_start;
+	double		y;
 
-	// Ajuster la distance du rayon en fonction de l'angle pour corriger la distorsion
-	ray.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
-	ray.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	distance = (CASE / ray.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
-	y = (HEIGHT / 2) - distance / 2;  // Position de départ du dessin du mur
+	raycast = data->raycast;
+	if (fmod(ray.x, CASE) < fmod(ray.y, CASE))
+		raycast.x = fmod(ray.x, CASE);
+	else
+		raycast.x = fmod(ray.y, CASE);
+	raycast.x *= (double)raycast.N_wall.width / CASE;
+	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
+	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
+	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
+	y_start = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
+	y = y_start;
 	if (y < 0)
 		y = 0;
-	while (y < (HEIGHT / 2) + distance / 2 && y <= HEIGHT)
+	raycast.color = 0x00FFFFFF;
+	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		ft_mlx_pixel_put(&data->minimap.raycast, x, y, 0x00FFFFFF);  // Dessiner un pixel blanc pour représenter le mur
+		raycast.y = y - y_start * (raycast.distance / raycast.N_wall.height);
+		// raycast.color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.color);
 		++y;
 	}
 }

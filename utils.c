@@ -25,13 +25,13 @@ int  map_len(char *file)
 double get_angle(char direction)
 {
     if (direction == 'N')  // north
-        return (2 * M_PI);
+        return (N);
     if (direction == 'E')  // East
-        return (3 * M_PI / 2);
+        return (E);
     if (direction == 'S')  // south
-        return (M_PI);
+        return (S);
     if (direction == 'W')  // west
-        return (M_PI / 2);
+        return (W);
     return (-1);
 }
 
@@ -65,7 +65,6 @@ int init_start(char **map, t_data *data)
     }
     return (-1);
 }
-
 
 void	map_clear(char **map)
 {
