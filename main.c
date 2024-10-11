@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/08 10:04:37 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/10/11 15:48:36 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,9 @@ int	cub_close(t_data *data)
 // Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
-	int new_x;
-	int new_y;
+	//! Passe en float pour plus de precision dans les deplacements ?
+	double new_x;
+	double new_y;
 
 	// new positions based on angle and speed of movement
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
@@ -59,6 +60,11 @@ void	moove(t_data *data, int y, int x)
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	data->x += new_x;  // Update x position
 	data->y += new_y;  // Update y position
+
+	/*debug comment le perso avance*/
+	printf("line 65 / fonction moove / mian.c\n");
+	printf("new_x %f, new_y %f \n", new_x, new_y);
+	/*debug*/
 
 	// Updating images after moving
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
@@ -91,7 +97,6 @@ int	key_hook(int keycode, t_data *data)
 			printf("Keyboard config set to AZERTY\n");
 		}
 	}
-
 	// Escape key
 	if (keycode == 65307)
 		cub_close(data);
@@ -120,7 +125,6 @@ int	key_hook(int keycode, t_data *data)
 		if (keycode == 113)  // q
 			moove(data, 0, -1);
 	}
-
 	// Rotate camera flèches Right/Left
 	if (keycode == 65361)
 		data->angle -= ROTATE_SPEED;  // Left

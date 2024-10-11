@@ -19,6 +19,7 @@ int		get_max_tab_len(char **map)
 	}
 	return (max_len);
 }
+
 //  Read map since file and return tab map
 char	**get_map(char *file)
 {
@@ -48,6 +49,7 @@ char	**get_map(char *file)
 	close(fd);
 	return (map);
 }
+
 // Add space to map to equalize the length of the lines
 char	**init_map(char **map_off)
 {
@@ -109,6 +111,7 @@ int	pars_map(char **map, char **space, int k, int i)
 }
 
 // Validate map
+int	parsing(t_data *data, char *file)
 {
 	char	**map_off;  
 
