@@ -12,6 +12,7 @@
 
 #include "cub3d.h"
 
+// Display the map in console
 void	print_map(char **map, int erase_bool)
 {
 	int	char_count = 0;
@@ -25,13 +26,14 @@ void	print_map(char **map, int erase_bool)
 	if (!erase_bool)
 		return ;
 	for (int i = 0; i < line_count; i++) {
-		printf("\033[A");
+		printf("\033[A");  // Remonter le curseur dans la console d'un nombre de lignes égal à line_count
 	}
 	for (int i = 0; i < char_count; i++) {
-		printf("\b \b");
+		printf("\b \b");  // Effacer les caractères en réinitialisant leur espace
 	}
 }
 
+// close the window and free
 int	cub_close(t_data *data)
 {
 	mlx_clear_window(data->mlx, data->win);
@@ -44,32 +46,39 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
+// Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
 	int new_x;
 	int new_y;
 
+	// new positions based on angle and speed of movement
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
-	data->x += new_x;
-	data->y += new_y;
+	data->x += new_x;  // Update x position
+	data->y += new_y;  // Update y position
+
+	// Updating images after moving
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	mlx_destroy_image(data->mlx, data->minimap.raycast.img);
-	data->minimap.space = init_space(data);
-	data->minimap.raycast = init_ray_cast(data->mlx);
-	ray_cast(data);
+	data->minimap.space = init_space(data);  // Reinitialise map
+	data->minimap.raycast = init_ray_cast(data->mlx);  // Reinitialise raycasting
+	ray_cast(data);  
+	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
+// keyboard key events
 int	key_hook(int keycode, t_data *data)
 {
 	static int azerty;
 
-	if (keycode == 114)
+	// switch AZERTY or QWERTY
+	if (keycode == 114)  // keyboard r
 	{
 		if (azerty == TRUE)
 		{
@@ -82,51 +91,54 @@ int	key_hook(int keycode, t_data *data)
 			printf("Keyboard config set to AZERTY\n");
 		}
 	}
-	// ESKAPE
+
+	// Escape key
 	if (keycode == 65307)
 		cub_close(data);
 
 	if (azerty == FALSE)
 	{
-		// WASD
-		if (keycode == 119)
+		// Déplacement mode QWERTY
+		if (keycode == 119)  // w
 			moove(data, -1, 0);
-		if (keycode == 115)
+		if (keycode == 115)  // s
 			moove(data, 1, 0);
-		if (keycode == 100)
+		if (keycode == 100)  // d
 			moove(data, 0, 1);
-		if (keycode == 97)
+		if (keycode == 97)   // a
 			moove(data, 0, -1);
 	}
 	else
 	{
-		// ZQSD
-		if (keycode == 122)
-			moove(data, -1, 0); // z
-		if (keycode == 115)
-			moove(data, 1, 0); // s
-		if (keycode == 100)
-			moove(data, 0, 1); // d
-		if (keycode == 113)
-			moove(data, 0, -1); // q
+		// Déplacement mode AZERTY
+		if (keycode == 122)  // z
+			moove(data, -1, 0);
+		if (keycode == 115)  // s
+			moove(data, 1, 0);
+		if (keycode == 100)  // d
+			moove(data, 0, 1);
+		if (keycode == 113)  // q
+			moove(data, 0, -1);
 	}
-	// VISION
+
+	// Rotate camera flèches Right/Left
 	if (keycode == 65361)
-		data->angle -= ROTATE_SPEED;
+		data->angle -= ROTATE_SPEED;  // Left
 	if (keycode == 65363)
-		data->angle += ROTATE_SPEED;
-	data->angle = fmod(data->angle, N);
+		data->angle += ROTATE_SPEED;  // Right
+	data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
 	if (keycode == 65361 || keycode == 65363)
-		moove(data, 0, 0);
+		moove(data, 0, 0);  // Recalcul position after rotate
 	return (0);
 }
 
+// Init windows/graphic_system ?
 int	init_cub3d(t_data *data)
 {
 	data->mlx = mlx_init();
 	if (!data->mlx)
 		return (-1);
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");  // New windows
 	if (!data->win)
 		return (-1);
 	return (0);
@@ -136,20 +148,20 @@ int main(int ac, char **av)
 {
 	t_data	data;
 
-	if (ac != 2)
+	if (ac != 2)  // Verifi arg
 	{
 		printf("Error\n");
 		return (1);
 	}
-	if (parsing(&data, av[1]) == -1)
+	if (parsing(&data, av[1]) == -1)  // Parsing map
 		return (1);
-	print_map(data.map, FALSE);
-	if (init_cub3d(&data) == -1
+	print_map(data.map, FALSE); 
+	if (init_cub3d(&data) == -1  // Init Cub3D / minimap
 		|| create_minimap(&data) == -1)
 		return (1);
-	mlx_hook(data.win, 17, 4, cub_close, &data);
-	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);
-	mlx_loop(data.mlx);
-	cub_close(&data);
+	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
+	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
+	mlx_loop(data.mlx);  // Principal loop
+	cub_close(&data); 
 	return (0);
 }
