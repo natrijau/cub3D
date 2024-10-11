@@ -1,6 +1,6 @@
 #include "cub3d.h"
 	
-/*initialise les paramètres du rayon pour chaque angle.*/
+/*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
 	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
@@ -21,7 +21,7 @@ void	ray_setup(t_data *data, t_ray *ray)
 }
 
 /*
-vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide (ce qui indiquerait une collision).
+vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ?
 */
 int	ray_cast_protection(t_data *data, t_ray ray)
 {
@@ -37,7 +37,7 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 	return (0);
 }
 
-/*dessine le mur à la bonne distance en fonction de la projection du rayon.*/
+/*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
 	int		y;
@@ -55,8 +55,8 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	}
 }
 
-/*c'est la boucle principale qui parcourt l'écran en projetant des rayons, calculant 
-les collisions, et dessinant les murs.*/
+/*c'est la boucle principale qui parcourt l'écran en projetant des rayons, calcul 
+les collisions, et dessine les murs ?*/
 void	ray_cast(t_data *data)
 {
 	t_ray	ray;
