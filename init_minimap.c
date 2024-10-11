@@ -62,7 +62,7 @@ t_image	init_character(void *mlx)
 		}
 		++i;
 	}
-	return (img)
+	return (img);
 }
 
 // Fonction pour initialiser l'image du raycasting (vue en 3D simulée)

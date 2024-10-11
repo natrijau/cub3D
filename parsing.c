@@ -109,6 +109,7 @@ int	pars_map(char **map, char **space, int k, int i)
 }
 
 // Validate map
+int	parsing(t_data *data, char *file)
 {
 	char	**map_off;  
 
