@@ -43,7 +43,7 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	// Ajuster la distance du rayon en fonction de l'angle pour corriger la distorsion
 	ray.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	ray.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	distance = (CASE / ray.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
+	distance = ((CASE / 2) / ray.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
 	y = (HEIGHT / 2) - distance / 2;  // Position de départ du dessin du mur
 	if (y < 0)
 		y = 0;
