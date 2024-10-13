@@ -13,12 +13,12 @@
 #  define M_PI 3.14159265358979323846
 # endif
 # define BUFFER_SIZE 100
-# define MOOVE_SPEED 3
+# define MOOVE_SPEED 2
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 960
+# define HEIGHT 540
 # define TRUE 1
 # define FALSE 0
 # define N (M_PI * 2)

@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/11 15:48:36 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/13 11:19:37 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,6 +134,22 @@ int	key_hook(int keycode, t_data *data)
 		moove(data, 0, 0);  // Recalcul position after rotate
 	return (0);
 }
+// Fonction appelée lorsqu'il y a un mouvement de souris
+int mouse_move(int x, int y, t_data *data)
+{
+	(void) y;
+	int	center_x;
+	center_x = WIDTH / 2;
+	mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
+    if (abs(x - center_x) < 5) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+		return (0);	// si mouvement inferieur a 5 pixel on ignore (evite pleins de recalcul inutiles)
+	if (x > center_x)
+		data->angle += (ROTATE_SPEED / 5);  // rotate Right
+	else if (x < center_x)
+		data->angle -= (ROTATE_SPEED / 5);  // rotate Left
+	moove(data, 0, 0);
+    return (0);
+}
 
 int main(int ac, char **av)
 {
@@ -149,8 +165,10 @@ int main(int ac, char **av)
 	print_map(data.map, FALSE); 
 	if (init_cub3d(&data) == -1)
 		return (1);
+	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
 	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
+	mlx_hook(data.win, 6, 1L<<6 , mouse_move, &data);  // Defin hook moove mouse
 	mlx_loop(data.mlx);  // Principal loop
 	cub_close(&data); 
 	return (0);
