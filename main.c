@@ -22,7 +22,7 @@ void	print_map(char **map, int erase_bool)
 		char_count += printf("%s\n", map[i]);
 		line_count++;
 	}
-	usleep(20000);
+	usleep(15000);
 	if (!erase_bool)
 		return ;
 	for (int i = 0; i < line_count; i++) {
@@ -51,7 +51,6 @@ int	cub_close(t_data *data)
 // Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
-	//! Passe en float pour plus de precision dans les deplacements ?
 	double new_x;
 	double new_y;
 
@@ -140,13 +139,14 @@ int mouse_move(int x, int y, t_data *data)
 	(void) y;
 	int	center_x;
 	center_x = WIDTH / 2;
-	mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
-    if (abs(x - center_x) < 5) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
-		return (0);	// si mouvement inferieur a 5 pixel on ignore (evite pleins de recalcul inutiles)
+    if (abs(x - center_x) < 15) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+		return (0);	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
 	if (x > center_x)
-		data->angle += (ROTATE_SPEED / 5);  // rotate Right
+		data->angle += (ROTATE_SPEED / 1.5);  // rotate Right
 	else if (x < center_x)
-		data->angle -= (ROTATE_SPEED / 5);  // rotate Left
+		data->angle -= (ROTATE_SPEED / 1.5);  // rotate Left
+	data->angle = fmod(data->angle, N);
+	mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
 	moove(data, 0, 0);
     return (0);
 }
