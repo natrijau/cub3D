@@ -45,11 +45,11 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
 	t_raycast	raycast;
-	double		y_start;
+	double		factor;
 	double		y;
 
 	raycast = data->raycast;
-	if (fmod(ray.x, CASE) < fmod(ray.y, CASE))
+	if (ray.flag == 'y')
 		raycast.x = fmod(ray.x, CASE);
 	else
 		raycast.x = fmod(ray.y, CASE);
@@ -57,16 +57,18 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
-	y_start = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
-	y = y_start;
+	factor = (double)raycast.N_wall.height / raycast.distance;
+	y = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
 	if (y < 0)
 		y = 0;
-	raycast.color = 0x00FFFFFF;
+	raycast.y = (y - (HEIGHT / 2) + (raycast.distance / 2)) * factor;
+	if (raycast.y < 0)
+		raycast.y = 0;
 	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.y = y - y_start * (raycast.distance / raycast.N_wall.height);
-		// raycast.color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		raycast.color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
 		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.color);
+		raycast.y += factor;
 		++y;
 	}
 }
@@ -86,7 +88,11 @@ void	ray_cast(t_data *data)
 		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
 		{
 			ray.x += ray.x_step / 10;
+			ray.flag = 'x';
+			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
+				break;
 			ray.y += ray.y_step / 10;
+			ray.flag = 'y';
 			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
 				break;
 			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);  // Dessiner le rayon (en bleu ici)

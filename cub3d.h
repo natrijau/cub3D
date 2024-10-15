@@ -47,6 +47,7 @@ typedef struct	s_ray
 	double	y_step;
 	int		x_multi;
 	int		y_multi;
+	char	flag;
 }				t_ray;
 
 typedef struct	s_raycast
