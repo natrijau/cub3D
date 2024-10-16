@@ -1,5 +1,11 @@
 #include "cub3d.h"
 
+void	creat_image(t_image *img, void *mlx, int width, int height)
+{
+	img->img = mlx_new_image(mlx, width, height);
+	img->addr = mlx_get_data_addr(img->img, &img->bpp, &img->line_len, &img->endian);
+}
+
 // Fonction pour placer un pixel de couleur spécifique dans une image
 void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
@@ -13,26 +19,23 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 t_image	init_space(t_data *data)
 {
 	t_image	img;
-	int		color;
 	int		x, y, i, j;
 
-	img.img = mlx_new_image(data->mlx, data->minimap.width * CASE, data->minimap.height * CASE);  // Créer une nouvelle image de la taille de la minimap
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);  // Obtenir l'adresse de l'image
-	color = 0x00FFFFFF;  // Blanc pour représenter l'espace vide
+	creat_image(&img, data->mlx, data->minimap.width * CASE, data->minimap.height * CASE);  // Créer une nouvelle image pour l'espace
 	y = -1;
 	while (++y < data->minimap.height)  // Parcourir les lignes de la minimap
 	{
 		x = -1;
 		while (++x < data->minimap.width && data->map[y][x])  // Parcourir les colonnes de la minimap
 		{
-			if (data->map[y][x] == '0')  // Si la case est un espace vide ('0')
+			if (data->map[y][x] == '0' || ft_strchr("NSEW", data->map[y][x]))  // Si la case est un espace vide ('0')
 			{
 				i = -1;
 				while (++i < CASE)  // Parcourir les pixels de la case
 				{
 					j = -1;
 					while (++j < CASE)  // Remplir la case avec des pixels blancs
-						ft_mlx_pixel_put(&img, x * CASE + i, y * CASE + j, color);
+						ft_mlx_pixel_put(&img, x * CASE + i, y * CASE + j, 0x00FFFFFF);
 				}
 			}
 		}
@@ -48,8 +51,7 @@ t_image	init_character(void *mlx)
 	int		i;
 	int		j;
 
-	img.img = mlx_new_image(mlx, CASE, CASE);  // new image for character
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	creat_image(&img, mlx, CASE, CASE);  // Créer une nouvelle image pour le personnage
 	color = 0x00FF0000;  // red
 	i = 0;
 	while (i < CASE)
@@ -65,30 +67,43 @@ t_image	init_character(void *mlx)
 	return (img);
 }
 
-// Fonction pour initialiser l'image du raycasting (vue en 3D simulée)
-t_image	init_ray_cast(void *mlx)
+t_image	get_wall(void *mlx, char *file)
 {
 	t_image	img;
 
-	img.img = mlx_new_image(mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
+	img.img = mlx_xpm_file_to_image(mlx, file, &img.width, &img.height);
 	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
-	return (img);  // Retourner l'image du raycasting
+	return (img);
+}
+
+// Fonction pour initialiser l'image du raycasting (vue en 3D simulée)
+t_raycast	init_ray_cast(t_data *data)
+{
+	t_raycast	raycast;
+
+	raycast = data->raycast;
+	creat_image(&raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
+	raycast.N_wall = get_wall(data->mlx, "textures/brick_wall.xpm");  // Charger l'image du mur Nord
+	return (raycast);
 }
 
 // Fonction pour créer et afficher la minimap et ses composants
-int	create_minimap(t_data *data)
+int	init_cub3d(t_data *data)
 {
+	data->mlx = mlx_init();
+	if (!data->mlx)
+		return (-1);
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");  // New windows
+	if (!data->win)
+		return (-1);
 	data->minimap.height = ft_strtablen(data->map);  // Définir la hauteur de la minimap
 	data->minimap.width = ft_strlen(data->map[0]);  // Définir la largeur de la minimap
 	data->minimap.space = init_space(data);  // Initialiser l'image de l'espace (fond de la minimap)
 	data->minimap.character = init_character(data->mlx);  // Initialiser l'image du personnage
-	data->minimap.raycast = init_ray_cast(data->mlx);  // Initialiser l'image du raycasting
+	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
-	
-	// Afficher les images à la fenêtre (rendu final sur l'écran)
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
-
 	return (0);
 }

@@ -73,7 +73,7 @@ char	**init_map(char **map_off)
 		}
 		j = -1;
 		while (++j < max_len)
-			map[i][j] = ' ';
+			map[i][j] = '1';  // Fill with '1' to avoid out of bounds
 		map[i][j] = '\0';
 	}
 	map[i] = NULL;
@@ -91,8 +91,8 @@ int	pars_map(char **map, char **space, int k, int i)
 		printf("Error\n");
 		exit(EXIT_FAILURE);
 	}
+	space[k][i] = map[k][i];  // Copy map to space
 	map[k][i] = '1';  // Mark current position as '1'
-	space[k][i] = '0';  // Mark the matching space as '0'
 	/* 
 	print_map(map, TRUE); 
 	print_map(space, TRUE); 

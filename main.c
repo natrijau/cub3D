@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/11 15:48:36 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:34:32 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	print_map(char **map, int erase_bool)
 		char_count += printf("%s\n", map[i]);
 		line_count++;
 	}
-	usleep(20000);
+	usleep(15000);
 	if (!erase_bool)
 		return ;
 	for (int i = 0; i < line_count; i++) {
@@ -40,6 +40,8 @@ int	cub_close(t_data *data)
 	mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	mlx_destroy_image(data->mlx, data->minimap.character.img);
+	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
+	mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -49,7 +51,6 @@ int	cub_close(t_data *data)
 // Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
-	//! Passe en float pour plus de precision dans les deplacements ?
 	double new_x;
 	double new_y;
 
@@ -58,22 +59,19 @@ void	moove(t_data *data, int y, int x)
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
+	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == '1')
+		return ;
 	data->x += new_x;  // Update x position
 	data->y += new_y;  // Update y position
 
-	/*debug comment le perso avance*/
-	printf("line 65 / fonction moove / mian.c\n");
-	printf("new_x %f, new_y %f \n", new_x, new_y);
-	/*debug*/
-
 	// Updating images after moving
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
-	mlx_destroy_image(data->mlx, data->minimap.raycast.img);
+	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
 	data->minimap.space = init_space(data);  // Reinitialise map
-	data->minimap.raycast = init_ray_cast(data->mlx);  // Reinitialise raycasting
+	creat_image(&data->raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Reinitialise raycasting
 	ray_cast(data);  
 	// New images to windows
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.raycast.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
@@ -135,17 +133,22 @@ int	key_hook(int keycode, t_data *data)
 		moove(data, 0, 0);  // Recalcul position after rotate
 	return (0);
 }
-
-// Init windows/graphic_system ?
-int	init_cub3d(t_data *data)
+// Fonction appelée lorsqu'il y a un mouvement de souris
+int mouse_move(int x, int y, t_data *data)
 {
-	data->mlx = mlx_init();
-	if (!data->mlx)
-		return (-1);
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");  // New windows
-	if (!data->win)
-		return (-1);
-	return (0);
+	(void) y;
+	int	center_x;
+	center_x = WIDTH / 2;
+    if (abs(x - center_x) < 15) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+		return (0);	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
+	if (x > center_x)
+		data->angle += (ROTATE_SPEED / 1.5);  // rotate Right
+	else if (x < center_x)
+		data->angle -= (ROTATE_SPEED / 1.5);  // rotate Left
+	data->angle = fmod(data->angle, N);
+	mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
+	moove(data, 0, 0);
+    return (0);
 }
 
 int main(int ac, char **av)
@@ -160,11 +163,12 @@ int main(int ac, char **av)
 	if (parsing(&data, av[1]) == -1)  // Parsing map
 		return (1);
 	print_map(data.map, FALSE); 
-	if (init_cub3d(&data) == -1  // Init Cub3D / minimap
-		|| create_minimap(&data) == -1)
+	if (init_cub3d(&data) == -1)
 		return (1);
+	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
 	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
+	mlx_hook(data.win, 6, 1L<<6 , mouse_move, &data);  // Defin hook moove mouse
 	mlx_loop(data.mlx);  // Principal loop
 	cub_close(&data); 
 	return (0);
