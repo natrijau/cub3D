@@ -80,10 +80,25 @@ t_image	get_wall(void *mlx, char *file)
 t_raycast	init_ray_cast(t_data *data)
 {
 	t_raycast	raycast;
+	int			k;
+	int			i;
 
 	raycast = data->raycast;
 	creat_image(&raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
-	raycast.N_wall = get_wall(data->mlx, "textures/brick_wall.xpm");  // Charger l'image du mur Nord
+	k = 0;
+	while (k < HEIGHT)
+	{
+		i = 0;
+		while (i < WIDTH)
+		{
+			if (k < HEIGHT / 2)
+				ft_mlx_pixel_put(&raycast.raycast, i, k, raycast.ceiling_color);
+			else
+				ft_mlx_pixel_put(&raycast.raycast, i, k, raycast.floor_color);
+			++i;
+		}
+		++k;
+	}
 	return (raycast);
 }
 
@@ -100,6 +115,9 @@ int	init_cub3d(t_data *data)
 	data->minimap.width = ft_strlen(data->map[0]);  // Définir la largeur de la minimap
 	data->minimap.space = init_space(data);  // Initialiser l'image de l'espace (fond de la minimap)
 	data->minimap.character = init_character(data->mlx);  // Initialiser l'image du personnage
+	data->raycast.ceiling_color = 0xFF87CEEB;
+	data->raycast.floor_color = 0xFF3A9D23;
+	data->raycast.N_wall = get_wall(data->mlx, "textures/brick_wall.xpm");  // Charger l'image du mur Nord
 	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/13 11:19:37 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:48:26 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	moove(t_data *data, int y, int x)
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
 	data->minimap.space = init_space(data);  // Reinitialise map
-	creat_image(&data->raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Reinitialise raycasting
+	data->raycast = init_ray_cast(data);  // Reinitialise raycasting
 	ray_cast(data);  
 	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
