@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/16 15:34:32 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/16 15:54:06 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,7 +139,7 @@ int mouse_move(int x, int y, t_data *data)
 	(void) y;
 	int	center_x;
 	center_x = WIDTH / 2;
-    if (abs(x - center_x) < 15) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+    if (abs(x - center_x) < 30) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
 		return (0);	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
 	if (x > center_x)
 		data->angle += (ROTATE_SPEED / 1.5);  // rotate Right

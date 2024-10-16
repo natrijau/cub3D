@@ -57,6 +57,7 @@ int init_start(char **map, t_data *data)
                 data->y = i * CASE + CASE / 2;  // Player's vertical position
                 data->angle = get_angle(map[i][j]);  // Initializes the angle based on the direction found
                 data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
+                map[i][j] = '0';
                 return (0);
             }
             ++j;

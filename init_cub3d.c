@@ -28,7 +28,7 @@ t_image	init_space(t_data *data)
 		x = -1;
 		while (++x < data->minimap.width && data->map[y][x])  // Parcourir les colonnes de la minimap
 		{
-			if (data->map[y][x] == '0' || ft_strchr("NSEW", data->map[y][x]))  // Si la case est un espace vide ('0')
+			if (data->map[y][x] == '0' || ft_strchr("NSEW", data->map[y][x]) || data->map[y][x] == ' ')  // Si la case est un espace vide ('0')
 			{
 				i = -1;
 				while (++i < CASE)  // Parcourir les pixels de la case

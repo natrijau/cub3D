@@ -83,14 +83,15 @@ char	**init_map(char **map_off)
 // Recursive parsing function to validate and format map
 int	pars_map(char **map, char **space, int k, int i)
 {
-	if (k == 0 || i == 0 || k >= ft_strtablen(map) - 1
-		|| i >= ft_strlen(map[k]) - 1)  // Check map limits
+	if ((k == 0 || i == 0 || k >= ft_strtablen(map) - 1
+		|| i >= ft_strlen(map[k]) - 1) || !ft_strchr("01P ", map[k][i]))  // Check map limits
 	{
 		map_clear(map);
 		map_clear(space);
 		printf("Error\n");
 		exit(EXIT_FAILURE);
 	}
+	
 	space[k][i] = map[k][i];  // Copy map to space
 	map[k][i] = '1';  // Mark current position as '1'
 	/* 
