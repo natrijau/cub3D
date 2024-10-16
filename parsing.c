@@ -21,7 +21,7 @@ int		get_max_tab_len(char **map)
 }
 
 //  Read map since file and return tab map
-char	**get_map(char *file)
+char	**get_file(char *file)
 {
 	int	 fd;
 	char	**map;
@@ -111,12 +111,36 @@ int	pars_map(char **map, char **space, int k, int i)
 	return (0);
 }
 
+// // Get map a partir du fichier complet
+// char	**get_map(char **str)
+// {
+// 	char 	**map;
+// 	int		i;
+// 	int		y;
+
+// 	i = ft_strtablen(str);
+// 	while (i >= 0)
+// 	{
+// 		if (ft_strchr("01WESN ", )
+// 		{
+// 			/* code */
+// 		}
+		
+// 	}
+	
+// 	return (map);
+// }
+
 // Validate map
 int	parsing(t_data *data, char *file)
 {
-	char	**map_off;  
+	char	**file_content;
+	char	**map_off;
 
-	map_off = get_map(file);  // Charging map since file
+	file_content = get_file(file);  // Charging all file content
+	//!Verifier N S E O , etc...
+	//! get_wall pour ajouter les images correspondants aux murs
+	map_off = get_map(file_content); // Charging map since file content
 	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
 	{
 		printf("Error\n");

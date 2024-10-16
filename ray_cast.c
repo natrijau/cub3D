@@ -66,8 +66,8 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 		raycast.y = 0;
 	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
-		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.color);
+		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;
 	}

@@ -53,15 +53,13 @@ typedef struct	s_ray
 typedef struct	s_raycast
 {
 	t_image	raycast;
-	char	*N_file;
 	t_image	N_wall;
-	char	*E_file;
 	t_image	E_wall;
-	char	*S_file;
 	t_image	S_wall;
-	char	*W_file;
 	t_image	W_wall;
-	int		color;
+	int		floor_color;
+	int		ceiling_color;
+	int		wall_color;
 	double	distance;
 	double	x;
 	double	y;
@@ -88,7 +86,7 @@ typedef struct	s_data
 	double			y;
 }				t_data;
 
-char		**get_map(char *file);
+char		**get_file(char *file);
 void		ray_cast(t_data *data);
 t_image		init_space(t_data *data);
 t_raycast	init_ray_cast(t_data *data);
