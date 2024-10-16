@@ -58,13 +58,13 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
 	factor = (double)raycast.N_wall.height / raycast.distance;
-	y = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
+	y = raycast.pitch - raycast.distance / 2;  // Position de départ du dessin du mur
 	if (y < 0)
 		y = 0;
-	raycast.y = (y - (HEIGHT / 2) + (raycast.distance / 2)) * factor;
+	raycast.y = (y - raycast.pitch + (raycast.distance / 2)) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
-	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
+	while (y < raycast.pitch + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
 		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);

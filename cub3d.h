@@ -61,6 +61,7 @@ typedef struct	s_raycast
 	int		ceiling_color;
 	int		wall_color;
 	double	distance;
+	double	pitch;
 	double	x;
 	double	y;
 }				t_raycast;

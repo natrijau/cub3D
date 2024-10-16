@@ -72,6 +72,8 @@ t_image	get_wall(void *mlx, char *file)
 	t_image	img;
 
 	img.img = mlx_xpm_file_to_image(mlx, file, &img.width, &img.height);
+	if (!img.img)
+		return (img); //TODO
 	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	return (img);
 }
@@ -115,6 +117,7 @@ int	init_cub3d(t_data *data)
 	data->minimap.width = ft_strlen(data->map[0]);  // Définir la largeur de la minimap
 	data->minimap.space = init_space(data);  // Initialiser l'image de l'espace (fond de la minimap)
 	data->minimap.character = init_character(data->mlx);  // Initialiser l'image du personnage
+	data->raycast.pitch = HEIGHT / 2;
 	data->raycast.ceiling_color = 0xFF87CEEB;
 	data->raycast.floor_color = 0xFF3A9D23;
 	data->raycast.N_wall = get_wall(data->mlx, "textures/brick_wall.xpm");  // Charger l'image du mur Nord
