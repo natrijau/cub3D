@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/16 15:54:06 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/17 11:56:33 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,3 +173,7 @@ int main(int ac, char **av)
 	cub_close(&data); 
 	return (0);
 }
+
+//TODO voir parsing 
+//TODO modif RAYCASTING POUR AFFICHER LES MURS COORESPONDANT A LA DIRECTION
+//TODO 

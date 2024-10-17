@@ -111,25 +111,20 @@ int	pars_map(char **map, char **space, int k, int i)
 	return (0);
 }
 
-// // Get map a partir du fichier complet
-// char	**get_map(char **str)
-// {
-// 	char 	**map;
-// 	int		i;
-// 	int		y;
+// Get map a partir du fichier complet
+char	**get_map(char **str)
+{
+	int		i;
+	int		j;
 
-// 	i = ft_strtablen(str);
-// 	while (i >= 0)
-// 	{
-// 		if (ft_strchr("01WESN ", )
-// 		{
-// 			/* code */
-// 		}
-		
-// 	}
+	i = ft_strtablen(str) - 1;
+	j = 0;
+	(void)j;
+	while (str[i][0] == '1')
+		i--;
 	
-// 	return (map);
-// }
+	return (&str[i]);
+}
 
 // Validate map
 int	parsing(t_data *data, char *file)
@@ -140,7 +135,11 @@ int	parsing(t_data *data, char *file)
 	file_content = get_file(file);  // Charging all file content
 	//!Verifier N S E O , etc...
 	//! get_wall pour ajouter les images correspondants aux murs
-	map_off = get_map(file_content); // Charging map since file content
+	//TODO Pas du tout fini je boss sur aquabot pendant 1h ou 2 et je reprend
+	map_off = tab_cpy(get_map(file_content)); // Charging map since file content
+	// for (size_t i = 0; map_off[i]; i++)
+	// 	printf("%s\n", map_off[i]);
+	
 	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
 	{
 		printf("Error\n");

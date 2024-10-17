@@ -99,5 +99,6 @@ int			map_len(char *file);
 int			init_start(char **map, t_data *data);
 void		map_clear(char **map);
 int			ft_strtablen(char **map);
+char    	**tab_cpy(char **tab);
 
 #endif
