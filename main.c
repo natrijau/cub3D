@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/16 15:34:32 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/18 16:03:39 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,7 @@ void	moove(t_data *data, int y, int x)
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
-// keyboard key events
-int	key_hook(int keycode, t_data *data)
+int	key_hook_relaxed(int keycode, t_data *data)
 {
 	static int azerty;
 
@@ -96,40 +95,129 @@ int	key_hook(int keycode, t_data *data)
 		}
 	}
 	// Escape key
-	if (keycode == 65307)
+	if (keycode == 65307 && data->active_moove)
 		cub_close(data);
 
 	if (azerty == FALSE)
 	{
 		// Déplacement mode QWERTY
-		if (keycode == 119)  // w
-			moove(data, -1, 0);
-		if (keycode == 115)  // s
-			moove(data, 1, 0);
-		if (keycode == 100)  // d
-			moove(data, 0, 1);
-		if (keycode == 97)   // a
-			moove(data, 0, -1);
+		if (keycode == 119 && data->active_moove)  // w
+			data->active_moove = FALSE;
+		if (keycode == 115 && data->active_moove)  // s
+			data->active_moove = FALSE;
+		if (keycode == 100 && data->active_moove)  // d
+			data->active_moove = FALSE;
+		if (keycode == 97 && data->active_moove)   // a
+			data->active_moove = FALSE;
 	}
 	else
 	{
 		// Déplacement mode AZERTY
-		if (keycode == 122)  // z
-			moove(data, -1, 0);
-		if (keycode == 115)  // s
-			moove(data, 1, 0);
-		if (keycode == 100)  // d
-			moove(data, 0, 1);
-		if (keycode == 113)  // q
-			moove(data, 0, -1);
+		if (keycode == 122 && data->active_moove)  // z
+			data->active_moove = FALSE;
+		if (keycode == 115 && data->active_moove)  // s
+			data->active_moove = FALSE;
+		if (keycode == 100 && data->active_moove)  // d
+			data->active_moove = FALSE;
+		if (keycode == 113 && data->active_moove)  // q
+			data->active_moove = FALSE;
 	}
 	// Rotate camera flèches Right/Left
-	if (keycode == 65361)
-		data->angle -= ROTATE_SPEED;  // Left
-	if (keycode == 65363)
-		data->angle += ROTATE_SPEED;  // Right
+	if (keycode == 65361 && data->active_moove)
+		data->active_moove = FALSE;
+	if (keycode == 65363 && data->active_moove)
+		data->active_moove = FALSE;
 	data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
-	if (keycode == 65361 || keycode == 65363)
+	// if (keycode == 65361 || keycode == 65363)
+	// 	moove(data, 0, 0);  // Recalcul position after rotate
+	return (0);	
+}
+
+// keyboard key events
+int	key_hook_pressed(int keycode, t_data *data)
+{
+	static int azerty;
+
+	// switch AZERTY or QWERTY
+	if (keycode == 114)  // keyboard r
+	{
+		if (azerty == TRUE)
+		{
+			azerty = FALSE;
+			printf("Keyboard config set to QWERTY\n");
+		}
+		else
+		{
+			azerty = TRUE;
+			printf("Keyboard config set to AZERTY\n");
+		}
+	}
+	// Escape key
+	if (keycode == 65307 && !data->active_moove)
+		data->active_moove = TRUE;
+		// cub_close(data);
+
+	if (azerty == FALSE)
+	{
+		// Déplacement mode QWERTY
+		if (keycode == 119 && !data->active_moove)  // w
+		{
+			data->active_moove = TRUE;
+			moove(data, -1, 0);
+		}
+		if (keycode == 115 && !data->active_moove)  // s
+		{
+			data->active_moove = TRUE;
+			moove(data, 1, 0);
+		}
+		if (keycode == 100 && !data->active_moove)  // d
+		{
+			data->active_moove = TRUE;
+			moove(data, 0, 1);
+		}
+		if (keycode == 97 && !data->active_moove)   // a
+		{
+			data->active_moove = TRUE;
+			moove(data, 0, -1);
+		}
+	}
+	else
+	{
+		// Déplacement mode AZERTY
+		if (keycode == 122 && !data->active_moove)  // z
+		{
+			data->active_moove = TRUE;
+			moove(data, -1, 0);
+		}
+		if (keycode == 115 && !data->active_moove)  // s
+		{
+			data->active_moove = TRUE;
+			moove(data, 1, 0);
+		}
+		if (keycode == 100 && !data->active_moove)  // d
+		{
+			data->active_moove = TRUE;
+			moove(data, 0, 1);
+		}
+		if (keycode == 113 && !data->active_moove)  // q
+		{
+			data->active_moove = TRUE;
+			moove(data, 0, -1);
+		}
+	}
+	// Rotate camera flèches Right/Left
+	if (keycode == 65361 && !data->active_moove)
+	{
+		data->active_moove = TRUE;
+		data->angle -= ROTATE_SPEED;  // Left
+	}
+	if (keycode == 65363 && !data->active_moove)
+	{
+		data->active_moove = TRUE;
+		data->angle += ROTATE_SPEED;  // Right
+	}
+	data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
+	if ((keycode == 65361 || keycode == 65363) && data->active_moove)
 		moove(data, 0, 0);  // Recalcul position after rotate
 	return (0);
 }
@@ -139,7 +227,12 @@ int mouse_move(int x, int y, t_data *data)
 	(void) y;
 	int	center_x;
 	center_x = WIDTH / 2;
-    if (abs(x - center_x) < 15) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+
+	// a voir si vrament opi
+	if (data->active_moove == TRUE || (x == WIDTH / 2 && y == HEIGHT / 2))
+		return (-1);
+
+    if (abs(x - center_x) < 20) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
 		return (0);	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
 	if (x > center_x)
 		data->angle += (ROTATE_SPEED / 1.5);  // rotate Right
@@ -167,7 +260,8 @@ int main(int ac, char **av)
 		return (1);
 	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
-	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
+	mlx_hook(data.win, 2, 1L<<0, key_hook_pressed, &data);  // Defin hook keys (masques 1L<<0 :Détecte une touche de clavier enfoncée.)
+	mlx_hook(data.win, 3, 1L<<1, key_hook_relaxed, &data);  // Defin hook keys (masques 1L<<1 :Détecte une touche de clavier relâchée.)
 	mlx_hook(data.win, 6, 1L<<6 , mouse_move, &data);  // Defin hook moove mouse
 	mlx_loop(data.mlx);  // Principal loop
 	cub_close(&data); 

@@ -86,6 +86,7 @@ typedef struct	s_data
 	double		fov_rad;
 	double			x;
 	double			y;
+	int			active_moove;
 }				t_data;
 
 char		**get_map(char *file);
