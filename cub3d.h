@@ -101,4 +101,6 @@ void		map_clear(char **map);
 int			ft_strtablen(char **map);
 char    	**tab_cpy(char **tab);
 
+char	*clear_space(char *str);
+
 #endif

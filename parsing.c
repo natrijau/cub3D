@@ -29,8 +29,7 @@ char	**get_file(char *file)
 	int	 i;
 
 	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		return (NULL);
+
 	map = malloc(sizeof(char *) * (map_len(file) + 1));
 	if (!map)
 	{
@@ -126,6 +125,67 @@ char	**get_map(char **str)
 	return (&str[i]);
 }
 
+int	valid_textures(t_data *data, char **tab)
+{
+	(void)data;
+	int i;
+	int	fd;
+
+	i = 0;
+	while (tab[i])
+	{
+		if (tab[i][0] == 'N' && tab[i][1] == 'O')
+		{
+			fd = open(&tab[3], O_RDONLY);
+			if (fd < 0)
+				return (-1);
+		}
+		else if (tab[i][0] == 'S' && tab[i][1] == 'O')
+		{
+			fd = open(tab[3], O_RDONLY);
+			if (fd < 0)
+				return (-1);
+		}
+		else if (tab[i][0] == 'W' && tab[i][1] == 'E')
+		{
+			fd = open(tab[3], O_RDONLY);
+			if (fd < 0)
+				return (-1);
+		}			
+		else if (tab[i][0] == 'E' && tab[i][1] == 'A')
+		{
+			fd = open(tab[3], O_RDONLY);
+			if (fd < 0)
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	check_textures_colors(t_data *data, char **tab)
+{
+	int	i;
+	(void)data;
+	// int	j;
+
+	i = 0;
+	// j = 0;
+	while (tab[i])
+	{
+		
+		tab[i] = clear_space(tab[i]);
+		// if (tab[i][0] == '\n')
+		// 	free(tab[i]);		
+		i++;
+	}
+	if (valid_textures(data, tab))
+		return (-1);	
+	for (size_t i = 0; tab[i]; i++)
+		printf("tab[i] vaut mtnt %s\n", tab[i]);	
+	return (0);
+}
+
 // Validate map
 int	parsing(t_data *data, char *file)
 {
@@ -135,11 +195,17 @@ int	parsing(t_data *data, char *file)
 	file_content = get_file(file);  // Charging all file content
 	//!Verifier N S E O , etc...
 	//! get_wall pour ajouter les images correspondants aux murs
-	//TODO Pas du tout fini je boss sur aquabot pendant 1h ou 2 et je reprend
+
+	
 	map_off = tab_cpy(get_map(file_content)); // Charging map since file content
 	// for (size_t i = 0; map_off[i]; i++)
 	// 	printf("%s\n", map_off[i]);
-	
+	if (check_textures_colors(data, file_content))
+	{
+		printf("Error\n");
+		//? free mapp_off
+		return (-1); 
+	}	
 	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
 	{
 		printf("Error\n");

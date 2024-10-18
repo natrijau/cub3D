@@ -102,3 +102,36 @@ char    **tab_cpy(char **tab)
 	cpy[i++] = NULL;
 	return (cpy);
 }
+
+char	*clear_space(char *str)
+{
+	int		i;
+	int		j;
+	int		space;
+	char 	*cpy;
+
+	i = 0;
+	j = 0;
+	space = 0;
+	while (str[i])
+	{
+		if (str[i] == ' ')
+			space++;		
+		i++;
+	}
+	if (space == 0)
+		return (str);	
+	cpy = malloc(sizeof(char) * (ft_strlen(str) - space) + 1);
+	i = 0;
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i])
+		{
+			cpy[j] = str[i];		
+			j++;
+		}
+		i++;
+	}
+	free(str);
+	return (cpy);
+}
