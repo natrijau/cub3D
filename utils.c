@@ -7,6 +7,7 @@ int  map_len(char *file)
 	int	 len;
 
 	fd = open(file, O_RDONLY);
+	//!printf("Error\nCould not open file.\n");
 	if (fd < 0)
 		return (-1);
 	len = 0;

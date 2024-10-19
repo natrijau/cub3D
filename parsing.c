@@ -29,7 +29,7 @@ char	**get_file(char *file)
 	int	 i;
 
 	fd = open(file, O_RDONLY);
-
+	//! printf("Error\nCould not open file.\n");
 	map = malloc(sizeof(char *) * (map_len(file) + 1));
 	if (!map)
 	{
@@ -110,18 +110,17 @@ int	pars_map(char **map, char **space, int k, int i)
 	return (0);
 }
 
-// Get map a partir du fichier complet
-char	**get_map(char **str)
+// Debut de la map en partant du bas
+int find_map_start(char **file_content)
 {
-	int		i;
-	int		j;
-
-	i = ft_strtablen(str) - 1;
-	j = 0;
-	(void)j;
-	while (str[i][0] == '1')
-		i--;
-	return (&str[i]);
+    int i = ft_strtablen(file_content) - 1;
+    while (i >= 0)
+    {
+        if (is_map_line(file_content[i]))
+            return (i);
+        i--;
+    }
+    return (-1);
 }
 
 void	init_direction(t_data *data)
@@ -181,26 +180,47 @@ int	check_color(t_data *data, char **tab, int i)
 	return (0);
 }
 
-int	valid_textures(t_data *data, char **tab)
+int is_map_line(char *line_map)
 {
-	init_direction(data);
-	int i;
+	int	i;
 
 	i = 0;
-	while (tab[i])
+	while (line_map[i])
 	{
-		while (tab[i][0] == '\0' && tab[i + 1])
-			i++;		
-		if (get_file_texture(data, tab[i]))
-			return (-1);
-		else if (check_color(data, &tab[i], i))
-			return (-1);
+		if (ft_strchr("01NSEW", line_map[i]))
+			return (1);
+		else if (!ft_strchr(" \t", line_map[i]))
+			return (0);
 		i++;
 	}
 	return (0);
 }
 
-int	check_textures_colors(t_data *data, char **tab)
+int	valid_textures(t_data *data, char **tab, int max)
+{
+	init_direction(data);
+	int i;
+
+	i = 0;
+	while (i < max)
+	{
+		while (tab[i][0] == '\0' && tab[i + 1])
+			i++;
+		if (!ft_strchr("FC", tab[i][0]) || !ft_strchr("", tab[i]))
+		{
+			/* code */
+		}
+			
+		if (get_file_texture(data, tab[i]))
+			return (-1);
+		else if (check_color(data, &tab[i], i))
+			return (-1);	
+		i++;
+	}
+	return (0);
+}
+
+int	check_textures_colors(t_data *data, char **tab, int max)
 {
 	int	i;
 	(void)data;
@@ -212,12 +232,8 @@ int	check_textures_colors(t_data *data, char **tab)
 		tab[i] = clear_space(tab[i]);
 		i++;
 	}
-	for (size_t i = 0; tab[i]; i++)
-		printf("tab[i] vaut mtnt %s\n", tab[i]);	
-	if (valid_textures(data, tab))
-		return (-1);	
-	for (size_t i = 0; tab[i]; i++)
-		printf("tab[i] vaut mtnt %s\n", tab[i]);	
+	if (valid_textures(data, tab, max))
+		return (-1);
 	return (0);
 }
 
@@ -226,15 +242,19 @@ int	parsing(t_data *data, char *file)
 {
 	char	**file_content;
 	char	**map_off;
+	int		map_start;
 
 	file_content = get_file(file);  // Charging all file content
-	//!Verifier N S E O , etc...
-	//! get_wall pour ajouter les images correspondants aux murs
-
-	
+	map_start = find_map_start(file_content);
+    if (map_start == -1)
+    {
+        //!printf("Error: No valid map found.\n");
+		printf("Error\n");
+        map_clear(file_content);
+        return (-1);
+    }	
 	map_off = tab_cpy(get_map(file_content)); // Charging map since file content
-	// for (size_t i = 0; map_off[i]; i++)
-	// 	printf("%s\n", map_off[i]);
+
 	if (check_textures_colors(data, file_content))
 	{
 		printf("Error\n");
