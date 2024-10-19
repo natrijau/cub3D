@@ -78,6 +78,10 @@ typedef struct	s_data
 	char		**map;
 	void		*mlx;
 	void		*win;
+
+	char	**compass;
+	char	**path_wall;	
+	
 	t_minimap	minimap;
 	t_raycast	raycast;
 	double		angle;

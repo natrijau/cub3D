@@ -103,35 +103,53 @@ char    **tab_cpy(char **tab)
 	return (cpy);
 }
 
-char	*clear_space(char *str)
+int	count_char(char *str, char c)
 {
-	int		i;
-	int		j;
-	int		space;
-	char 	*cpy;
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (str[i])
+	{
+		if (str[i] == c)
+			count++;
+		i++;		
+	}
+	return (count);
+}
+
+//With malloc. replace value str after dell alloc str
+char	*remove_char_from_string(char *cpy, char *src, char c)
+{
+	int	i;
+	int	j;
 
 	i = 0;
 	j = 0;
-	space = 0;
-	while (str[i])
+	while (src[i])
 	{
-		if (str[i] == ' ')
-			space++;		
-		i++;
-	}
-	if (space == 0)
-		return (str);	
-	cpy = malloc(sizeof(char) * (ft_strlen(str) - space) + 1);
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] != ' ' && str[i])
+		if (src[i] != c && src[i])
 		{
-			cpy[j] = str[i];		
+			cpy[j] = src[i];		
 			j++;
 		}
 		i++;
 	}
+	return (cpy);		
+}
+
+char	*clear_space(char *str)
+{
+	char 	*cpy;
+
+	if (count_char(str, ' ') == 0)
+		return (str);	
+	cpy = ft_calloc(sizeof(char), (ft_strlen(str) - count_char(str, ' ')) + 1);
+	//!verif calloc
+	cpy = remove_char_from_string(cpy, str, ' ');
 	free(str);
-	return (cpy);
+	str = ft_strdup(cpy);
+	free(cpy);
+	return (str);
 }

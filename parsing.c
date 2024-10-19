@@ -121,43 +121,80 @@ char	**get_map(char **str)
 	(void)j;
 	while (str[i][0] == '1')
 		i--;
-	
 	return (&str[i]);
+}
+
+void	init_direction(t_data *data)
+{
+	data->path_wall = ft_calloc(sizeof(char *), 4);
+	data->compass = ft_calloc(sizeof(char *), 4);
+	data->compass[0] = ft_strdup("NO");
+	data->compass[1] = ft_strdup("SO");
+	data->compass[2] = ft_strdup("WE");
+	data->compass[3] = ft_strdup("EA");
+}
+
+int	get_file_texture(t_data *data, char *str)
+{
+	int		i;
+	int		fd;
+
+	i = 0;
+	fd = 0;
+	if (str[0] == 'F' || str[0] == 'C')
+		return (0);	
+	while (i < 4)
+	{
+		if (!ft_strncmp(str, data->compass[i], 2))
+			break;
+		i++;
+	}
+	fd = open(&str[2], O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	if (data->path_wall[i] != NULL)
+	{
+		// Valeur deja remplie
+		//! Renvoyer une erreur precise ?
+		return (-1);
+	}			
+	data->path_wall[i] = ft_strdup(&str[2]);
+	close(fd);
+	return (0);
+}
+
+int	check_color(t_data *data, char **tab, int i)
+{
+	(void) data;
+	if (tab[i][0] == 'F')
+	{
+		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
+		(*tab)++;
+		return (0);
+	}
+	else if (tab[i][0] == 'C')
+	{
+		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
+		(*tab)++;
+		return (0);
+	}
+	return (0);
 }
 
 int	valid_textures(t_data *data, char **tab)
 {
-	(void)data;
+	init_direction(data);
 	int i;
-	int	fd;
 
 	i = 0;
 	while (tab[i])
 	{
-		if (tab[i][0] == 'N' && tab[i][1] == 'O')
-		{
-			fd = open(&tab[3], O_RDONLY);
-			if (fd < 0)
-				return (-1);
-		}
-		else if (tab[i][0] == 'S' && tab[i][1] == 'O')
-		{
-			fd = open(tab[3], O_RDONLY);
-			if (fd < 0)
-				return (-1);
-		}
-		else if (tab[i][0] == 'W' && tab[i][1] == 'E')
-		{
-			fd = open(tab[3], O_RDONLY);
-			if (fd < 0)
-				return (-1);
-		}			
-		else if (tab[i][0] == 'E' && tab[i][1] == 'A')
-		{
-			fd = open(tab[3], O_RDONLY);
-			if (fd < 0)
-				return (-1);
-		}
+		while (tab[i][0] == '\0' && tab[i + 1])
+			i++;		
+		if (get_file_texture(data, tab[i]))
+			return (-1);
+		else if (check_color(data, &tab[i], i))
+			return (-1);
 		i++;
 	}
 	return (0);
@@ -167,18 +204,16 @@ int	check_textures_colors(t_data *data, char **tab)
 {
 	int	i;
 	(void)data;
-	// int	j;
 
 	i = 0;
-	// j = 0;
+	
 	while (tab[i])
 	{
-		
 		tab[i] = clear_space(tab[i]);
-		// if (tab[i][0] == '\n')
-		// 	free(tab[i]);		
 		i++;
 	}
+	for (size_t i = 0; tab[i]; i++)
+		printf("tab[i] vaut mtnt %s\n", tab[i]);	
 	if (valid_textures(data, tab))
 		return (-1);	
 	for (size_t i = 0; tab[i]; i++)
