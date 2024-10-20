@@ -120,7 +120,7 @@ int	count_char(char *str, char c)
 	return (count);
 }
 
-//With malloc. replace value str after dell alloc str
+//Withat malloc. replace value str after dell alloc str
 char	*remove_char_from_string(char *cpy, char *src, char c)
 {
 	int	i;
@@ -153,4 +153,20 @@ char	*clear_space(char *str)
 	str = ft_strdup(cpy);
 	free(cpy);
 	return (str);
+}
+
+int is_map_line(char *line_map)
+{
+	int	i;
+
+	i = 0;
+	while (line_map[i])
+	{
+		if (ft_strchr("01NSEW ", line_map[i]))
+			return (1);
+		else if (!ft_strchr(" \t", line_map[i]))
+			return (0);
+		i++;
+	}
+	return (0);
 }
