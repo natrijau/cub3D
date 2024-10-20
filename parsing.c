@@ -140,6 +140,8 @@ int	get_file_texture(t_data *data, char *str)
 
 	i = 0;
 	fd = 0;
+	if (str[0] == 'F' || str[0] == 'C')
+		return (0);	
 	while (i < 4)
 	{
 		if (!ft_strncmp(str, data->compass[i], 2))
@@ -160,19 +162,17 @@ int	get_file_texture(t_data *data, char *str)
 	return (0);
 }
 
-int	check_color(t_data *data, char **tab, int i)
+int	check_color(t_data *data, char *str)
 {
 	(void) data;
-	if (tab[i][0] == 'F')
+	if (str[0] == 'F')
 	{
 		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
-		(*tab)++;
 		return (0);
 	}
-	else if (tab[i][0] == 'C')
+	else if (str[0] == 'C')
 	{
 		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
-		(*tab)++;
 		return (0);
 	}
 	return (0);
@@ -194,15 +194,15 @@ int	not_valid_str(t_data *data, char *str)
 	return (0);
 }
 
-int	valid_textures(t_data *data, char **tab, int max)
+int	valid_textures(t_data *data, char **tab)
 {
 	init_direction(data);
 	int i;
 
 	i = 0;
-	while (i < max)
+	while (tab[i])
 	{
-		if (check_color(data, &tab[i], i))
+		if (check_color(data, tab[i]))
 			return (-1);		
 		else if (get_file_texture(data, tab[i]))
 			return (-1);
@@ -213,7 +213,7 @@ int	valid_textures(t_data *data, char **tab, int max)
 	return (0);
 }
 
-int	check_textures_colors(t_data *data, char **tab, int max)
+int	check_textures_colors(t_data *data, char **tab)
 {
 	int	i;
 	(void)data;
@@ -230,7 +230,7 @@ int	check_textures_colors(t_data *data, char **tab, int max)
 		tab[i] = clear_space(tab[i]);
 		i++;
 	}
-	if (valid_textures(data, tab, max))
+	if (valid_textures(data, tab))
 		return (-1);
 	return (0);
 }
@@ -299,7 +299,7 @@ int	parsing(t_data *data, char *file)
 	(void) data;
 	char	**file_content;
 	char	**content_except_map;
-	// char	**map_off;
+	char	**map_off;
 	(void) content_except_map;
 	int		map_start;
 
@@ -314,28 +314,29 @@ int	parsing(t_data *data, char *file)
 	}	
 	content_except_map = remove_empty_lines(file_content, map_start);
 
-	// map_off = tab_cpy(get_map(file_content)); // Charging map since file content
-	if (check_textures_colors(data, content_except_map, map_start))
+	if (check_textures_colors(data, content_except_map))
 	{
 		printf("Error\n");
 		//? free mapp_off
 		return (-1); 
 	}	
-	// if (!map_off || init_start(map_off, data) == -1)  // valid map ?
-	// {
-	// 	printf("Error\n");
-	// 	return (-1); 
-	// }
-	// data->map = init_map(map_off);
-	// if (!data->map || pars_map(map_off, data->map, data->y / CASE, data->x / CASE) == -1)
-	// {
-	// 	printf("Error\n");
-	// 	map_clear(map_off);
-	// 	if (data->map)
-	// 		map_clear(data->map);
-	// 	return (-1);
-	// }
-	// printf("Map:\n");
-	// map_clear(map_off);
+	map_off = tab_cpy(get_map(file_content)); // Charging map since file content
+	// map_off = &file_content[map_start + 1];
+	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
+	{
+		printf("Error\n");
+		return (-1); 
+	}
+	data->map = init_map(map_off);
+	if (!data->map || pars_map(map_off, data->map, data->y / CASE, data->x / CASE) == -1)
+	{
+		printf("Error\n");
+		map_clear(map_off);
+		if (data->map)
+			map_clear(data->map);
+		return (-1);
+	}
+	printf("Map:\n");
+	map_clear(map_off);
 	return (0);
 }
