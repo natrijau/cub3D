@@ -158,15 +158,47 @@ char	*clear_space(char *str)
 int is_map_line(char *line_map)
 {
 	int	i;
+	int	j;
+	char	*str;
 
 	i = 0;
+	j = 0;
+	str = ft_strdup("01NSEW \t");
 	while (line_map[i])
 	{
-		if (ft_strchr("01NSEW ", line_map[i]))
-			return (1);
-		else if (!ft_strchr(" \t", line_map[i]))
+		while (str[j])
+		{
+			if (str[j] == line_map[i])
+			{
+				j = 0;
+				break;
+			}	
+			j++;
+		}
+		if (j == ft_strlen(str))
+			return (0);		
+		i++;
+	}
+	return (1);
+}
+
+int ft_isspace(char c)
+{
+	if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v')
+		return (1);
+	return (0);
+}
+
+int is_empty_line(const char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isspace(line[i]))
 			return (0);
 		i++;
 	}
-	return (0);
+	return (1);
 }

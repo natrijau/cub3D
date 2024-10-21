@@ -105,7 +105,8 @@ void		map_clear(char **map);
 int			ft_strtablen(char **map);
 char    	**tab_cpy(char **tab);
 
-char	*clear_space(char *str);
-int is_map_line(char *line_map);
+char		*clear_space(char *str);
+int			is_map_line(char *line_map);
+int			is_empty_line(const char *line);
 
 #endif

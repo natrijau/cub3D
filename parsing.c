@@ -30,7 +30,7 @@ char	**get_file(char *file)
 
 	fd = open(file, O_RDONLY);
 	//! printf("Error\nCould not open file.\n");
-	map = malloc(sizeof(char *) * (map_len(file) + 1));
+	map = ft_calloc(sizeof(char *), (map_len(file) + 1));
 	if (!map)
 	{
 		close(fd);
@@ -116,6 +116,8 @@ int find_map_start(char **file_content)
     int i = ft_strtablen(file_content) - 1;
     while (i >= 0)
     {
+		if (is_empty_line(file_content[i]))
+			return (i);		
         if (!is_map_line(file_content[i]))
             return (i);
         i--;
@@ -235,27 +237,6 @@ int	check_textures_colors(t_data *data, char **tab)
 	return (0);
 }
 
-int ft_isspace(char c)
-{
-	if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\v')
-		return (1);
-	return (0);
-}
-
-int is_empty_line(const char *line)
-{
-	int	i;
-
-	i = 0;
-	while (line[i])
-	{
-		if (!ft_isspace(line[i]))
-			return (0);
-		i++;
-	}
-	return (1);
-}
-
 char **remove_empty_lines(char **lines, int num_lines)
 {
 	int		count;
@@ -273,7 +254,7 @@ char **remove_empty_lines(char **lines, int num_lines)
 		}
 		i++;
 	}
-	new_lines = malloc(count * sizeof(char *));
+	new_lines = ft_calloc(count, sizeof(char *));
 	if (!new_lines) {
 		//?perror("malloc failed");
 		//return error;
@@ -284,7 +265,7 @@ char **remove_empty_lines(char **lines, int num_lines)
 	{
 		if (!is_empty_line(lines[i]))
 		{
-			new_lines[j] = &lines[i][0];
+			new_lines[j] = ft_strdup(lines[i]);
 			j++;
 		}
 		i++;
@@ -320,8 +301,8 @@ int	parsing(t_data *data, char *file)
 		//? free mapp_off
 		return (-1); 
 	}	
-	map_off = tab_cpy(get_map(file_content)); // Charging map since file content
-	// map_off = &file_content[map_start + 1];
+	// map_off = tab_cpy(get_map(file_content)); // Charging map since file content
+	map_off = &file_content[map_start + 1];
 	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
 	{
 		printf("Error\n");
