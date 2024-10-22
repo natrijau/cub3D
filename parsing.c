@@ -139,7 +139,7 @@ int	add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
 	{
 		if (!dest)
 			return (-1);
-		dest = src;
+		*dest = *src;
 	}
 	return (0);
 }
