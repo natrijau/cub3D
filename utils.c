@@ -168,15 +168,13 @@ char	*clear_space(char *str)
 	return (cpy);
 }
 
-int is_map_line(char *line_map)
+int is_map_line(char *line_map, char *str)
 {
 	int	i;
 	int	j;
-	char	*str;
 
 	i = 0;
 	j = 0;
-	str = ft_strdup("01NSEW \n");
 	while (line_map[i])
 	{
 		while (str[j])
@@ -192,7 +190,6 @@ int is_map_line(char *line_map)
 			return (0);		
 		i++;
 	}
-	free(str);
 	return (1);
 }
 

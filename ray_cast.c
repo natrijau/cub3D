@@ -11,9 +11,9 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->x_multi = -1;                // Initialisation de x_multi
 	if (ray->angle > W && ray->angle < E)  // Si l'angle est entre W et E
 		ray->x_multi = 1;             // Inverser x_multi
-	ray->y_multi = 1;                 // Initialisation de y_multi
-	if (!(ray->angle < N && ray->angle > S))  // Si l'angle n'est pas entre N et S
-		ray->y_multi = -1;            // Inverser y_multi
+	ray->y_multi = -1;                 // Initialisation de y_multi
+	if (ray->angle < N && ray->angle > S)  // Si l'angle n'est pas entre N et S
+		ray->y_multi = 1;            // Inverser y_multi
 	ray->x_step = cos(ray->angle) * ray->x_multi;  // Calculer le pas en x selon l'angle
 	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
 	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
@@ -41,6 +41,26 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 	return (*(unsigned int *)dst);
 }
 
+void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
+{
+	if (ray.flag == 'y')
+	{
+		raycast->x = fmod(ray.x, CASE);
+		if (ray.y > data->y)
+			raycast->actual_wall = raycast->S_wall;
+		else
+			raycast->actual_wall = raycast->N_wall;
+	}
+	else
+	{
+		raycast->x = fmod(ray.y, CASE);
+		if (ray.x > data->x)
+			raycast->actual_wall = raycast->E_wall;
+		else
+			raycast->actual_wall = raycast->W_wall;
+	}
+}
+
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
@@ -49,15 +69,12 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	double		y;
 
 	raycast = data->raycast;
-	if (ray.flag == 'y')
-		raycast.x = fmod(ray.x, CASE);
-	else
-		raycast.x = fmod(ray.y, CASE);
-	raycast.x *= (double)raycast.N_wall.width / CASE;
+	set_texture_config(data, ray, &raycast);
+	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
-	factor = (double)raycast.N_wall.height / raycast.distance;
+	factor = (double)raycast.actual_wall.height / raycast.distance;
 	y = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
 	if (y < 0)
 		y = 0;
@@ -66,7 +83,7 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 		raycast.y = 0;
 	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
 		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;

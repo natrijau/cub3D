@@ -122,7 +122,7 @@ int find_map_start(char **file_content)
 	i = ft_strtablen(file_content) - 1;
 	while (i >= 0)
 	{
-		if (!is_map_line(file_content[i]))
+		if (!is_map_line(file_content[i], "01NSEW \n"))
 		{
 			if (i > 6 || i < 4)
 				return (-1);

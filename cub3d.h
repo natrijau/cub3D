@@ -57,6 +57,7 @@ typedef struct	s_raycast
 	t_image	E_wall;
 	t_image	S_wall;
 	t_image	W_wall;
+	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
 	int		wall_color;
@@ -103,7 +104,7 @@ int			ft_strtablen(char **map);
 char    	**tab_cpy(char **tab);
 
 char		*clear_space(char *str);
-int			is_map_line(char *line_map);
+int			is_map_line(char *line_map, char *str);
 int			is_empty_line(const char *line);
 
 #endif
