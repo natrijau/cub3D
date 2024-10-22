@@ -121,7 +121,7 @@ int	count_char(char *str, char c)
 }
 
 //Withat malloc. replace value str after dell alloc str
-char	*remove_char_from_string(char *cpy, char *src, char c)
+char	*copy_without_char(char *cpy, char *src, char c)
 {
 	int	i;
 	int	j;
@@ -132,7 +132,7 @@ char	*remove_char_from_string(char *cpy, char *src, char c)
 	{
 		if (src[i] != c && src[i])
 		{
-			cpy[j] = src[i];		
+			cpy[j] = src[i];
 			j++;
 		}
 		i++;
@@ -143,16 +143,29 @@ char	*remove_char_from_string(char *cpy, char *src, char c)
 char	*clear_space(char *str)
 {
 	char 	*cpy;
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
 
 	if (count_char(str, ' ') == 0)
 		return (str);	
 	cpy = ft_calloc(sizeof(char), (ft_strlen(str) - count_char(str, ' ')) + 1);
 	//!verif calloc
-	cpy = remove_char_from_string(cpy, str, ' ');
+	if (!cpy)
+		return (NULL);	
+	while (str[i])
+	{
+		if (str[i] != ' ' && str[i])
+		{
+			cpy[j] = str[i];
+			j++;
+		}
+		i++;
+	}
 	free(str);
-	str = ft_strdup(cpy);
-	free(cpy);
-	return (str);
+	return (cpy);
 }
 
 int is_map_line(char *line_map)
@@ -163,7 +176,7 @@ int is_map_line(char *line_map)
 
 	i = 0;
 	j = 0;
-	str = ft_strdup("01NSEW \t");
+	str = ft_strdup("01NSEW \n");
 	while (line_map[i])
 	{
 		while (str[j])
@@ -172,13 +185,14 @@ int is_map_line(char *line_map)
 			{
 				j = 0;
 				break;
-			}	
+			}
 			j++;
 		}
-		if (j == ft_strlen(str))
+		if (str[j] == '\0')
 			return (0);		
 		i++;
 	}
+	free(str);
 	return (1);
 }
 

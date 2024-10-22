@@ -78,10 +78,6 @@ typedef struct	s_data
 	char		**map;
 	void		*mlx;
 	void		*win;
-
-	char	**compass;
-	char	**path_wall;	
-	
 	t_minimap	minimap;
 	t_raycast	raycast;
 	double		angle;
@@ -96,6 +92,7 @@ t_image		init_space(t_data *data);
 t_raycast	init_ray_cast(t_data *data);
 int			init_cub3d(t_data *data);
 void		creat_image(t_image *img, void *mlx, int width, int height);
+t_image		get_wall(void *mlx, char *file);
 void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 int			parsing(t_data *data, char *file);
 void		print_map(char **map, int erase_bool);

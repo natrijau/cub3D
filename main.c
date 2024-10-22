@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/19 13:49:14 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:28:21 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,6 +160,9 @@ int main(int ac, char **av)
 		printf("Error\n");
 		return (1);
 	}
+	data.mlx = mlx_init();
+	if (!data.mlx)
+		return (1);
 	if (parsing(&data, av[1]) == -1)  // Parsing map
 		return (1);
 	print_map(data.map, FALSE); 

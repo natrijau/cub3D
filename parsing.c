@@ -23,27 +23,32 @@ int		get_max_tab_len(char **map)
 //  Read map since file and return tab map
 char	**get_file(char *file)
 {
-	int	 fd;
+	int		fd;
 	char	**map;
 	char	*line;
-	int	 i;
+	int		i;
 
 	fd = open(file, O_RDONLY);
-	//! printf("Error\nCould not open file.\n");
 	map = ft_calloc(sizeof(char *), (map_len(file) + 1));
-	if (!map)
+	if (!map || fd < 0)
 	{
 		close(fd);
 		return (NULL);
 	}
 	i = 0;
-	line = get_next_line(fd);
-	map[i] = line;
-	while (line)
+	while (TRUE)
 	{
-		map[i][ft_strlen(map[i]) - 1] = '\0';
 		line = get_next_line(fd);
-		map[++i] = line;
+		if (!line)
+			break ;
+		if (is_empty_line(line))
+		{
+			free(line);
+			continue ;
+		}
+		map[i] = line;
+		map[i][ft_strlen(map[i]) - 1] = '\0';
+		i++;
 	}
 	close(fd);
 	return (map);
@@ -97,7 +102,6 @@ int	pars_map(char **map, char **space, int k, int i)
 	print_map(map, TRUE); 
 	print_map(space, TRUE); 
 	*/
-
 	// Recursive calls to continue parsing in all directions
 	if (map[k][i + 1] && map[k][i + 1] != '1')
 		pars_map(map, space, k, i + 1);
@@ -113,175 +117,103 @@ int	pars_map(char **map, char **space, int k, int i)
 // Debut de la map en partant du bas
 int find_map_start(char **file_content)
 {
-    int i = ft_strtablen(file_content) - 1;
-    while (i >= 0)
-    {
-		if (is_empty_line(file_content[i]))
-			return (i);		
-        if (!is_map_line(file_content[i]))
-            return (i);
-        i--;
-    }
-    return (-1);
+	int i;
+
+	i = ft_strtablen(file_content) - 1;
+	while (i >= 0)
+	{
+		if (!is_map_line(file_content[i]))
+		{
+			if (i > 6 || i < 4)
+				return (-1);
+			return (i);
+		}
+		i--;
+	}
+	return (-1);
 }
 
-void	init_direction(t_data *data)
+int	add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
 {
-	data->path_wall = ft_calloc(sizeof(char *), 4);
-	data->compass = ft_calloc(sizeof(char *), 4);
-	data->compass[0] = ft_strdup("NO");
-	data->compass[1] = ft_strdup("SO");
-	data->compass[2] = ft_strdup("WE");
-	data->compass[3] = ft_strdup("EA");
+	if (!ft_strncmp(str, direction, 2))
+	{
+		if (!dest)
+			return (-1);
+		dest = src;
+	}
+	return (0);
 }
 
 int	get_file_texture(t_data *data, char *str)
 {
-	int		i;
-	int		fd;
+	t_image	img;
 
-	i = 0;
-	fd = 0;
 	if (str[0] == 'F' || str[0] == 'C')
-		return (0);	
-	while (i < 4)
-	{
-		if (!ft_strncmp(str, data->compass[i], 2))
-			break;
-		i++;
-	}
-	fd = open(&str[2], O_RDONLY);
-	if (fd < 0)
+		return (0);
+	img = get_wall(data->mlx, &str[2]);
+	if (!img.img)
 		return (-1);
-	if (data->path_wall[i] != NULL)
-	{
-		// Valeur deja remplie
-		//! Renvoyer une erreur precise ?
+	if (add_direction_img(&data->raycast.N_wall, &img, str, "NO") == -1)
 		return (-1);
-	}			
-	data->path_wall[i] = ft_strdup(&str[2]);
-	close(fd);
+	if (add_direction_img(&data->raycast.S_wall, &img, str, "SO") == -1)
+		return (-1);
+	if (add_direction_img(&data->raycast.W_wall, &img, str, "WE") == -1)
+		return (-1);
+	if (add_direction_img(&data->raycast.E_wall, &img, str, "EA") == -1)
+		return (-1);
 	return (0);
 }
 
 int	check_color(t_data *data, char *str)
 {
-	(void) data;
+	(void)data;
 	if (str[0] == 'F')
 	{
-		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
+
 		return (0);
 	}
 	else if (str[0] == 'C')
 	{
-		//! determiner la couleurs en fonction des trois valeurs cles RGB, tester les limites de ces valeurs
 		return (0);
 	}
 	return (0);
 }
 
-int	not_valid_str(t_data *data, char *str)
+int	valid_textures(t_data *data, char **tab, int map_start)
 {
-	int		i;
-
-	i = 0;
-	while (i <= 5)
-	{
-		if (i < 4 && !ft_strncmp(str, data->compass[i], 2))
-			break;
-		i++;
-	}
-	if (i == 5)
-		return (-1);		
-	return (0);
-}
-
-int	valid_textures(t_data *data, char **tab)
-{
-	init_direction(data);
 	int i;
 
 	i = 0;
-	while (tab[i])
+	while (i < map_start)
 	{
 		if (check_color(data, tab[i]))
 			return (-1);		
 		else if (get_file_texture(data, tab[i]))
 			return (-1);
-		else if (not_valid_str(data, tab[i]))
-			return (-1);
 		i++;
 	}
 	return (0);
 }
 
-int	check_textures_colors(t_data *data, char **tab)
+int	check_textures_colors(t_data *data, char **tab, int map_start)
 {
 	int	i;
-	(void)data;
 
 	i = 0;
-
-	if (ft_strtablen(tab) > 6 || ft_strtablen(tab) < 4)
-	{
-		//!perror("erreur nombre d'arguments");
-		return (-1);		
-	}
 	while (tab[i])
 	{
 		tab[i] = clear_space(tab[i]);
 		i++;
 	}
-	if (valid_textures(data, tab))
+	if (valid_textures(data, tab, map_start))
 		return (-1);
 	return (0);
 }
 
-char **remove_empty_lines(char **lines, int num_lines)
-{
-	int		count;
-	char	**new_lines;
-	int		i;
-	int		j;
-
-	i = 0;
-	j = 0;
-	count = 0;
-	while (i < num_lines)
-	{
-		if (!is_empty_line(lines[i])){
-			count++;
-		}
-		i++;
-	}
-	new_lines = ft_calloc(count, sizeof(char *));
-	if (!new_lines) {
-		//?perror("malloc failed");
-		//return error;
-		// return ;
-	}
-	i = 0;
-	while (i < num_lines)
-	{
-		if (!is_empty_line(lines[i]))
-		{
-			new_lines[j] = ft_strdup(lines[i]);
-			j++;
-		}
-		i++;
-	}
-	return (new_lines);
-}
-
-
 // Validate map
 int	parsing(t_data *data, char *file)
 {
-	(void) data;
 	char	**file_content;
-	char	**content_except_map;
-	char	**map_off;
-	(void) content_except_map;
 	int		map_start;
 
 	file_content = get_file(file);  // Charging all file content
@@ -292,32 +224,29 @@ int	parsing(t_data *data, char *file)
 		printf("Error\n");
 		map_clear(file_content);
 		return (-1);
-	}	
-	content_except_map = remove_empty_lines(file_content, map_start);
-
-	if (check_textures_colors(data, content_except_map))
+	}
+	if (check_textures_colors(data, file_content, map_start))
 	{
 		printf("Error\n");
 		//? free mapp_off
 		return (-1); 
-	}	
-	// map_off = tab_cpy(get_map(file_content)); // Charging map since file content
-	map_off = &file_content[map_start + 1];
-	if (!map_off || init_start(map_off, data) == -1)  // valid map ?
+	}
+	// printf("&file_content[map_start] %s \n", &file_content[map_start]);
+	if (init_start(&file_content[map_start], data) == -1)  // valid map ?
 	{
 		printf("Error\n");
 		return (-1); 
 	}
-	data->map = init_map(map_off);
-	if (!data->map || pars_map(map_off, data->map, data->y / CASE, data->x / CASE) == -1)
+	data->map = init_map(&file_content[map_start]);
+	if (!data->map || pars_map(&file_content[map_start], data->map, data->y / CASE, data->x / CASE) == -1)
 	{
 		printf("Error\n");
-		map_clear(map_off);
+		map_clear(file_content);
 		if (data->map)
 			map_clear(data->map);
 		return (-1);
 	}
 	printf("Map:\n");
-	map_clear(map_off);
+	map_clear(file_content);
 	return (0);
 }

@@ -72,7 +72,8 @@ t_image	get_wall(void *mlx, char *file)
 	t_image	img;
 
 	img.img = mlx_xpm_file_to_image(mlx, file, &img.width, &img.height);
-	img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
+	if (img.img)
+		img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	return (img);
 }
 
@@ -83,16 +84,12 @@ t_raycast	init_ray_cast(t_data *data)
 
 	raycast = data->raycast;
 	creat_image(&raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
-	raycast.N_wall = get_wall(data->mlx, "textures/brick_wall.xpm");  // Charger l'image du mur Nord
 	return (raycast);
 }
 
 // Fonction pour créer et afficher la minimap et ses composants
 int	init_cub3d(t_data *data)
 {
-	data->mlx = mlx_init();
-	if (!data->mlx)
-		return (-1);
 	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");  // New windows
 	if (!data->win)
 		return (-1);
