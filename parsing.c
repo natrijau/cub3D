@@ -89,12 +89,7 @@ int	pars_map(char **map, char **space, int k, int i)
 {
 	if ((k == 0 || i == 0 || k >= ft_strtablen(map) - 1
 		|| i >= ft_strlen(map[k]) - 1) || !ft_strchr("01P ", map[k][i]))  // Check map limits
-	{
-		map_clear(map);
-		map_clear(space);
-		printf("Error\n");
-		exit(EXIT_FAILURE);
-	}
+		return (-1);
 	
 	space[k][i] = map[k][i];  // Copy map to space
 	map[k][i] = '1';  // Mark current position as '1'
@@ -163,25 +158,42 @@ int	get_file_texture(t_data *data, char *str)
 		return (-1);
 	return (0);
 }
+//ff2b56
 
-int	scan_int_color(t_image *color, , char *str)
+int	scan_int_color(t_data *data, char *str, char c)
 {
 	int		i;
-	char	*tab;
-	char	*tmp;
+	int		j;
+	int		color;
+	char	**tab;
 
 	i = 0;
+	j = 0;
+	color = 0;
 	tab = ft_split(str, ',');
 	while (tab[i])
 	{
-		if ((!ft_atoi(tab[i]) > 0 && !ft_atoi(tab[i]) < 255) || i > 2)
+		j = 0;			
+		while (tab[i][j])
+		{
+			if (!(tab[i][j] >= '0' && tab[i][j] <= '9') || j > 2)
+				return (-1);
+			j++;
+		}
+		if (((ft_atoi(tab[i]) < 0) || (ft_atoi(tab[i]) > 255)) || i > 2)
 		{
 			map_clear(tab);
 			return (-1);
 		}
 		i++;
 	}
-	color = mlx_get_color_value(data.mlx, );
+	//! A voir si calcul bon ? jai essayer de reproduire la logique de la fonction mlxgetcolor
+	color = (ft_atoi(tab[0]) << 16) | (ft_atoi(tab[1]) << 8) | ft_atoi(tab[2]);
+	if (c == 'F')
+		data->raycast.floor_color = mlx_get_color_value(data->mlx, color);
+	else if (c == 'C')
+		data->raycast.ceiling_color = mlx_get_color_value(data->mlx, color);
+	map_clear(tab);
 	return (0);
 }
 
@@ -189,12 +201,14 @@ int	check_color(t_data *data, char *str)
 {
 	if (str[0] == 'F')
 	{
-		if (scan_int_color(data->raycast.floor_color, &str[1]))
-
+		if (scan_int_color(data, &str[1], 'F'))
+			return (-1);
 		return (0);
 	}
 	else if (str[0] == 'C')
 	{
+		if (scan_int_color(data, &str[1], 'C'))
+			return (-1);
 		return (0);
 	}
 	return (0);
@@ -221,7 +235,7 @@ int	check_textures_colors(t_data *data, char **tab, int map_start)
 	int	i;
 
 	i = 0;
-	while (tab[i])
+	while (i < map_start)
 	{
 		tab[i] = clear_space(tab[i]);
 		i++;
@@ -249,11 +263,10 @@ int	parsing(t_data *data, char *file)
 	if (check_textures_colors(data, file_content, map_start))
 	{
 		printf("Error\n");
-		//? free mapp_off
+		map_clear(file_content);
 		return (-1); 
 	}
-	// printf("&file_content[map_start] %s \n", &file_content[map_start]);
-	if (init_start(&file_content[map_start], data) == -1)  // valid map ?
+	if (init_start(&file_content[map_start + 1], data) == -1)  // valid map ?
 	{
 		printf("Error\n");
 		return (-1); 

@@ -81,9 +81,25 @@ t_image	get_wall(void *mlx, char *file)
 t_raycast	init_ray_cast(t_data *data)
 {
 	t_raycast	raycast;
+	int			i;
+	int			k;
 
 	raycast = data->raycast;
 	creat_image(&raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
+	k = 0;
+	while (k < HEIGHT)
+	{
+		i = 0;
+		while (i < WIDTH)
+		{
+			if (k < HEIGHT / 2)
+				ft_mlx_pixel_put(&raycast.raycast, i, k, raycast.ceiling_color);
+			else
+				ft_mlx_pixel_put(&raycast.raycast, i, k, raycast.floor_color);
+			++i;
+		}
+		++k;
+	}	
 	return (raycast);
 }
 

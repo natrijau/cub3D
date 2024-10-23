@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/22 17:28:21 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:27:11 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -181,6 +181,9 @@ int main(int ac, char **av)
 	return (0);
 }
 
+//? A tester : limite de 131470 Char pour la map
+
 //TODO voir parsing 
 //TODO modif RAYCASTING POUR AFFICHER LES MURS COORESPONDANT A LA DIRECTION
 //TODO 
+//TODO stack over

@@ -36,36 +36,47 @@ double get_angle(char direction)
 	return (-1);
 }
 
+void	find_player_position(t_data *data, char **map, int line, int *bool)
+{
+	int	col;
+
+	col = 0;
+	while (map[line][col])
+	{
+		if (ft_strchr("NSEW", map[line][col]))
+		{
+			data->x = col * CASE + CASE / 2;  // Player's horizontal position
+			data->y = (line + 1) * CASE + CASE / 2;  // Player's vertical position
+			data->angle = get_angle(map[line][col]);  // Initializes the angle based on the direction found
+			data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
+			map[line][col] = '0';
+			(*bool)++;
+		}
+		col++;
+	}
+}
 
 // initialize player position on map
 int init_start(char **map, t_data *data)
 {
 	int i;
-	int j;
+	int find_player;
 
 	i = 0;
+	find_player = 0;
 	if (!map)
 		return (-1);
-
 	while (map[i])
 	{
-		j = 0;
-		while (map[i][j])
-		{
-			if (ft_strchr("NSEW", map[i][j]))  // Finds the player's position based on his direction
-			{
-				data->x = j * CASE + CASE / 2;  // Player's horizontal position
-				data->y = i * CASE + CASE / 2;  // Player's vertical position
-				data->angle = get_angle(map[i][j]);  // Initializes the angle based on the direction found
-				data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
-				map[i][j] = '0';
-				return (0);
-			}
-			++j;
-		}
+		find_player_position(data, map, i, &find_player);
 		++i;
 	}
-	return (-1);
+	if (find_player != 1)
+	{
+		printf("trop de players\n");
+		return (-1);		
+	}	
+	return (0);
 }
 
 void	map_clear(char **map)
