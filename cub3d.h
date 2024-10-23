@@ -10,7 +10,7 @@
 # include "minilibx-linux/mlx_int.h"
 
 # ifndef M_PI
-#  define M_PI 3.14159265358979323846
+#  define M_PI 3.1415926535897932384626433
 # endif
 # define BUFFER_SIZE 100
 # define MOOVE_SPEED 2
@@ -103,6 +103,7 @@ void		map_clear(char **map);
 int			ft_strtablen(char **map);
 char    	**tab_cpy(char **tab);
 
+int			get_max_tab_len(char **map);
 char		*clear_space(char *str);
 int			is_map_line(char *line_map, char *str);
 int			is_empty_line(const char *line);

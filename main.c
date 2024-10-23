@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/23 13:27:11 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:44:53 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,7 +168,19 @@ int main(int ac, char **av)
 	if (!data.mlx)
 		return (1);
 	if (parsing(&data, av[1]) == -1)  // Parsing map
+	{
+		// mlx_destroy_image(data.mlx, data.minimap.space.img);
+		// mlx_destroy_image(data.mlx, data.minimap.character.img);
+		// mlx_destroy_image(data.mlx, data.raycast.raycast.img);
+		mlx_destroy_image(data.mlx, data.raycast.N_wall.img);
+		mlx_destroy_image(data.mlx, data.raycast.E_wall.img);
+		mlx_destroy_image(data.mlx, data.raycast.S_wall.img);
+		mlx_destroy_image(data.mlx, data.raycast.W_wall.img);
+		mlx_destroy_display(data.mlx);
+		free(data.mlx);
+		// map_clear(data.map);
 		return (1);
+	}
 	print_map(data.map, FALSE); 
 	if (init_cub3d(&data) == -1)
 		return (1);
@@ -177,7 +189,7 @@ int main(int ac, char **av)
 	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
 	mlx_hook(data.win, 6, 1L<<6 , mouse_move, &data);  // Defin hook moove mouse
 	mlx_loop(data.mlx);  // Principal loop
-	cub_close(&data); 
+	cub_close(&data);
 	return (0);
 }
 

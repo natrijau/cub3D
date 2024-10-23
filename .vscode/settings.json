@@ -9,6 +9,7 @@
         "string": "c",
         "string_view": "c",
         "libft.h": "c",
-        "mlx.h": "c"
+        "mlx.h": "c",
+        "cub3d.h": "c"
     }
 }

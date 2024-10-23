@@ -224,3 +224,23 @@ int is_empty_line(const char *line)
 	}
 	return (1);
 }
+
+// returns the length of the longest line on map
+int	get_max_tab_len(char **map)
+{
+	int	max_len;
+	int	tmp_len;
+	int	i;
+
+	i = 0;
+	tmp_len = 0;
+	max_len = ft_strlen(map[i]);
+	while (map[i])
+	{
+		tmp_len = ft_strlen(map[i]);
+		if (tmp_len > max_len)
+			max_len = tmp_len;
+		i++;
+	}
+	return (max_len);
+}
