@@ -116,7 +116,7 @@ int	init_cub3d(t_data *data)
 	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
+	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 	return (0);
 }

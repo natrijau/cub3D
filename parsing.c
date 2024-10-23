@@ -227,15 +227,15 @@ int	check_size_map(char **map)
 	{
 		while (map[i][j])
 		{
-			if (j > 300)
-				return (-1);
+			// if (j > 300)
+			// 	return (-1);
 			j++;		
 		}
 		j = 0;
 		i++;
 	}
-	if (i > 300)
-		return (-1);		
+	// if (i > 300)
+	// 	return (-1);		
 	return (0);
 }
 
