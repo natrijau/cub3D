@@ -84,6 +84,7 @@ int	key_hook(int keycode, t_data *data)
 {
 	static int azerty;
 
+	
 	// switch AZERTY or QWERTY
 	if (keycode == 114)  // keyboard r
 	{

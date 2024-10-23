@@ -164,11 +164,32 @@ int	get_file_texture(t_data *data, char *str)
 	return (0);
 }
 
+int	scan_int_color(t_image *color, , char *str)
+{
+	int		i;
+	char	*tab;
+	char	*tmp;
+
+	i = 0;
+	tab = ft_split(str, ',');
+	while (tab[i])
+	{
+		if ((!ft_atoi(tab[i]) > 0 && !ft_atoi(tab[i]) < 255) || i > 2)
+		{
+			map_clear(tab);
+			return (-1);
+		}
+		i++;
+	}
+	color = mlx_get_color_value(data.mlx, );
+	return (0);
+}
+
 int	check_color(t_data *data, char *str)
 {
-	(void)data;
 	if (str[0] == 'F')
 	{
+		if (scan_int_color(data->raycast.floor_color, &str[1]))
 
 		return (0);
 	}
