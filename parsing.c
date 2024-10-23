@@ -262,12 +262,14 @@ int	parsing(t_data *data, char *file)
 	if (init_start(&file_content[map_start + 1], data) == -1)
 	{
 		printf("Error\n");
+		map_clear(file_content);
 		return (-1);
 	}
 	data->map = init_map(&file_content[map_start]);
 	if (check_size_map(data->map))
 	{
 		printf("error numb of line or column\n");
+		map_clear(file_content);
 		return (-1);	
 	}
 	if (!data->map || pars_map(&file_content[map_start], data->map, data->y / CASE, data->x / CASE) == -1)

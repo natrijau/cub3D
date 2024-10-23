@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/23 17:44:53 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:10:37 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,13 @@ int mouse_move(int x, int y, t_data *data)
     return (0);
 }
 
+//! DECOMMENTE POUR JOUER AVEC MOI
+// __|___|__
+// __|_X_|__
+//   |   |
+// X = Nathan
+// O = Yan
+
 int main(int ac, char **av)
 {
 	t_data	data;
@@ -169,16 +176,17 @@ int main(int ac, char **av)
 		return (1);
 	if (parsing(&data, av[1]) == -1)  // Parsing map
 	{
+		//! juste pour tester
 		// mlx_destroy_image(data.mlx, data.minimap.space.img);
 		// mlx_destroy_image(data.mlx, data.minimap.character.img);
 		// mlx_destroy_image(data.mlx, data.raycast.raycast.img);
-		mlx_destroy_image(data.mlx, data.raycast.N_wall.img);
-		mlx_destroy_image(data.mlx, data.raycast.E_wall.img);
-		mlx_destroy_image(data.mlx, data.raycast.S_wall.img);
-		mlx_destroy_image(data.mlx, data.raycast.W_wall.img);
-		mlx_destroy_display(data.mlx);
+		// mlx_destroy_image(data.mlx, data.raycast.N_wall.img);
+		// mlx_destroy_image(data.mlx, data.raycast.E_wall.img);
+		// mlx_destroy_image(data.mlx, data.raycast.S_wall.img);
+		// mlx_destroy_image(data.mlx, data.raycast.W_wall.img);
+		// mlx_destroy_display(data.mlx);
 		free(data.mlx);
-		// map_clear(data.map);
+		map_clear(data.map);
 		return (1);
 	}
 	print_map(data.map, FALSE); 
