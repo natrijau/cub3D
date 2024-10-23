@@ -219,7 +219,7 @@ int	valid_textures(t_data *data, char **tab, int map_start)
 	int i;
 
 	i = 0;
-	while (i < map_start)
+	while (i <= map_start)
 	{
 		if (check_color(data, tab[i]))
 			return (-1);		
@@ -235,7 +235,7 @@ int	check_textures_colors(t_data *data, char **tab, int map_start)
 	int	i;
 
 	i = 0;
-	while (i < map_start)
+	while (i <= map_start)
 	{
 		tab[i] = clear_space(tab[i]);
 		i++;
