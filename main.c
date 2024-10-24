@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/23 18:10:37 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/24 15:57:59 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,8 @@ void	moove(t_data *data, int y, int x)
 	ray_cast(data);  
 	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
 // keyboard key events
@@ -160,12 +160,11 @@ int mouse_move(int x, int y, t_data *data)
 // __|_X_|__
 //   |   |
 // X = Nathan
-// O = Yan
+// O = Yann
 
 int main(int ac, char **av)
 {
 	t_data	data;
-
 	if (ac != 2)  // Verifi arg
 	{
 		printf("Error\n");
@@ -186,7 +185,8 @@ int main(int ac, char **av)
 		// mlx_destroy_image(data.mlx, data.raycast.W_wall.img);
 		// mlx_destroy_display(data.mlx);
 		free(data.mlx);
-		map_clear(data.map);
+		if (data.map)
+			map_clear(data.map);
 		return (1);
 	}
 	print_map(data.map, FALSE); 
@@ -201,9 +201,10 @@ int main(int ac, char **av)
 	return (0);
 }
 
-//? A tester : limite de 131470 Char pour la map
-
-//TODO voir parsing 
-//TODO modif RAYCASTING POUR AFFICHER LES MURS COORESPONDANT A LA DIRECTION
-//TODO 
-//TODO stack over
+//TODO REGLER LA SOURIS (MLX LOOP HOOK , souris qui ne reviens pas au centre , etc ...)
+//TODO DDA ?
+//TODO fonction pour free toutes les allocations 
+//TODO MINIMAP RONDE
+//TODO PORTES ?????? pas sur
+//TODO NORMER DES FONCTIONS
+//TODO TRIER LES FICHIERS

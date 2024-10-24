@@ -73,7 +73,7 @@ int init_start(char **map, t_data *data)
 	}
 	if (find_player != 1)
 	{
-		printf("trop de players\n");
+		printf("Invalid numb of player\n");
 		return (-1);		
 	}	
 	return (0);

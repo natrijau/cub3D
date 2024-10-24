@@ -97,9 +97,23 @@ int	scan_int_color(t_data *data, char *str, char c)
 	}
 	color = (ft_atoi(tab[0]) << 16) | (ft_atoi(tab[1]) << 8) | ft_atoi(tab[2]);
 	if (c == 'F')
-		data->raycast.floor_color = mlx_get_color_value(data->mlx, color);
+	{
+		if (data->raycast.floor_color)
+		{
+			printf("doublons couleur\n");
+			return (-1);
+		}
+		data->raycast.floor_color = color;
+	}
 	else if (c == 'C')
-		data->raycast.ceiling_color = mlx_get_color_value(data->mlx, color);
+	{
+		if (data->raycast.ceiling_color)
+		{
+			printf("doublons couleur\n");
+			return (-1);		
+		}
+		data->raycast.ceiling_color = color;
+	}
 	map_clear(tab);
 	return (0);
 }
@@ -145,6 +159,8 @@ int	check_textures_colors(t_data *data, char **tab, int map_start)
 {
 	int	i;
 
+	data->raycast.floor_color = 0;
+	data->raycast.ceiling_color = 0;
 	i = 0;
 	while (i <= map_start)
 	{
@@ -228,7 +244,7 @@ int	check_size_map(char **map)
 		while (map[i][j])
 		{
 			// if (j > 300)
-			// 	return (-1);
+			// 	return (-1);==1504449==    at 0x404FA7: ft_strtabl
 			j++;		
 		}
 		j = 0;
@@ -265,14 +281,14 @@ int	parsing(t_data *data, char *file)
 		map_clear(file_content);
 		return (-1);
 	}
-	data->map = init_map(&file_content[map_start]);
+	data->map = init_map(&file_content[map_start + 1]);
 	if (check_size_map(data->map))
 	{
 		printf("error numb of line or column\n");
 		map_clear(file_content);
 		return (-1);	
 	}
-	if (!data->map || pars_map(&file_content[map_start], data->map, data->y / CASE, data->x / CASE) == -1)
+	if (!data->map || pars_map(&file_content[map_start + 1], data->map, data->y / CASE, data->x / CASE) == -1)
 	{
 		printf("Error\n");
 		map_clear(file_content);

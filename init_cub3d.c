@@ -35,7 +35,7 @@ t_image	init_space(t_data *data)
 				{
 					j = -1;
 					while (++j < CASE)  // Remplir la case avec des pixels blancs
-						ft_mlx_pixel_put(&img, x * CASE + i, y * CASE + j, 0x00FFFFFF);
+						ft_mlx_pixel_put(&img, x * CASE + i, y * CASE + j, 0x00A0A0A0);
 				}
 			}
 		}
@@ -99,7 +99,7 @@ t_raycast	init_ray_cast(t_data *data)
 			++i;
 		}
 		++k;
-	}	
+	}
 	return (raycast);
 }
 
@@ -116,7 +116,7 @@ int	init_cub3d(t_data *data)
 	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	// mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 	return (0);
 }

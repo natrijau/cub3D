@@ -118,7 +118,7 @@ void	ray_cast(t_data *data)
 			ray.flag = 'y';
 			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
 				break;
-			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);  // Dessiner le rayon (en bleu ici)
+			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x00FFFFFF);  // Dessiner le rayon (en bleu ici)
 		}
 		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
 		++i_ray;
