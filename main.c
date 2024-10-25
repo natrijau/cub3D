@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/25 14:11:50 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/25 14:57:13 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ void	moove(t_data *data, int y, int x)
 	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->mouse_x - CASE / 2, data->y - CASE / 2);
 }
 
 // keyboard key events
@@ -140,15 +140,13 @@ int mouse_move(int x, int y, t_data *data)
 	(void) y;
 	int	center_x;
 	center_x = WIDTH / 2;
-    if (abs(x - center_x) < 50) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
-		return (0);	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
-	if (x > center_x)
-		data->angle += (ROTATE_SPEED / 1.5);  // rotate Right
-	else if (x < center_x)
-		data->angle -= (ROTATE_SPEED / 1.5);  // rotate Left
-	data->angle = fmod(data->angle, N);
-	mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
-	moove(data, 0, 0);
+	if (x != center_x && data->mouse_move == FALSE)
+	{
+		data->mouse_move = TRUE;
+		data->mouse_x = x;
+	}
+	else if (x == center_x && data->mouse_move == TRUE)
+		data->mouse_move = FALSE;
     return (0);
 }
 
@@ -219,6 +217,20 @@ int update_move(t_data *data)
 		data->angle += ROTATE_SPEED;  // Right
 		data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
 		moove(data, 0, 0);  // Recalcul position after rotate
+	}
+	int	center_x;
+	center_x = WIDTH / 2;	
+	if (data->mouse_move)
+	{
+	    // if (abs(data->mouse_x - center_x) < 50) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+		// return ;	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
+		if (data->mouse_x > center_x)
+			data->angle += (ROTATE_SPEED);  // rotate Right
+		else if (data->mouse_x < center_x)
+			data->angle -= (ROTATE_SPEED);  // rotate Left
+		// data->angle = fmod(data->angle, N);
+		mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
+		moove(data, 0, 0);	
 	}
 	
     return 0;

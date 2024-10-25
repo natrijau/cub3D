@@ -94,6 +94,8 @@ typedef struct	s_data
 	int			move_left;
 	int			rotate_right;
 	int			rotate_left;
+	int			mouse_move;
+	int			mouse_x;
 }				t_data;
 
 char		**get_file(char *file);
