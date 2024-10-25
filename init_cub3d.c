@@ -116,14 +116,15 @@ int	init_cub3d(t_data *data)
 	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
 	data->height_and_case = data->minimap.height * CASE;
 	data->width_and_case = data->minimap.width * CASE;
-	data->move_left = FALSE;
-	data->forward = FALSE;
-	data->back = FALSE;
-	data->move_right = FALSE;
-	data->rotate_left = FALSE;
-	data->rotate_right = FALSE;
-	data->mouse_move = FALSE;
-	data->mouse_x = 0;
+	data->hook.keyboard_bool = FALSE;
+	data->hook.move_forward = FALSE;
+	data->hook.move_back = FALSE;
+	data->hook.move_right = FALSE;
+	data->hook.move_left = FALSE;
+	data->hook.rotate_left = FALSE;
+	data->hook.rotate_right = FALSE;
+	data->hook.mouse_move = FALSE;
+	data->hook.mouse_x = 0;
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);

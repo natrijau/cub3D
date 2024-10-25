@@ -71,174 +71,138 @@ void	moove(t_data *data, int y, int x)
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
 	data->minimap.space = init_space(data);  // Reinitialise map
-	creat_image(&data->raycast.raycast, data->mlx, WIDTH, HEIGHT);  // Reinitialise raycasting
+	data->raycast = init_ray_cast(data);  // Reinitialise raycast
 	ray_cast(data);  
 	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->mouse_x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
 // keyboard key events
 int	key_hook(int keycode, t_data *data)
 {
-	static int azerty;
+	t_hook	*hook;
 
-	
+	hook = &data->hook;
 	// switch AZERTY or QWERTY
-	if (keycode == 114)  // keyboard r
-	{
-		if (azerty == TRUE)
-		{
-			azerty = FALSE;
-			printf("Keyboard config set to QWERTY\n");
-		}
-		else
-		{
-			azerty = TRUE;
-			printf("Keyboard config set to AZERTY\n");
-		}
-	}
+	if (keycode == 119 && hook->keyboard_bool == FALSE)  // w
+		hook->keyboard_bool = TRUE;
+	else if (keycode == 122 && hook->keyboard_bool == TRUE)  // w
+		hook->keyboard_bool = FALSE;
 	// Escape key
 	if (keycode == 65307)
 		cub_close(data);
 
-	if (azerty == FALSE)
-	{
-		// Déplacement mode QWERTY
-		if (keycode == 119 && data->forward == FALSE)  // w
-			data->forward = TRUE;
-		if (keycode == 115 && data->back == FALSE)  // s
-			data->back = TRUE;
-		if (keycode == 100 && data->move_right == FALSE)  // d
-			data->move_right = TRUE;
-		if (keycode == 97 && data->move_left == FALSE)   // a
-			data->move_left = TRUE;
-	}
-	else
-	{
-		// Déplacement mode AZERTY
-		if (keycode == 122 && data->forward == FALSE)  // w
-			data->forward = TRUE;
-		if (keycode == 115 && data->back == FALSE)  // s
-			data->back = TRUE;
-		if (keycode == 100 && data->move_right == FALSE)  // d
-			data->move_right = TRUE;
-		if (keycode == 113 && data->move_left == FALSE)   // a
-			data->move_left = TRUE;
-	}
+	// Déplacement mode QWERTY
+	if ((keycode == 119 && hook->keyboard_bool == TRUE)
+		|| (keycode == 122 && hook->keyboard_bool == FALSE))
+		hook->move_forward = TRUE;
+	else if (keycode == 97 && hook->keyboard_bool == TRUE)   // q
+		hook->move_left = TRUE;
+	else if (keycode == 113 && hook->keyboard_bool == FALSE)   // a
+		hook->move_left = TRUE;
+	else if (keycode == 115)  // s
+		hook->move_back = TRUE;
+	else if (keycode == 100)  // d
+		hook->move_right = TRUE;
+
 	// Rotate camera flèches Right/Left
-	if (keycode == 65361 && data->rotate_right == FALSE)
-		data->rotate_right = TRUE;
-	if (keycode == 65363 && data->rotate_left == FALSE)
-		data->rotate_left = TRUE;
+	if (keycode == 65361)
+		hook->rotate_right = TRUE;
+	else if (keycode == 65363)
+		hook->rotate_left = TRUE;
 	return (0);
 }
+
 // Fonction appelée lorsqu'il y a un mouvement de souris
 int mouse_move(int x, int y, t_data *data)
 {
-	(void) y;
-	int	center_x;
+	t_hook	*hook;
+	int		center_x;
+
+	(void)y;
 	center_x = WIDTH / 2;
-	if (x != center_x && data->mouse_move == FALSE)
+	hook = &data->hook;	
+	if (hook->mouse_move)
 	{
-		data->mouse_move = TRUE;
-		data->mouse_x = x;
+	    if (abs(x - center_x) < 50) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
+			return 0;	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
+		if (x > center_x)
+			data->angle += (ROTATE_SPEED);  // rotate Right
+		else if (x < center_x)
+			data->angle -= (ROTATE_SPEED);  // rotate Left
+		data->angle = fmod(data->angle, N);
+		mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
 	}
-	else if (x == center_x && data->mouse_move == TRUE)
-		data->mouse_move = FALSE;
     return (0);
 }
 
 //! DECOMMENTE POUR JOUER AVEC MOI
-// __|___|__
-// __|_X_|__
-//   |   |
+// ___|___|___
+// ___|_X_|___
+//    |   | O 
 // X = Nathan
 // O = Yann
 
 int	key_release(int keycode, t_data *data)
 {
-	static int azerty;
+	t_hook	*hook;
 
-	if (azerty == FALSE)
-	{
-		// Déplacement mode QWERTY
-		if (keycode == 119 && data->forward == TRUE)  // w
-			data->forward = FALSE;
-		if (keycode == 115 && data->back == TRUE)  // s
-			data->back = FALSE;
-		if (keycode == 100 && data->move_right == TRUE)  // d
-			data->move_right = FALSE;
-		if (keycode == 97 && data->move_left == TRUE)   // a
-			data->move_left = FALSE;
-	}
-	else
-	{
-		// Déplacement mode AZERTY
-		if (keycode == 122 && data->forward == TRUE)  // w
-			data->forward = FALSE;
-		if (keycode == 115 && data->back == TRUE)  // s
-			data->back = FALSE;
-		if (keycode == 100 && data->move_right == TRUE)  // d
-			data->move_right = FALSE;
-		if (keycode == 113 && data->move_left == TRUE)   // a
-			data->move_left = FALSE;
-	}
+	hook = &data->hook;
+	if ((keycode == 119 && hook->keyboard_bool == TRUE)
+		|| (keycode == 122 && hook->keyboard_bool == FALSE))
+		hook->move_forward = FALSE;
+	else if (keycode == 97 && hook->keyboard_bool == TRUE)   // q
+		hook->move_left = FALSE;
+	else if (keycode == 113 && hook->keyboard_bool == FALSE)   // a
+		hook->move_left = FALSE;
+	else if (keycode == 115)  // s
+		hook->move_back = FALSE;
+	else if (keycode == 100)  // d
+		hook->move_right = FALSE;
 	// Rotate camera flèches Right/Left
-	if (keycode == 65361 && data->rotate_right == TRUE)
-		data->rotate_right = FALSE;
-	if (keycode == 65363 && data->rotate_left == TRUE)
-		data->rotate_left = FALSE;
+	if (keycode == 65361)
+		hook->rotate_right = FALSE;
+	if (keycode == 65363)
+		hook->rotate_left = FALSE;
 	return (0);
 }
 
-int update_move(t_data *data)
+int update_move(t_data *data) //! JE PEUX SUPPRIMER TOUTES LES CONDITIONS (ex: y -= 1 * hook.move_forward), TRUE = 1 et FALSE = 0 !!!
 {
-    // Vérifier les booléens et appeler la fonction de déplacement
-    if (data->forward)
-        moove(data, -1, 0);
-    if (data->back)
-        moove(data, 1, 0);
-    if (data->move_right)
-        moove(data, 0, 1);
-    if (data->move_left)
-	{
-        moove(data, 0, -1);
-	}
-	if (data->rotate_right)
-	{
+	t_hook	hook;
+	int 	x;
+	int 	y;
+
+	hook = data->hook;
+	x = 0;
+	y = 0;
+    // Vérifier les booléens
+    if (hook.move_forward)
+        y -= 1;
+    if (hook.move_back)
+        y += 1;
+    if (hook.move_right)
+        x += 1;
+    if (hook.move_left)
+		x -= 1;
+	if (hook.rotate_right)
 		data->angle -= ROTATE_SPEED;  // Left
-		data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
-		moove(data, 0, 0);  // Recalcul position after rotate
-	}
-	if (data->rotate_left)
-	{
+	if (hook.rotate_left)
 		data->angle += ROTATE_SPEED;  // Right
+	if (hook.rotate_right || hook.rotate_left)
 		data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
-		moove(data, 0, 0);  // Recalcul position after rotate
-	}
-	int	center_x;
-	center_x = WIDTH / 2;	
-	if (data->mouse_move)
-	{
-	    // if (abs(data->mouse_x - center_x) < 50) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
-		// return ;	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
-		if (data->mouse_x > center_x)
-			data->angle += (ROTATE_SPEED);  // rotate Right
-		else if (data->mouse_x < center_x)
-			data->angle -= (ROTATE_SPEED);  // rotate Left
-		// data->angle = fmod(data->angle, N);
-		mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
-		moove(data, 0, 0);	
-	}
-	
-    return 0;
+	else if (!x && !y)
+		return (0);
+	moove(data, y, x);
+    return (0);
 }
 
 int main(int ac, char **av)
 {
 	t_data	data;
+
 	if (ac != 2)  // Verifi arg
 	{
 		printf("Error\n");

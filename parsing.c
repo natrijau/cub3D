@@ -9,7 +9,7 @@ char	**init_map(char **map_off)
 	int		max_len;
 
 	max_len = get_max_tab_len(map_off);
-	map = malloc(sizeof(char *) * (ft_strtablen(map_off) + 1));
+	map = malloc(sizeof(char *) * (ft_strtablen(map_off)));
 	if (!map)
 		return (NULL);
 	i = -1;
@@ -211,6 +211,8 @@ char	**get_file(char *file)
 	if (!map || fd < 0)
 	{
 		close(fd);
+		if (map)
+			free(map);
 		return (NULL);
 	}
 	i = 0;
@@ -230,29 +232,6 @@ char	**get_file(char *file)
 	}
 	close(fd);
 	return (map);
-}
-
-int	check_size_map(char **map)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (map[i])
-	{
-		while (map[i][j])
-		{
-			// if (j > 300)
-			// 	return (-1);==1504449==    at 0x404FA7: ft_strtabl
-			j++;		
-		}
-		j = 0;
-		i++;
-	}
-	// if (i > 300)
-	// 	return (-1);		
-	return (0);
 }
 
 // Validate map
@@ -282,13 +261,7 @@ int	parsing(t_data *data, char *file)
 		return (-1);
 	}
 	data->map = init_map(&file_content[map_start + 1]);
-	if (check_size_map(data->map))
-	{
-		printf("error numb of line or column\n");
-		map_clear(file_content);
-		return (-1);	
-	}
-	if (!data->map || pars_map(&file_content[map_start], data->map, data->y / CASE, data->x / CASE) == -1)
+	if (!data->map || pars_map(&file_content[map_start + 1], data->map, data->y / CASE, data->x / CASE) == -1)
 	{
 		printf("Error\n");
 		map_clear(file_content);

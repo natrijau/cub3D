@@ -74,6 +74,20 @@ typedef struct	s_minimap
 	t_image	character;
 }				t_minimap;
 
+typedef struct s_hook
+{
+	int			keyboard_bool;
+	int			move_forward;
+	int			move_back;
+	int			move_right;
+	int			move_left;
+	int			rotate_right;
+	int			rotate_left;
+	int			mouse_move;
+	int			mouse_x;
+}				t_hook;
+
+
 typedef struct	s_data
 {
 	char		**map;
@@ -81,21 +95,15 @@ typedef struct	s_data
 	void		*win;
 	t_minimap	minimap;
 	t_raycast	raycast;
+	t_hook		hook;
 	double		angle;
 	double		fov_rad;
-	double			x;
-	double			y;
-
+	double		first_rayangle;
+	double		angle_step;
+	double		x;
+	double		y;
 	int			height_and_case;
 	int			width_and_case;
-	int			forward;
-	int			back;
-	int			move_right;
-	int			move_left;
-	int			rotate_right;
-	int			rotate_left;
-	int			mouse_move;
-	int			mouse_x;
 }				t_data;
 
 char		**get_file(char *file);

@@ -46,9 +46,11 @@ void	find_player_position(t_data *data, char **map, int line, int *bool)
 		if (ft_strchr("NSEW", map[line][col]))
 		{
 			data->x = col * CASE + CASE / 2;  // Player's horizontal position
-			data->y = (line + 1) * CASE + CASE / 2;  // Player's vertical position
+			data->y = line * CASE + CASE / 2;  // Player's vertical position
 			data->angle = get_angle(map[line][col]);  // Initializes the angle based on the direction found
 			data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
+			data->first_rayangle = (data->fov_rad / 2.0) - M_PI / 4.0;
+			data->angle_step = data->fov_rad / WIDTH;
 			map[line][col] = '0';
 			(*bool)++;
 		}
