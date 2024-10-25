@@ -114,6 +114,14 @@ int	init_cub3d(t_data *data)
 	data->minimap.space = init_space(data);  // Initialiser l'image de l'espace (fond de la minimap)
 	data->minimap.character = init_character(data->mlx);  // Initialiser l'image du personnage
 	data->raycast = init_ray_cast(data);  // Initialiser l'image du raycasting
+	data->height_and_case = data->minimap.height * CASE;
+	data->width_and_case = data->minimap.width * CASE;
+	data->move_left = FALSE;
+	data->forward = FALSE;
+	data->back = FALSE;
+	data->move_right = FALSE;
+	data->rotate_left = FALSE;
+	data->rotate_right = FALSE;
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);

@@ -288,7 +288,7 @@ int	parsing(t_data *data, char *file)
 		map_clear(file_content);
 		return (-1);	
 	}
-	if (!data->map || pars_map(&file_content[map_start + 1], data->map, data->y / CASE, data->x / CASE) == -1)
+	if (!data->map || pars_map(&file_content[map_start], data->map, data->y / CASE, data->x / CASE) == -1)
 	{
 		printf("Error\n");
 		map_clear(file_content);

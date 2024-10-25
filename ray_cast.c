@@ -23,9 +23,15 @@ void	ray_setup(t_data *data, t_ray *ray)
 /* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
 int	ray_cast_protection(t_data *data, t_ray ray)
 {
+	static int	height_and_case;
+	static int	width_and_case;
+
+	height_and_case = data->minimap.height * CASE;
+	width_and_case = data->minimap.width * CASE;
+
 	// Vérifie si le rayon sort de la carte ou rencontre un mur
-	if (ray.y < 0 || ray.y > data->minimap.height * CASE
-		|| ray.x < 0 || ray.x > data->minimap.width * CASE)
+	if (ray.y < 0 || ray.y > data->height_and_case
+		|| ray.x < 0 || ray.x > data->width_and_case)
 		return (-1);
 	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1'
 		|| data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '3')
@@ -36,8 +42,10 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
+	static int stock_img;
 
-	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	stock_img = img->bpp >> 3;
+	dst = img->addr + (y * img->line_len + x * stock_img);
 	return (*(unsigned int *)dst);
 }
 
@@ -73,21 +81,25 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	t_raycast	raycast;
 	double		factor;
 	double		y;
+	static int	middle_width;
+	static int	middle_height;
 
+	middle_width = WIDTH >> 1;
+	middle_height = HEIGHT >> 1;
 	raycast = data->raycast;
 	set_texture_config(data, ray, &raycast);
 	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
+	raycast.distance = (CASE / raycast.distance) * ((middle_width) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
 	factor = (double)raycast.actual_wall.height / raycast.distance;
-	y = (HEIGHT / 2) - raycast.distance / 2;  // Position de départ du dessin du mur
+	y = (middle_height) - raycast.distance / 2;  // Position de départ du dessin du mur
 	if (y < 0)
 		y = 0;
-	raycast.y = (y - (HEIGHT / 2) + (raycast.distance / 2)) * factor;
+	raycast.y = (y - (middle_height) + (raycast.distance / 2)) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
-	while (y < (HEIGHT / 2) + raycast.distance / 2 && y <= HEIGHT)
+	while (y < (middle_height) + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
 		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);

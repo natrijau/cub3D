@@ -17,8 +17,8 @@
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 960
-# define HEIGHT 540
+# define WIDTH 1920
+# define HEIGHT 1080
 # define TRUE 1
 # define FALSE 0
 # define N (M_PI * 2)
@@ -85,6 +85,15 @@ typedef struct	s_data
 	double		fov_rad;
 	double			x;
 	double			y;
+
+	int			height_and_case;
+	int			width_and_case;
+	int			forward;
+	int			back;
+	int			move_right;
+	int			move_left;
+	int			rotate_right;
+	int			rotate_left;
 }				t_data;
 
 char		**get_file(char *file);
