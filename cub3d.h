@@ -84,7 +84,7 @@ typedef struct s_hook
 	int			rotate_right;
 	int			rotate_left;
 	int			mouse_move;
-	int			mouse_x;
+	int			old_x;
 }				t_hook;
 
 

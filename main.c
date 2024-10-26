@@ -80,7 +80,7 @@ void	moove(t_data *data, int y, int x)
 }
 
 // keyboard key events
-int	key_hook(int keycode, t_data *data)
+int	key_press(int keycode, t_data *data)
 {
 	t_hook	*hook;
 
@@ -93,7 +93,6 @@ int	key_hook(int keycode, t_data *data)
 	// Escape key
 	if (keycode == 65307)
 		cub_close(data);
-
 	// Déplacement mode QWERTY
 	if ((keycode == 119 && hook->keyboard_bool == TRUE)
 		|| (keycode == 122 && hook->keyboard_bool == FALSE))
@@ -106,7 +105,6 @@ int	key_hook(int keycode, t_data *data)
 		hook->move_back = TRUE;
 	else if (keycode == 100)  // d
 		hook->move_right = TRUE;
-
 	// Rotate camera flèches Right/Left
 	if (keycode == 65361)
 		hook->rotate_right = TRUE;
@@ -114,36 +112,6 @@ int	key_hook(int keycode, t_data *data)
 		hook->rotate_left = TRUE;
 	return (0);
 }
-
-// Fonction appelée lorsqu'il y a un mouvement de souris
-int mouse_move(int x, int y, t_data *data)
-{
-	t_hook	*hook;
-	int		center_x;
-
-	(void)y;
-	center_x = WIDTH / 2;
-	hook = &data->hook;	
-	if (hook->mouse_move)
-	{
-	    if (abs(x - center_x) < 50) // abs renvoie la valeur absolue de la diff entre position actuelle souris (x) et position centrale de l'écran (center_x)
-			return 0;	// si mouvement inferieur a 7 pixel on ignore (evite pleins de recalcul inutiles)
-		if (x > center_x)
-			data->angle += (ROTATE_SPEED);  // rotate Right
-		else if (x < center_x)
-			data->angle -= (ROTATE_SPEED);  // rotate Left
-		data->angle = fmod(data->angle, N);
-		mlx_mouse_move(data->mlx, data->win, center_x, HEIGHT / 2);
-	}
-    return (0);
-}
-
-//! DECOMMENTE POUR JOUER AVEC MOI
-// ___|___|___
-// ___|_X_|___
-//    |   | O 
-// X = Nathan
-// O = Yann
 
 int	key_release(int keycode, t_data *data)
 {
@@ -169,32 +137,41 @@ int	key_release(int keycode, t_data *data)
 	return (0);
 }
 
+//! DECOMMENTE POUR JOUER AVEC MOI
+// ___|___|___
+// ___|_X_|___
+//    |   | O 
+// X = Nathan
+// O = Yann
+
 int update_move(t_data *data) //! JE PEUX SUPPRIMER TOUTES LES CONDITIONS (ex: y -= 1 * hook.move_forward), TRUE = 1 et FALSE = 0 !!!
 {
-	t_hook	hook;
+	t_hook	*hook;
 	int 	x;
 	int 	y;
 
-	hook = data->hook;
+	hook = &data->hook;
+	// rotate avec la souris
+	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
+	if (x != hook->old_x)
+		data->angle += (x - hook->old_x) * 0.002; // trkl c good
+	hook->old_x = x;
+    // Vérifier les booléens
 	x = 0;
 	y = 0;
-    // Vérifier les booléens
-    if (hook.move_forward)
+    if (hook->move_forward)
         y -= 1;
-    if (hook.move_back)
+    if (hook->move_back)
         y += 1;
-    if (hook.move_right)
+    if (hook->move_right)
         x += 1;
-    if (hook.move_left)
+    if (hook->move_left)
 		x -= 1;
-	if (hook.rotate_right)
+	if (hook->rotate_right)
 		data->angle -= ROTATE_SPEED;  // Left
-	if (hook.rotate_left)
+	if (hook->rotate_left)
 		data->angle += ROTATE_SPEED;  // Right
-	if (hook.rotate_right || hook.rotate_left)
-		data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
-	else if (!x && !y)
-		return (0);
+	data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
 	moove(data, y, x);
     return (0);
 }
@@ -213,15 +190,6 @@ int main(int ac, char **av)
 		return (1);
 	if (parsing(&data, av[1]) == -1)  // Parsing map
 	{
-		//! juste pour tester
-		// mlx_destroy_image(data.mlx, data.minimap.space.img);
-		// mlx_destroy_image(data.mlx, data.minimap.character.img);
-		// mlx_destroy_image(data.mlx, data.raycast.raycast.img);
-		// mlx_destroy_image(data.mlx, data.raycast.N_wall.img);
-		// mlx_destroy_image(data.mlx, data.raycast.E_wall.img);
-		// mlx_destroy_image(data.mlx, data.raycast.S_wall.img);
-		// mlx_destroy_image(data.mlx, data.raycast.W_wall.img);
-		// mlx_destroy_display(data.mlx);
 		free(data.mlx);
 		if (data.map)
 			map_clear(data.map);
@@ -232,9 +200,8 @@ int main(int ac, char **av)
 		return (1);
 	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
-	mlx_hook(data.win, 2, 1L<<0, key_hook, &data);  // Defin hook keys
+	mlx_hook(data.win, 2, 1L<<0, key_press, &data);  // Defin hook keys
 	mlx_hook(data.win, 3, 1L<<1, key_release, &data);  // bouton relachee
-	mlx_hook(data.win, 6, 1L<<6 , mouse_move, &data);  // Defin hook moove mouse
 	mlx_loop_hook(data.mlx, update_move, &data);
 	mlx_loop(data.mlx);  // Principal loop
 	cub_close(&data);

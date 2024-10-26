@@ -50,21 +50,21 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
 		{
-			raycast->actual_wall = raycast->S_wall;
+			raycast->actual_wall = raycast->N_wall;
 			raycast->x = CASE - raycast->x;
 		}
 		else
-			raycast->actual_wall = raycast->N_wall;
+			raycast->actual_wall = raycast->S_wall;
 	}
 	else
 	{
 		raycast->x = fmod(ray.y, CASE);
 		if (ray.x > data->x)
-			raycast->actual_wall = raycast->E_wall;
+			raycast->actual_wall = raycast->W_wall;
 		else
 		{
 			raycast->x = CASE - raycast->x;
-			raycast->actual_wall = raycast->W_wall;
+			raycast->actual_wall = raycast->E_wall;
 		}
 	}
 }
