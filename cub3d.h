@@ -87,7 +87,6 @@ typedef struct s_hook
 	int			old_x;
 }				t_hook;
 
-
 typedef struct	s_data
 {
 	char		**map;
@@ -106,7 +105,7 @@ typedef struct	s_data
 	int			width_and_case;
 }				t_data;
 
-char		**get_file(char *file);
+int			init_data(t_data *data, char **tab, int map_start);
 void		ray_cast(t_data *data);
 t_image		init_space(t_data *data);
 t_raycast	init_ray_cast(t_data *data);
@@ -117,14 +116,17 @@ void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 int			parsing(t_data *data, char *file);
 void		print_map(char **map, int erase_bool);
 int			map_len(char *file);
-int			init_start(char **map, t_data *data);
 void		map_clear(char **map);
 int			ft_strtablen(char **map);
-char    	**tab_cpy(char **tab);
-
 int			get_max_tab_len(char **map);
 char		*clear_space(char *str);
-int			is_map_line(char *line_map, char *str);
 int			is_empty_line(const char *line);
+int 		ft_isspace(char c);
+// init_data_utils
+int			check_color_value(char **tab);
+t_image		get_wall(void *mlx, char *file);
+int			add_direction_img(t_image *dest, t_image *src, char *str, char *direction);
+double		get_angle(char direction);
+char		*clear_space(char *src);
 
 #endif

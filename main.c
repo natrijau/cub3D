@@ -188,17 +188,14 @@ int main(int ac, char **av)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (1);
-	if (parsing(&data, av[1]) == -1)  // Parsing map
+	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)  // Parsing map
 	{
 		free(data.mlx);
-		if (data.map)
-			map_clear(data.map);
 		return (1);
 	}
-	print_map(data.map, FALSE); 
-	if (init_cub3d(&data) == -1)
-		return (1);
-	mlx_mouse_hide(data.mlx, data.win);
+	printf("Map:\n");
+	print_map(data.map, FALSE);
+	// mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
 	mlx_hook(data.win, 2, 1L<<0, key_press, &data);  // Defin hook keys
 	mlx_hook(data.win, 3, 1L<<1, key_release, &data);  // bouton relachee
@@ -208,17 +205,6 @@ int main(int ac, char **av)
 	return (0);
 }
 
-
-/*
-	if (data.forward == TRUE)
-		moove(&data, -1, 0);
-	if (data.back == TRUE)
-		moove(&data, 1, 0);
-	if (data.move_right == TRUE)
-		moove(&data, 0, 1);
-	if (data.move_left == TRUE)
-		moove(&data, 0, -1);
-*/
 //TODO REGLER LA SOURIS (MLX LOOP HOOK , souris qui ne reviens pas au centre , etc ...)
 //TODO DDA ?
 //TODO fonction pour free toutes les allocations 

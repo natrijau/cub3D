@@ -1,18 +1,68 @@
 #include "cub3d.h"
 
+//  Read map since file and return tab map
+static char	**get_file(char *file)
+{
+	char	**map;
+	int		fd;
+	int		i;
+
+	fd = open(file, O_RDONLY);
+	if (fd < 0)
+		return (NULL);
+	map = malloc(sizeof(char *) * (map_len(file) + 1));
+	i = 0;
+	while (map)
+	{
+		map[i] = get_next_line(fd);
+		if (!map[i])
+			break ;
+		if (is_empty_line(map[i]))
+		{
+			free(map[i]);
+			continue ;
+		}
+		map[i][ft_strlen(map[i]) - 1] = '\0';
+		i++;
+	}
+	close(fd);
+	return (map);
+}
+
+// Debut de la map en partant du bas
+static int	find_map_start(char **file_content)
+{
+	int	i;
+	int	j;
+
+	i = ft_strtablen(file_content) - 1;
+	while (i >= 4)
+	{
+		j = 0;
+		while (file_content[i][j] && ft_strchr("01NSEW ", file_content[i][j]))
+			j++;
+		if (file_content[i][j] && i <= 6)
+			return (i);
+		else if (file_content[i][j])
+			break ;
+		i--;
+	}
+	return (-1);
+}
+
 // Add space to map to equalize the length of the lines
-char	**init_map(char **map_off)
+static char	**init_map(char **map_off)
 {
 	char	**map;
 	int		i;
 	int		j;
 	int		max_len;
 
-	max_len = get_max_tab_len(map_off);
-	map = malloc(sizeof(char *) * (ft_strtablen(map_off)));
+	map = malloc(sizeof(char *) * (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
 	i = -1;
+	max_len = get_max_tab_len(map_off);
 	while (map_off[++i])
 	{
 		map[i] = malloc(sizeof(char) * (max_len + 1));
@@ -31,245 +81,50 @@ char	**init_map(char **map_off)
 }
 
 // Recursive parsing function to validate and format map
-int	pars_map(char **map, char **space, int k, int i)
+static int	flood_fil(char **map, char **space, int k, int i)
 {
-	if ((k == 0 || i == 0 || k >= ft_strtablen(map) - 1
-			|| i >= ft_strlen(map[k]) - 1) || !ft_strchr("01P ", map[k][i]))
+	if (!k || !i || k > ft_strtablen(map) || i > ft_strlen(map[k])
+		|| !ft_strchr("01P ", map[k][i]))
 		return (-1);
 	space[k][i] = map[k][i];
 	map[k][i] = '1';
 	if (map[k][i + 1] && map[k][i + 1] != '1')
-		pars_map(map, space, k, i + 1);
+		flood_fil(map, space, k, i + 1);
 	if (map[k + 1] && map[k + 1][i] && map[k + 1][i] != '1')
-		pars_map(map, space, k + 1, i);
+		flood_fil(map, space, k + 1, i);
 	if (map[k][i - 1] && map[k][i - 1] != '1')
-		pars_map(map, space, k, i - 1);
+		flood_fil(map, space, k, i - 1);
 	if (map[k - 1][i] && map[k - 1][i] != '1')
-		pars_map(map, space, k - 1, i);
+		flood_fil(map, space, k - 1, i);
 	return (0);
-}
-
-int	add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
-{
-	if (!ft_strncmp(str, direction, 2))
-	{
-		if (!dest)
-			return (-1);
-		*dest = *src;
-	}
-	return (0);
-}
-
-int	check_value_color(char **tab)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (tab[i])
-	{
-		j = 0;
-		while (tab[i][j])
-		{
-			if (!(tab[i][j] >= '0' && tab[i][j] <= '9') || j > 2)
-				return (-1);
-			j++;
-		}
-		if (((ft_atoi(tab[i]) < 0) || (ft_atoi(tab[i]) > 255)) || i > 2)
-			return (-1);
-		i++;
-	}
-	return (0);
-}
-
-int	scan_int_color(t_data *data, char *str, char c)
-{
-	int		color;
-	char	**tab;
-
-	color = 0;
-	tab = ft_split(str, ',');
-	if(check_value_color(tab))
-	{
-		map_clear(tab);
-		return (-1);
-	}
-	color = (ft_atoi(tab[0]) << 16) | (ft_atoi(tab[1]) << 8) | ft_atoi(tab[2]);
-	if (c == 'F')
-	{
-		if (data->raycast.floor_color)
-		{
-			printf("doublons couleur\n");
-			return (-1);
-		}
-		data->raycast.floor_color = color;
-	}
-	else if (c == 'C')
-	{
-		if (data->raycast.ceiling_color)
-		{
-			printf("doublons couleur\n");
-			return (-1);		
-		}
-		data->raycast.ceiling_color = color;
-	}
-	map_clear(tab);
-	return (0);
-}
-
-int	get_file_texture(t_data *data, char *str)
-{
-	t_image	img;
-
-	if (str[0] == 'F' || str[0] == 'C')
-		return (0);
-	img = get_wall(data->mlx, &str[2]);
-	if (!img.img)
-		return (-1);
-	if (add_direction_img(&data->raycast.N_wall, &img, str, "NO") == -1)
-		return (-1);
-	if (add_direction_img(&data->raycast.S_wall, &img, str, "SO") == -1)
-		return (-1);
-	if (add_direction_img(&data->raycast.W_wall, &img, str, "WE") == -1)
-		return (-1);
-	if (add_direction_img(&data->raycast.E_wall, &img, str, "EA") == -1)
-		return (-1);
-	return (0);
-}
-
-int	check_color(t_data *data, char *str)
-{
-	if (str[0] == 'F')
-	{
-		if (scan_int_color(data, &str[1], 'F'))
-			return (-1);
-		return (0);
-	}
-	else if (str[0] == 'C')
-	{
-		if (scan_int_color(data, &str[1], 'C'))
-			return (-1);
-		return (0);
-	}
-	return (0);
-}
-
-int	check_textures_colors(t_data *data, char **tab, int map_start)
-{
-	int	i;
-
-	data->raycast.floor_color = 0;
-	data->raycast.ceiling_color = 0;
-	i = 0;
-	while (i <= map_start)
-	{
-		tab[i] = clear_space(tab[i]);
-		i++;
-	}
-	i = 0;
-	while (i <= map_start)
-	{
-		if (check_color(data, tab[i]))
-			return (-1);
-		else if (get_file_texture(data, tab[i]))
-			return (-1);
-		i++;
-	}
-	return (0);
-}
-
-// Debut de la map en partant du bas
-int	find_map_start(char **file_content)
-{
-	int	i;
-
-	i = ft_strtablen(file_content) - 1;
-	while (i >= 0)
-	{
-		if (!is_map_line(file_content[i], "01NSEW \n"))
-		{
-			if (i > 6 || i < 4)
-				return (-1);
-			return (i);
-		}
-		i--;
-	}
-	return (-1);
-}
-
-//  Read map since file and return tab map
-char	**get_file(char *file)
-{
-	int		fd;
-	char	**map;
-	char	*line;
-	int		i;
-
-	fd = open(file, O_RDONLY);
-	map = ft_calloc(sizeof(char *), (map_len(file) + 1));
-	if (!map || fd < 0)
-	{
-		close(fd);
-		if (map)
-			free(map);
-		return (NULL);
-	}
-	i = 0;
-	while (TRUE)
-	{
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		if (is_empty_line(line))
-		{
-			free(line);
-			continue ;
-		}
-		map[i] = line;
-		map[i][ft_strlen(map[i]) - 1] = '\0';
-		i++;
-	}
-	close(fd);
-	return (map);
 }
 
 // Validate map
-int	parsing(t_data *data, char *file)
+int	parsing(t_data *data, char *path_file)
 {
-	char	**file_content;
+	char	**file;
 	int		map_start;
 
-	file_content = get_file(file);
-	map_start = find_map_start(file_content);
-	if (map_start == -1)
+	file = get_file(path_file);
+	map_start = find_map_start(file) + 1;
+	if (init_data(data, file, map_start) == -1)
 	{
-		printf("Error: No valid map found.\n");
-		map_clear(file_content);
+		map_clear(file);
 		return (-1);
 	}
-	if (check_textures_colors(data, file_content, map_start))
+	data->map = init_map(&file[map_start]);
+	if (!data->map)
 	{
-		printf("Error\n");
-		map_clear(file_content);
+		map_clear(file);
 		return (-1);
 	}
-	if (init_start(&file_content[map_start + 1], data) == -1)
+	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
-		printf("Error\n");
-		map_clear(file_content);
+		printf("Error\nInvalid map\n");
+		map_clear(file);
+		map_clear(data->map);
 		return (-1);
 	}
-	data->map = init_map(&file_content[map_start + 1]);
-	if (!data->map || pars_map(&file_content[map_start + 1], data->map, data->y / CASE, data->x / CASE) == -1)
-	{
-		printf("Error\n");
-		map_clear(file_content);
-		if (data->map)
-			map_clear(data->map);
-		return (-1);
-	}
-	printf("Map:\n");
-	map_clear(file_content);
+	map_clear(file);
 	return (0);
 }

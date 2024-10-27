@@ -28,7 +28,7 @@ t_image	init_space(t_data *data)
 		x = -1;
 		while (++x < data->minimap.width && data->map[y][x])  // Parcourir les colonnes de la minimap
 		{
-			if (data->map[y][x] == '0' || ft_strchr("NSEW", data->map[y][x]) || data->map[y][x] == ' ')  // Si la case est un espace vide ('0')
+			if (data->map[y][x] == '0')  // Si la case est un espace vide ('0')
 			{
 				i = -1;
 				while (++i < CASE)  // Parcourir les pixels de la case
@@ -64,16 +64,6 @@ t_image	init_character(void *mlx)
 		}
 		++i;
 	}
-	return (img);
-}
-
-t_image	get_wall(void *mlx, char *file)
-{
-	t_image	img;
-
-	img.img = mlx_xpm_file_to_image(mlx, file, &img.width, &img.height);
-	if (img.img)
-		img.addr = mlx_get_data_addr(img.img, &img.bpp, &img.line_len, &img.endian);
 	return (img);
 }
 
