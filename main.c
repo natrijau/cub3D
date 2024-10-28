@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/25 14:57:13 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:06:10 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	print_map(char **map, int erase_bool)
 // close the window and free
 int	cub_close(t_data *data)
 {
+	mlx_mouse_show(data->mlx, data->win);
 	mlx_clear_window(data->mlx, data->win);
 	mlx_destroy_window(data->mlx, data->win);
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
@@ -51,6 +52,8 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
+#include <unistd.h>
+
 // Move the character according to user input
 void	moove(t_data *data, int y, int x)
 {
@@ -62,11 +65,11 @@ void	moove(t_data *data, int y, int x)
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
-	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == '1')
-		return ;
-	data->x += new_x;  // Update x position
-	data->y += new_y;  // Update y position
-
+	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1')
+	{
+		data->x += new_x;  // Update x position
+		data->y += new_y;  // Update y position
+	}
 	// Updating images after moving
 	mlx_destroy_image(data->mlx, data->minimap.space.img);
 	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
@@ -144,7 +147,7 @@ int	key_release(int keycode, t_data *data)
 // X = Nathan
 // O = Yann
 
-int update_move(t_data *data) //! JE PEUX SUPPRIMER TOUTES LES CONDITIONS (ex: y -= 1 * hook.move_forward), TRUE = 1 et FALSE = 0 !!!
+int update_move(t_data *data)
 {
 	t_hook	*hook;
 	int 	x;
@@ -154,8 +157,15 @@ int update_move(t_data *data) //! JE PEUX SUPPRIMER TOUTES LES CONDITIONS (ex: y
 	// rotate avec la souris
 	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
 	if (x != hook->old_x)
-		data->angle += (x - hook->old_x) * 0.002; // trkl c good
-	hook->old_x = x;
+	{
+		data->angle += (x - hook->old_x) * 0.001; // trkl c good
+		if (x > WIDTH - 200)
+			x = WIDTH - 200;
+		else if (x < 200)
+			x = 200;
+		mlx_mouse_move(data->mlx, data->win, x, y);
+		hook->old_x = x;
+	}
     // Vérifier les booléens
 	x = 0;
 	y = 0;
@@ -195,7 +205,7 @@ int main(int ac, char **av)
 	}
 	printf("Map:\n");
 	print_map(data.map, FALSE);
-	// mlx_mouse_hide(data.mlx, data.win);
+	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
 	mlx_hook(data.win, 2, 1L<<0, key_press, &data);  // Defin hook keys
 	mlx_hook(data.win, 3, 1L<<1, key_release, &data);  // bouton relachee
@@ -205,9 +215,7 @@ int main(int ac, char **av)
 	return (0);
 }
 
-//TODO REGLER LA SOURIS (MLX LOOP HOOK , souris qui ne reviens pas au centre , etc ...)
 //TODO DDA ?
-//TODO fonction pour free toutes les allocations 
 //TODO MINIMAP RONDE
 //TODO PORTES ?????? pas sur
 //TODO NORMER DES FONCTIONS
