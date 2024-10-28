@@ -26,6 +26,12 @@
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
 
+typedef struct	s_vec
+{
+	double	x;
+	double	y;
+}				t_vec;
+
 typedef struct	s_image
 {
 	void	*img;

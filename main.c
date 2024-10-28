@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/28 15:06:10 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:33:26 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,38 +149,30 @@ int	key_release(int keycode, t_data *data)
 
 int update_move(t_data *data)
 {
-	t_hook	*hook;
 	int 	x;
 	int 	y;
 
-	hook = &data->hook;
 	// rotate avec la souris
 	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
-	if (x != hook->old_x)
+	if (x != data->hook.old_x)
 	{
-		data->angle += (x - hook->old_x) * 0.001; // trkl c good
+		data->angle += (x - data->hook.old_x) * 0.001;
 		if (x > WIDTH - 200)
 			x = WIDTH - 200;
 		else if (x < 200)
 			x = 200;
 		mlx_mouse_move(data->mlx, data->win, x, y);
-		hook->old_x = x;
+		data->hook.old_x = x;
 	}
     // Vérifier les booléens
 	x = 0;
 	y = 0;
-    if (hook->move_forward)
-        y -= 1;
-    if (hook->move_back)
-        y += 1;
-    if (hook->move_right)
-        x += 1;
-    if (hook->move_left)
-		x -= 1;
-	if (hook->rotate_right)
-		data->angle -= ROTATE_SPEED;  // Left
-	if (hook->rotate_left)
-		data->angle += ROTATE_SPEED;  // Right
+    y -= data->hook.move_forward;
+    y += data->hook.move_back;
+    x += data->hook.move_right;
+	x -= data->hook.move_left;
+	data->angle -= ROTATE_SPEED * data->hook.rotate_right;  // Left
+	data->angle += ROTATE_SPEED * data->hook.rotate_left;  // Right
 	data->angle = fmod(data->angle, N);  // Limit angle  ( 0 ; N )
 	moove(data, y, x);
     return (0);
