@@ -103,8 +103,8 @@ int	init_data(t_data *data, char **tab, int map_start)
 {
 	int	i;
 	int	plyr_bool;
-
-	if (--map_start == -1 && printf("Error\nInvalid element information"))
+	if (((--map_start == -1) && printf("Error\nInvalid element information\n"))
+		|| ((!tab[map_start + 1]) && printf("Error\nMap not found\n")))
 		return (-1);
 	data->raycast.floor_color = 0;
 	data->raycast.ceiling_color = 0;
@@ -120,7 +120,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 				return (-1);
 		}
 		else if (!is_map_line(tab[i], "01NSEW ")
-			|| find_plyr_pos(data, tab[i], i - map_start, &plyr_bool))
+			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
 	return (0);
