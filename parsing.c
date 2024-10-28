@@ -8,7 +8,7 @@ static char	**get_file(char *file)
 	int		i;
 
 	fd = open(file, O_RDONLY);
-	if (fd < 0)
+	if (fd < 0 && printf("Error\nInvalid file\n"))
 		return (NULL);
 	map = malloc(sizeof(char *) * (map_len(file) + 1));
 	i = 0;
@@ -106,6 +106,8 @@ int	parsing(t_data *data, char *path_file)
 	int		map_start;
 
 	file = get_file(path_file);
+	if (!file)
+		return (-1);
 	map_start = find_map_start(file) + 1;
 	if (init_data(data, file, map_start) == -1)
 	{
