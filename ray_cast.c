@@ -5,7 +5,7 @@ void	ray_setup(t_data *data, t_ray *ray)
 {
 	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
 	if (ray->angle > W)               // Si l'angle est supérieur à W
-		ray->angle -= N;              // Réduire l'angle de N pour le remettre dans la plage
+		ray->angle -= N;                                                                                                                                                                                        // Réduire l'angle de N pour le remettre dans la plage
 	ray->x = data->x;                 // Position en x du rayon égale à la position actuelle de l'utilisateur
 	ray->y = data->y;                 // Position en y du rayon égale à la position actuelle de l'utilisateur
 	ray->x_multi = -1;                // Initialisation de x_multi
@@ -97,6 +97,20 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	}
 }
 
+void	draw_line(t_image *img, t_vec start, t_vec end)
+{
+	int m_new = 2 * (end.y - start.y);
+    int slope_error_new = m_new - (end.x - start.x); 
+    for (int x = start.x, y = start.y; x <= end.x; x++) { 
+        ft_mlx_pixel_put(img, x, y, 0x00FFFFFF);
+        slope_error_new += m_new;
+        if (slope_error_new >= 0) { 
+            y++; 
+            slope_error_new -= 2 * (end.x - start.x);
+        }
+    }
+}
+
 /*c'est la boucle principale qui parcourt l'écran en projetant des rayons, calcul 
 les collisions, et dessine les murs ?*/
 void	ray_cast(t_data *data)
@@ -121,6 +135,7 @@ void	ray_cast(t_data *data)
 			ray.flag = 'y';
 			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x00FFFFFF);  // Dessiner le rayon (en bleu ici)
 		}
+		// draw_line(&data->minimap.space, (t_vec){data->x, data->y}, (t_vec){ray.x, ray.y});
 		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
 		++i_ray;
 		ray.angle += data->angle_step;  // Incrémenter l'angle du rayon pour le prochain
