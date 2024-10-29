@@ -62,13 +62,12 @@ void	moove(t_data *data, int y, int x)
 
 	// new positions based on angle and speed of movement
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
-	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y + 2 * y) / CASE][(int)(data->x + new_x + 2 * x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y + 2 * y) / CASE][(int)(data->x + new_x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x + 2 * x) / CASE] != '1')
+		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] != '1'
+		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] != '1')
 	{
 		data->x += new_x;  // Update x position
 		data->y += new_y;  // Update y position
