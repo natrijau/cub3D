@@ -8,7 +8,7 @@ static char	**get_file(char *file)
 	int		i;
 
 	fd = open(file, O_RDONLY);
-	if (fd < 0 && printf("Error\nInvalid file\n"))
+	if (fd < 0 && printf("Error\nInvalid file type\n"))
 		return (NULL);
 	map = malloc(sizeof(char *) * (map_len(file) + 1));
 	i = 0;
@@ -83,7 +83,7 @@ static char	**init_map(char **map_off)
 // Recursive parsing function to validate and format map
 static int	flood_fil(char **map, char **space, int k, int i)
 {
-	if (!k || !i || k > ft_strtablen(map) || i > ft_strlen(map[k])
+	if (!k || !i || k >= ft_strtablen(map) - 1 || i >= ft_strlen(map[k]) - 1
 		|| !ft_strchr("01P ", map[k][i]))
 		return (-1);
 	space[k][i] = map[k][i];
@@ -124,7 +124,6 @@ int	parsing(t_data *data, char *path_file)
 	{
 		printf("Error\nInvalid map\n");
 		map_clear(file);
-		map_clear(data->map);
 		return (-1);
 	}
 	map_clear(file);

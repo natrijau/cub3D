@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
 /*   Updated: 2024/10/28 15:33:26 by yanolive         ###   ########.fr       */
@@ -26,26 +26,36 @@ void	print_map(char **map, int erase_bool)
 	if (!erase_bool)
 		return ;
 	for (int i = 0; i < line_count; i++) {
-		printf("\033[A");  // Remonter le curseur dans la console d'un nombre de lignes égal à line_count
+		printf("\033[A");
 	}
 	for (int i = 0; i < char_count; i++) {
-		printf("\b \b");  // Effacer les caractères en réinitialisant leur espace
+		printf("\b \b");
 	}
 }
 
 // close the window and free
 int	cub_close(t_data *data)
 {
-	mlx_mouse_show(data->mlx, data->win);
-	mlx_clear_window(data->mlx, data->win);
-	mlx_destroy_window(data->mlx, data->win);
-	mlx_destroy_image(data->mlx, data->minimap.space.img);
-	mlx_destroy_image(data->mlx, data->minimap.character.img);
-	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
-	mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
-	mlx_destroy_image(data->mlx, data->raycast.E_wall.img);
-	mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
-	mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
+	if (data->win)
+	{
+		mlx_mouse_show(data->mlx, data->win);
+		mlx_clear_window(data->mlx, data->win);
+		mlx_destroy_window(data->mlx, data->win);
+	}	
+	if (data->minimap.space.img)
+		mlx_destroy_image(data->mlx, data->minimap.space.img);
+	if (data->minimap.character.img)
+		mlx_destroy_image(data->mlx, data->minimap.character.img);
+	if (data->raycast.raycast.img)
+		mlx_destroy_image(data->mlx, data->raycast.raycast.img);
+	if (data->raycast.N_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
+	if (data->raycast.E_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.E_wall.img);
+	if (data->raycast.S_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
+	if (data->raycast.W_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -180,23 +190,33 @@ int update_move(t_data *data)
     return (0);
 }
 
+void	data_init_img(t_data *data)
+{
+	data->win = NULL;
+	data->minimap.space.img = NULL;
+	data->minimap.character.img = NULL;
+	data->raycast.raycast.img = NULL;
+	data->raycast.N_wall.img = NULL;
+	data->raycast.E_wall.img = NULL;
+	data->raycast.S_wall.img = NULL;
+	data->raycast.W_wall.img = NULL;
+	data->map = NULL;
+}
+
 int main(int ac, char **av)
 {
 	t_data	data;
-
-	if (ac != 2)  // Verifi arg
+	if (ac != 2)
 	{
-		printf("Error\n");
+		printf("Error\nInvalid number of arguments\n");
 		return (1);
 	}
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (1);
-	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)  // Parsing map
-	{
-		free(data.mlx);
-		return (1);
-	}
+	data_init_img(&data);
+	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
+		cub_close(&data);
 	printf("Map:\n");
 	print_map(data.map, FALSE);
 	mlx_mouse_hide(data.mlx, data.win);
