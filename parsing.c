@@ -120,6 +120,8 @@ int	parsing(t_data *data, char *path_file)
 		map_clear(file);
 		return (-1);
 	}
+	// for (size_t i = 0; data->map[i]; i++)
+		// printf("tab[%ld]\t %s\n", i, data->map[i]);	
 	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");

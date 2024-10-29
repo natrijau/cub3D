@@ -17,8 +17,8 @@
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1200
+# define HEIGHT 800
 # define TRUE 1
 # define FALSE 0
 # define N (M_PI * 2)
