@@ -83,18 +83,21 @@ static char	**init_map(char **map_off)
 // Recursive parsing function to validate and format map
 static int	flood_fil(char **map, char **space, int k, int i)
 {
-	if (!k || !i || k >= ft_strtablen(map) - 1 || i >= ft_strlen(map[k]) - 1
-		|| !ft_strchr("01P ", map[k][i]))
+	printf("map[k][i] %c\n", map[k + 1][i]);
+	// if (map[k][i] != '0' || map[k][i] != '1')
+		// return (1);
+	if ((!k || !i || k >= ft_strtablen(map) - 1 || i >= ft_strlen(map[k]) - 1
+		|| !ft_strchr("01P ", map[k][i])))
 		return (-1);
 	space[k][i] = map[k][i];
 	map[k][i] = '1';
-	if (map[k][i + 1] && map[k][i + 1] != '1')
+	if (map[k][i + 1] != '1')
 		flood_fil(map, space, k, i + 1);
-	if (map[k + 1] && map[k + 1][i] && map[k + 1][i] != '1')
+	if (map[k + 1][i] && map[k + 1][i] != '1')
 		flood_fil(map, space, k + 1, i);
-	if (map[k][i - 1] && map[k][i - 1] != '1')
+	if (map[k][i - 1] != '1')
 		flood_fil(map, space, k, i - 1);
-	if (map[k - 1][i] && map[k - 1][i] != '1')
+	if (map[k - 1][i] != '1')
 		flood_fil(map, space, k - 1, i);
 	return (0);
 }

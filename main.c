@@ -153,7 +153,7 @@ int	key_release(int keycode, t_data *data)
 }
 
 //! DECOMMENTE POUR JOUER AVEC MOI
-// ___|___|___
+// ___|___|_X_
 // ___|_X_|___
 //    |   | O 
 // X = Nathan
