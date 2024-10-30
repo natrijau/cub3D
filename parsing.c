@@ -58,14 +58,14 @@ static char	**init_map(char **map_off)
 	int		j;
 	int		max_len;
 
-	map = malloc(sizeof(char *) * (ft_strtablen(map_off) + 1));
+	map = ft_calloc(sizeof(char *), (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
 	i = -1;
 	max_len = get_max_tab_len(map_off);
 	while (map_off[++i])
 	{
-		map[i] = malloc(sizeof(char) * (max_len + 1));
+		map[i] = ft_calloc(sizeof(char), (max_len + 1));
 		if (!map[i])
 		{
 			map_clear(map);
@@ -73,32 +73,33 @@ static char	**init_map(char **map_off)
 		}
 		j = -1;
 		while (++j < max_len)
-			map[i][j] = '1';
-		map[i][j] = '\0';
+		{
+			if (j >= ft_strlen(map_off[i]) || map_off[i][j] == ' ')
+				map[i][j] = ' ';
+			else
+				map[i][j] = map_off[i][j];
+		}
 	}
-	map[i] = NULL;
 	return (map);
 }
 
 // Recursive parsing function to validate and format map
-static int	flood_fil(char **map, char **space, int k, int i)
+static int	flood_fil(char **map, char **space, int x, int i)
 {
-	printf("map[k][i] %c\n", map[k + 1][i]);
-	// if (map[k][i] != '0' || map[k][i] != '1')
-		// return (1);
-	if ((!k || !i || k >= ft_strtablen(map) - 1 || i >= ft_strlen(map[k]) - 1
-		|| !ft_strchr("01P ", map[k][i])))
+	if ((!x || !i || x >= ft_strtablen(map) - 1 || i >= ft_strlen(map[x]) - 1
+		|| map[x][i] == ' '))
+			return (-1);
+	space[x][i] = map[x][i];
+	map[x][i] = '1';
+	if (map[x][i + 1] && map[x][i + 1] != '1' && flood_fil(map, space, x, i + 1) == -1)
 		return (-1);
-	space[k][i] = map[k][i];
-	map[k][i] = '1';
-	if (map[k][i + 1] != '1')
-		flood_fil(map, space, k, i + 1);
-	if (map[k + 1][i] && map[k + 1][i] != '1')
-		flood_fil(map, space, k + 1, i);
-	if (map[k][i - 1] != '1')
-		flood_fil(map, space, k, i - 1);
-	if (map[k - 1][i] != '1')
-		flood_fil(map, space, k - 1, i);
+	if (map[x + 1][i] && map[x + 1][i] != '1' && flood_fil(map, space, x + 1, i))
+		return (-1);
+	if (map[x][i - 1] && map[x][i - 1] != '1' && flood_fil(map, space, x, i - 1))
+		return (-1);
+	if (map[x - 1][i] && map[x - 1][i] != '1' && flood_fil(map, space, x - 1, i))
+		return (-1);
+		;
 	return (0);
 }
 
@@ -123,8 +124,8 @@ int	parsing(t_data *data, char *path_file)
 		map_clear(file);
 		return (-1);
 	}
-	// for (size_t i = 0; data->map[i]; i++)
-		// printf("tab[%ld]\t %s\n", i, data->map[i]);	
+	for (size_t i = 0; data->map[i]; i++)
+		printf("tab[%ld]\t %s\n", i, data->map[i]);
 	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");
