@@ -3,9 +3,11 @@
 /*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
+	data->raycast.wall_color = 0;
+	ray->flag = 'y';
 	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
 	if (ray->angle > W)               // Si l'angle est supérieur à W
-		ray->angle -= N;                                                                                                                                                                                        // Réduire l'angle de N pour le remettre dans la plage
+		ray->angle -= N;              // Réduire l'angle de N pour le remettre dans la plage
 	ray->x = data->x;                 // Position en x du rayon égale à la position actuelle de l'utilisateur
 	ray->y = data->y;                 // Position en y du rayon égale à la position actuelle de l'utilisateur
 	ray->x_multi = -1;                // Initialisation de x_multi
@@ -24,8 +26,8 @@ void	ray_setup(t_data *data, t_ray *ray)
 int	ray_cast_protection(t_data *data, t_ray ray)
 {
 	// Vérifie si le rayon sort de la carte ou rencontre un mur
-	if (ray.y < 0 || ray.y > data->height_and_case
-		|| ray.x < 0 || ray.x > data->width_and_case)
+	if (ray.y < 0 || ray.y >= data->map_height
+		|| ray.x < 0 || ray.x >= data->map_width)
 		return (-1);
 	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1')
 		return (-1);
@@ -69,7 +71,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 }
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
-void	draw_wall(t_data *data, t_ray ray, int x)
+void	draw_wall(t_data *data, t_ray ray, int x, int in_wall)
 {
 	t_raycast	raycast;
 	double		factor;
@@ -90,7 +92,8 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 		raycast.y = 0;
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		if (!in_wall)
+			raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
 		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;
@@ -123,7 +126,7 @@ void	ray_cast(t_data *data)
 	while (i_ray < WIDTH)  // Parcourir la largeur de l'écran
 	{
 		ray_setup(data, &ray);  // Préparer le rayon
-		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
+		while (!ray_cast_protection(data, ray))  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
 		{
 			ray.x += ray.x_step * 0.1;
 			ray.flag = 'y';
@@ -131,12 +134,12 @@ void	ray_cast(t_data *data)
 				break;
 			ray.y += ray.y_step * 0.1;
 			ray.flag = 'x';
-			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
-				break;
-			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x00FFFFFF);  // Dessiner le rayon (en bleu ici)
 		}
 		// draw_line(&data->minimap.space, (t_vec){data->x, data->y}, (t_vec){ray.x, ray.y});
-		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
+		if (ray.x == data->x && ray.y == data->y)
+			draw_wall(data, ray, i_ray, TRUE);
+		else
+			draw_wall(data, ray, i_ray, FALSE);  // Dessiner le mur à cette distance
 		++i_ray;
 		ray.angle += data->angle_step;  // Incrémenter l'angle du rayon pour le prochain
 	}

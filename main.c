@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/28 15:33:26 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/11/05 16:13:26 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,6 @@ int	cub_close(t_data *data)
 		mlx_clear_window(data->mlx, data->win);
 		mlx_destroy_window(data->mlx, data->win);
 	}	
-	if (data->minimap.space.img)
-		mlx_destroy_image(data->mlx, data->minimap.space.img);
-	if (data->minimap.character.img)
-		mlx_destroy_image(data->mlx, data->minimap.character.img);
 	if (data->raycast.raycast.img)
 		mlx_destroy_image(data->mlx, data->raycast.raycast.img);
 	if (data->raycast.N_wall.img)
@@ -75,24 +71,13 @@ void	moove(t_data *data, int y, int x)
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
-	// printf("data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] %c\n",data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE]);
-	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] != '1'
-		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] != '1')
-	{
-		data->x += new_x;  // Update x position
-		data->y += new_y;  // Update y position
-	}
-	// Updating images after moving
-	mlx_destroy_image(data->mlx, data->minimap.space.img);
+	data->x += new_x;  // Update x position
+	data->y += new_y;  // Update y position
 	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
-	data->minimap.space = init_space(data);  // Reinitialise map
 	data->raycast = init_ray_cast(data);  // Reinitialise raycast
-	ray_cast(data);  
+	ray_cast(data);
 	// New images to windows
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
 }
 
 // keyboard key events
@@ -165,18 +150,6 @@ int update_move(t_data *data)
 	int 	x;
 	int 	y;
 
-	// rotate avec la souris
-	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
-	if (x != data->hook.old_x)
-	{
-		data->angle += (x - data->hook.old_x) * 0.001;
-		if (x > WIDTH - 200)
-			x = WIDTH - 200;
-		else if (x < 200)
-			x = 200;
-		mlx_mouse_move(data->mlx, data->win, x, y);
-		data->hook.old_x = x;
-	}
     // Vérifier les booléens
 	x = 0;
 	y = 0;
@@ -194,8 +167,6 @@ int update_move(t_data *data)
 void	data_init_img(t_data *data)
 {
 	data->win = NULL;
-	data->minimap.space.img = NULL;
-	data->minimap.character.img = NULL;
 	data->raycast.raycast.img = NULL;
 	data->raycast.N_wall.img = NULL;
 	data->raycast.E_wall.img = NULL;
@@ -218,9 +189,6 @@ int main(int ac, char **av)
 	data_init_img(&data);
 	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
 		cub_close(&data);
-	printf("Map:\n");
-	print_map(data.map, FALSE);
-	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);  // Defin hook close windows
 	mlx_hook(data.win, 2, 1L<<0, key_press, &data);  // Defin hook keys
 	mlx_hook(data.win, 3, 1L<<1, key_release, &data);  // bouton relachee

@@ -72,13 +72,6 @@ typedef struct	s_raycast
 	double	y;
 }				t_raycast;
 
-typedef struct	s_minimap
-{
-	int		height;
-	int		width;
-	t_image	space;
-	t_image	character;
-}				t_minimap;
 
 typedef struct s_hook
 {
@@ -89,8 +82,6 @@ typedef struct s_hook
 	int			move_left;
 	int			rotate_right;
 	int			rotate_left;
-	int			mouse_move;
-	int			old_x;
 }				t_hook;
 
 typedef struct	s_data
@@ -98,7 +89,6 @@ typedef struct	s_data
 	char		**map;
 	void		*mlx;
 	void		*win;
-	t_minimap	minimap;
 	t_raycast	raycast;
 	t_hook		hook;
 	double		angle;
@@ -107,13 +97,12 @@ typedef struct	s_data
 	double		angle_step;
 	double		x;
 	double		y;
-	int			height_and_case;
-	int			width_and_case;
+	int			map_height;
+	int			map_width;
 }				t_data;
 
 int			init_data(t_data *data, char **tab, int map_start);
 void		ray_cast(t_data *data);
-t_image		init_space(t_data *data);
 t_raycast	init_ray_cast(t_data *data);
 int			init_cub3d(t_data *data);
 void		creat_image(t_image *img, void *mlx, int width, int height);
