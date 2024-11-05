@@ -126,13 +126,13 @@ void	ray_cast(t_data *data)
 		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
 		{
 			ray.x += ray.x_step * 0.1;
-			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
-				break;
-			ray.flag = 'x';
-			ray.y += ray.y_step * 0.1;
-			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
-				break;
 			ray.flag = 'y';
+			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
+				break;
+			ray.y += ray.y_step * 0.1;
+			ray.flag = 'x';
+			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
+				break;
 			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x00FFFFFF);  // Dessiner le rayon (en bleu ici)
 		}
 		// draw_line(&data->minimap.space, (t_vec){data->x, data->y}, (t_vec){ray.x, ray.y});
