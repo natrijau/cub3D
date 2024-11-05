@@ -22,7 +22,8 @@ static char	**get_file(char *file)
 			free(map[i]);
 			continue ;
 		}
-		map[i][ft_strlen(map[i]) - 1] = '\0';
+		if (map[i][ft_strlen(map[i]) - 1] == '\n')
+			map[i][ft_strlen(map[i]) - 1] = '\0';
 		i++;
 	}
 	close(fd);
@@ -91,7 +92,7 @@ static int	flood_fil(char **map, char **space, int x, int i)
 			return (-1);
 	space[x][i] = map[x][i];
 	map[x][i] = '1';
-	if (map[x][i + 1] && map[x][i + 1] != '1' && flood_fil(map, space, x, i + 1) == -1)
+	if (map[x][i + 1] && map[x][i + 1] != '1' && flood_fil(map, space, x, i + 1))
 		return (-1);
 	if (map[x + 1][i] && map[x + 1][i] != '1' && flood_fil(map, space, x + 1, i))
 		return (-1);
@@ -99,7 +100,6 @@ static int	flood_fil(char **map, char **space, int x, int i)
 		return (-1);
 	if (map[x - 1][i] && map[x - 1][i] != '1' && flood_fil(map, space, x - 1, i))
 		return (-1);
-		;
 	return (0);
 }
 
@@ -124,8 +124,6 @@ int	parsing(t_data *data, char *path_file)
 		map_clear(file);
 		return (-1);
 	}
-	for (size_t i = 0; data->map[i]; i++)
-		printf("tab[%ld]\t %s\n", i, data->map[i]);
 	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");
