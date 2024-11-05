@@ -55,11 +55,11 @@ double get_angle(char direction)
 	if (direction == 'N')  // north
 		return (N);
 	if (direction == 'E')  // East
-		return (E);
+		return (W);
 	if (direction == 'S')  // south
 		return (S);
 	if (direction == 'W')  // west
-		return (W);
+		return (E);
 	printf("Error\nInvalid player direction: %c\n", direction);
 	return (-1);
 }

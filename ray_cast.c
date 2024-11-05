@@ -27,8 +27,7 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 	if (ray.y < 0 || ray.y > data->height_and_case
 		|| ray.x < 0 || ray.x > data->width_and_case)
 		return (-1);
-	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1'
-		|| data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '3')
+	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1')
 		return (-1);
 	return (0);
 }

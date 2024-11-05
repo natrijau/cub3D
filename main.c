@@ -75,6 +75,7 @@ void	moove(t_data *data, int y, int x)
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
+	// printf("data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] %c\n",data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE]);
 	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1'
 		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] != '1'
 		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] != '1')
@@ -153,7 +154,7 @@ int	key_release(int keycode, t_data *data)
 }
 
 //! DECOMMENTE POUR JOUER AVEC MOI
-// ___|___|___
+// ___|___|_X_
 // ___|_X_|___
 //    |   | O 
 // X = Nathan
