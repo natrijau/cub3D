@@ -15,7 +15,8 @@ void	ray_setup(t_data *data, t_ray *ray)
 	if (ray->angle < N && ray->angle > S)  // Si l'angle n'est pas entre N et S
 		ray->y_multi = 1;        // Inverser y_multi
 	ray->x_step = cos(ray->angle) * ray->x_multi;  // Calculer le pas en x selon l'angle
-	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
+	//! ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
+	ray->y_step = sin(ray->angle) * ray->y_multi;  // Calculer le pas en y selon l'angle
 	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
 	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
 }
