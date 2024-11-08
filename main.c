@@ -42,12 +42,8 @@ int	cub_close(t_data *data)
 		mlx_clear_window(data->mlx, data->win);
 		mlx_destroy_window(data->mlx, data->win);
 	}	
-	if (data->minimap.space.img)
-		mlx_destroy_image(data->mlx, data->minimap.space.img);
-	if (data->minimap.character.img)
-		mlx_destroy_image(data->mlx, data->minimap.character.img);
-	if (data->raycast.raycast.img)
-		mlx_destroy_image(data->mlx, data->raycast.raycast.img);
+	if (data->img_win.img)
+		mlx_destroy_image(data->mlx, data->img_win.img);
 	if (data->raycast.N_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
 	if (data->raycast.E_wall.img)
@@ -57,7 +53,12 @@ int	cub_close(t_data *data)
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
 	if (data->raycast.D_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);	
+		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);
+	
+	// for (int k = 0; data->tab_door[k]; k++)
+	// 	free(data->tab_door[k]);
+	// free(data->tab_door);
+
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -80,24 +81,38 @@ void	moove(t_data *data, int y, int x)
 	// printf("data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] %c\n",data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE]);
 	if ((data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == '0'
 		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] == '0'
-		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == '0') ||
-		((data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == 'D'
-		// || data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] == 'D'
-		|| data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == 'D') && data->door == FALSE))
+		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == '0'))
 	{
 		data->x += new_x;  // Update x position
 		data->y += new_y;  // Update y position
 	}
 	// Updating images after moving
-	mlx_destroy_image(data->mlx, data->minimap.space.img);
-	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
-	data->minimap.space = init_space(data);  // Reinitialise map
-	data->raycast = init_ray_cast(data);  // Reinitialise raycast
-	ray_cast(data);  
+	mlx_destroy_image(data->mlx, data->img_win.img);
+	init_img_win(data);  // Reinitialise window image
+	init_minimap(data);  // Reinitialise minimap
+	ray_cast(data);
 	// New images to windows
-	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
+}
+
+void	replace_door(t_data *data)
+{
+	int i;
+
+	i = 0;
+	if (!data->tab_door)
+		return;	
+	while (data->tab_door[i])
+	{
+		if (data->door == FALSE)
+		{
+			printf("c = %d", data->map[data->tab_door[i][0]][data->tab_door[i][1]]);
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = '0';
+		}
+		else if (data->door == TRUE)
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = 'D';
+		i++;
+	}
 }
 
 // keyboard key events
@@ -109,11 +124,13 @@ int	key_press(int keycode, t_data *data)
 	if (keycode == 65293 && data->door == TRUE) // touche ENTRER
 	{
 		data->door = FALSE;
+		replace_door(data);
 		printf("activer\n");
 	}
 	else if (keycode == 65293 && data->door == FALSE) // touche ENTRER
 	{
 		data->door = TRUE;
+		replace_door(data);
 		printf("desactiver\n");
 	}
 	else // switch AZERTY or QWERTY
@@ -209,9 +226,7 @@ int update_move(t_data *data)
 void	data_init_img(t_data *data)
 {
 	data->win = NULL;
-	data->minimap.space.img = NULL;
-	data->minimap.character.img = NULL;
-	data->raycast.raycast.img = NULL;
+	data->img_win.img = NULL;
 	data->raycast.N_wall.img = NULL;
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
