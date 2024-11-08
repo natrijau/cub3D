@@ -40,7 +40,7 @@ static int	find_map_start(char **file_content)
 	while (i >= 4)
 	{
 		j = 0;
-		while (file_content[i][j] && ft_strchr("01NSEW ", file_content[i][j]))
+		while (file_content[i][j] && ft_strchr("01NSEWP ", file_content[i][j]))
 			j++;
 		if (file_content[i][j] && i <= 6)
 			return (i);

@@ -28,7 +28,8 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 	if (ray.y < 0 || ray.y > data->height_and_case
 		|| ray.x < 0 || ray.x > data->width_and_case)
 		return (-1);
-	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1')
+	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1' ||
+		data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == 'P')
 		return (-1);
 	return (0);
 }
@@ -45,7 +46,12 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (ray.flag == 'x')
+	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'P') // Cas du mur 'P'
+	{
+		raycast->actual_wall = raycast->P_wall; // Texture spécifique pour 'P'
+		raycast->x = fmod(ray.x, CASE); 
+	}
+	else if (ray.flag == 'x')
 	{
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
@@ -68,6 +74,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		}
 	}
 }
+
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)

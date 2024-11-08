@@ -56,6 +56,8 @@ int	cub_close(t_data *data)
 		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
+	if (data->raycast.P_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.P_wall.img);	
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -201,6 +203,7 @@ void	data_init_img(t_data *data)
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
 	data->raycast.W_wall.img = NULL;
+	data->raycast.P_wall.img = ../textures/doortile.xpm;
 	data->map = NULL;
 }
 

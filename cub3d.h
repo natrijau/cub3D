@@ -63,6 +63,7 @@ typedef struct	s_raycast
 	t_image	E_wall;
 	t_image	S_wall;
 	t_image	W_wall;
+	t_image	P_wall;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
