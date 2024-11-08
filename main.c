@@ -42,12 +42,8 @@ int	cub_close(t_data *data)
 		mlx_clear_window(data->mlx, data->win);
 		mlx_destroy_window(data->mlx, data->win);
 	}	
-	if (data->minimap.space.img)
-		mlx_destroy_image(data->mlx, data->minimap.space.img);
-	if (data->minimap.character.img)
-		mlx_destroy_image(data->mlx, data->minimap.character.img);
-	if (data->raycast.raycast.img)
-		mlx_destroy_image(data->mlx, data->raycast.raycast.img);
+	if (data->img_win.img)
+		mlx_destroy_image(data->mlx, data->img_win.img);
 	if (data->raycast.N_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
 	if (data->raycast.E_wall.img)
@@ -84,15 +80,12 @@ void	moove(t_data *data, int y, int x)
 		data->y += new_y;  // Update y position
 	}
 	// Updating images after moving
-	mlx_destroy_image(data->mlx, data->minimap.space.img);
-	mlx_destroy_image(data->mlx, data->raycast.raycast.img);
-	data->minimap.space = init_space(data);  // Reinitialise map
-	data->raycast = init_ray_cast(data);  // Reinitialise raycast
-	ray_cast(data);  
+	mlx_destroy_image(data->mlx, data->img_win.img);
+	init_img_win(data);  // Reinitialise window image
+	init_minimap(data);  // Reinitialise minimap
+	ray_cast(data);
 	// New images to windows
-	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 }
 
 // keyboard key events
@@ -194,9 +187,7 @@ int update_move(t_data *data)
 void	data_init_img(t_data *data)
 {
 	data->win = NULL;
-	data->minimap.space.img = NULL;
-	data->minimap.character.img = NULL;
-	data->raycast.raycast.img = NULL;
+	data->img_win.img = NULL;
 	data->raycast.N_wall.img = NULL;
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
