@@ -74,12 +74,7 @@ static char	**init_map(char **map_off)
 		}
 		j = -1;
 		while (++j < max_len)
-		{
-			if (j >= ft_strlen(map_off[i]) || map_off[i][j] == ' ')
-				map[i][j] = ' ';
-			else
-				map[i][j] = map_off[i][j];
-		}
+			map[i][j] = '1';
 	}
 	return (map);
 }
