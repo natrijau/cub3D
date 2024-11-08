@@ -29,7 +29,7 @@ int	ray_cast_protection(t_data *data, t_ray ray)
 		|| ray.x < 0 || ray.x > data->width_and_case)
 		return (-1);
 	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1' ||
-		data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == 'P')
+		(data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == 'D' && data->door == TRUE))
 		return (-1);
 	return (0);
 }
@@ -46,9 +46,9 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'P') // Cas du mur 'P'
+	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D' && data->door == TRUE) // Cas du mur 'P'
 	{
-		raycast->actual_wall = raycast->P_wall; // Texture spécifique pour 'P'
+		raycast->actual_wall = raycast->D_wall; // Texture spécifique pour 'P'
 		raycast->x = fmod(ray.x, CASE); 
 	}
 	else if (ray.flag == 'x')
