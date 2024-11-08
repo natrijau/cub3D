@@ -102,6 +102,7 @@ typedef struct	s_data
 	t_minimap	minimap;
 	t_raycast	raycast;
 	t_hook		hook;
+	int			**tab_door;
 	int			door;
 	double		angle;
 	double		fov_rad;
