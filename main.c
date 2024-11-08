@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/10/28 15:33:26 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/11/05 12:26:33 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ int	cub_close(t_data *data)
 		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
+	if (data->raycast.D_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);	
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -76,9 +78,12 @@ void	moove(t_data *data, int y, int x)
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	// printf("data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] %c\n",data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE]);
-	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] != '1'
-		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] != '1')
+	if ((data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == '0'
+		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] == '0'
+		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == '0') ||
+		((data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == 'D'
+		// || data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] == 'D'
+		|| data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == 'D') && data->door == FALSE))
 	{
 		data->x += new_x;  // Update x position
 		data->y += new_y;  // Update y position
@@ -101,7 +106,17 @@ int	key_press(int keycode, t_data *data)
 	t_hook	*hook;
 
 	hook = &data->hook;
-	// switch AZERTY or QWERTY
+	if (keycode == 65293 && data->door == TRUE) // touche ENTRER
+	{
+		data->door = FALSE;
+		printf("activer\n");
+	}
+	else if (keycode == 65293 && data->door == FALSE) // touche ENTRER
+	{
+		data->door = TRUE;
+		printf("desactiver\n");
+	}
+	else // switch AZERTY or QWERTY
 	if (keycode == 119 && hook->keyboard_bool == FALSE)  // w
 		hook->keyboard_bool = TRUE;
 	else if (keycode == 122 && hook->keyboard_bool == TRUE)  // w
@@ -201,6 +216,16 @@ void	data_init_img(t_data *data)
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
 	data->raycast.W_wall.img = NULL;
+	data->raycast.D_wall.img = mlx_xpm_file_to_image(data->mlx, "./textures/doortile.xpm", 
+													&data->raycast.D_wall.width, 
+													&data->raycast.D_wall.height);
+	if (!data->raycast.D_wall.img)
+		printf("Error\nFailed to load door texture: %s\n", "ures/doortile.xpm");
+	data->raycast.D_wall.addr = mlx_get_data_addr(data->raycast.D_wall.img, 
+													&data->raycast.D_wall.bpp, 
+													&data->raycast.D_wall.line_len, 
+													&data->raycast.D_wall.endian);
+	data->door = TRUE;
 	data->map = NULL;
 }
 

@@ -11,7 +11,7 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));  // Calcul de la position du pixel
+	dst = img->addr + (y * img->line_len + x * (img->bpp >> 3));  // Calcul de la position du pixel
 	*(unsigned int *)dst = color;  // Placer la couleur au bon endroit
 }
 
@@ -28,7 +28,7 @@ t_image	init_space(t_data *data)
 		x = -1;
 		while (++x < data->minimap.width && data->map[y][x])  // Parcourir les colonnes de la minimap
 		{
-			if (data->map[y][x] == '0')  // Si la case est un espace vide ('0')
+			if ((data->map[y][x] == '0' || data->map[y][x] == 'P') && ((x >= data->x - (CASE >> 1) - 4) || (x <= data->x + 4)))  // Si la case est un espace vide ('0')
 			{
 				i = -1;
 				while (++i < CASE)  // Parcourir les pixels de la case
@@ -119,6 +119,6 @@ int	init_cub3d(t_data *data)
 	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
 	mlx_put_image_to_window(data->mlx, data->win, data->raycast.raycast.img, 0, 0);
 	mlx_put_image_to_window(data->mlx, data->win, data->minimap.space.img, 0, 0);
-	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - CASE / 2, data->y - CASE / 2);
+	mlx_put_image_to_window(data->mlx, data->win, data->minimap.character.img, data->x - (CASE >> 1), data->y - (CASE >> 1));
 	return (0);
 }

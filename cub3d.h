@@ -63,6 +63,7 @@ typedef struct	s_raycast
 	t_image	E_wall;
 	t_image	S_wall;
 	t_image	W_wall;
+	t_image	D_wall;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
@@ -101,6 +102,7 @@ typedef struct	s_data
 	t_minimap	minimap;
 	t_raycast	raycast;
 	t_hook		hook;
+	int			door;
 	double		angle;
 	double		fov_rad;
 	double		first_rayangle;

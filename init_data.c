@@ -119,7 +119,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 				|| init_texture(data, tab[i]))
 				return (-1);
 		}
-		else if (!is_map_line(tab[i], "01NSEW ")
+		else if (!is_map_line(tab[i], "01NSEWD ")
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
