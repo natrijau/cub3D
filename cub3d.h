@@ -13,12 +13,16 @@
 #  define M_PI 3.1415926535897932384626433
 # endif
 # define BUFFER_SIZE 100
-# define MOOVE_SPEED 2
+# define MOOVE_SPEED 1.5
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 1300
-# define HEIGHT 700
+# define WIDTH 1920
+# define HEIGHT 1080
+# define MINIMAP_IMG_POS_X WIDTH - HEIGHT / 5
+# define MINIMAP_IMG_POS_Y HEIGHT - HEIGHT / 5
+# define PLAYER_IMG_POS_X WIDTH - HEIGHT / 10 - CASE / 2
+# define PLAYER_IMG_POS_Y HEIGHT - HEIGHT / 10 - CASE / 2
 # define TRUE 1
 # define FALSE 0
 # define N (M_PI * 2)
@@ -58,7 +62,6 @@ typedef struct	s_ray
 
 typedef struct	s_raycast
 {
-	t_image	raycast;
 	t_image	N_wall;
 	t_image	E_wall;
 	t_image	S_wall;
@@ -77,8 +80,6 @@ typedef struct	s_minimap
 {
 	int		height;
 	int		width;
-	t_image	space;
-	t_image	character;
 }				t_minimap;
 
 typedef struct s_hook
@@ -99,6 +100,7 @@ typedef struct	s_data
 	char		**map;
 	void		*mlx;
 	void		*win;
+	t_image		img_win;
 	t_minimap	minimap;
 	t_raycast	raycast;
 	t_hook		hook;
@@ -116,8 +118,8 @@ typedef struct	s_data
 
 int			init_data(t_data *data, char **tab, int map_start);
 void		ray_cast(t_data *data);
-t_image		init_space(t_data *data);
-t_raycast	init_ray_cast(t_data *data);
+void		init_minimap(t_data *data);
+void		init_img_win(t_data *data);
 int			init_cub3d(t_data *data);
 void		creat_image(t_image *img, void *mlx, int width, int height);
 t_image		get_wall(void *mlx, char *file);
