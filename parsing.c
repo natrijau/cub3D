@@ -73,12 +73,7 @@ static char	**init_map(char **map_off)
 		}
 		j = -1;
 		while (++j < max_len)
-		{
-			if (j >= ft_strlen(map_off[i]) || map_off[i][j] == ' ')
-				map[i][j] = ' ';
-			else
-				map[i][j] = map_off[i][j];
-		}
+			map[i][j] = '1';
 	}
 	return (map);
 }
@@ -93,13 +88,12 @@ static int	flood_fil(char **map, char **space, int x, int i)
 	map[x][i] = '1';
 	if (map[x][i + 1] && map[x][i + 1] != '1' && flood_fil(map, space, x, i + 1) == -1)
 		return (-1);
-	if (map[x + 1][i] && map[x + 1][i] != '1' && flood_fil(map, space, x + 1, i))
+	if (map[x + 1][i] && map[x + 1][i] != '1' && flood_fil(map, space, x + 1, i) == -1)
 		return (-1);
-	if (map[x][i - 1] && map[x][i - 1] != '1' && flood_fil(map, space, x, i - 1))
+	if (map[x][i - 1] && map[x][i - 1] != '1' && flood_fil(map, space, x, i - 1) == -1)
 		return (-1);
-	if (map[x - 1][i] && map[x - 1][i] != '1' && flood_fil(map, space, x - 1, i))
+	if (map[x - 1][i] && map[x - 1][i] != '1' && flood_fil(map, space, x - 1, i) == -1)
 		return (-1);
-		;
 	return (0);
 }
 
