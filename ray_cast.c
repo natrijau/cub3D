@@ -18,16 +18,21 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
 	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
 	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
+	ray->x_step_div = ray->x_step * 0.1;  // Calculer le pas en x divisé par 10
+	ray->y_step_div = ray->y_step * 0.1;  // Calculer le pas en y divisé par 10
 }
 
 /* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
 int	ray_cast_protection(t_data *data, t_ray *ray)
 {
-	int	i;
+	int		i;
+
 	// Vérifie si le rayon sort de la carte ou rencontre un mur
 	if (ray->y >= 0 && ray->y <= data->height_and_case
 		&& ray->x >= 0 && ray->x <= data->width_and_case
-		&& data->map[(int)ray->y / CASE][(int)(ray->x) / CASE] != '1')
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] != '1'
+		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] != '1'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] != '1')
 		return (0);
 	//! a partir de la on est sur un semi dda
 	ray->x -= ray->x_step;
@@ -35,16 +40,18 @@ int	ray_cast_protection(t_data *data, t_ray *ray)
 	i = 0;
 	while (ray->y >= 0 && ray->y <= data->height_and_case
 		&& ray->x >= 0 && ray->x <= data->width_and_case
-		&& data->map[(int)ray->y / CASE][(int)(ray->x) / CASE] != '1')
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] != '1'
+		&& data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] != '1'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] != '1')
 	{
 		if (i++ % 2)
 		{
-			ray->x += ray->x_step * 0.1;
+			ray->x += ray->x_step_div;
 			ray->flag = 'y';
 		}
 		else
 		{
-			ray->y += ray->y_step * 0.1;
+			ray->y += ray->y_step_div;
 			ray->flag = 'x';
 		}
 	}
