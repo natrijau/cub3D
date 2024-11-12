@@ -30,9 +30,9 @@ int	ray_cast_protection(t_data *data, t_ray *ray)
 	// Vérifie si le rayon sort de la carte ou rencontre un mur
 	if (ray->y >= 0 && ray->y <= data->height_and_case
 		&& ray->x >= 0 && ray->x <= data->width_and_case
-		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] != '1'
-		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] != '1'
-		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] != '1')
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 		return (0);
 	//! a partir de la on est sur un semi dda
 	ray->x -= ray->x_step;
@@ -40,9 +40,9 @@ int	ray_cast_protection(t_data *data, t_ray *ray)
 	i = 0;
 	while (ray->y >= 0 && ray->y <= data->height_and_case
 		&& ray->x >= 0 && ray->x <= data->width_and_case
-		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] != '1'
-		&& data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] != '1'
-		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] != '1')
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] == '0')
 	{
 		if (i++ % 2)
 		{
