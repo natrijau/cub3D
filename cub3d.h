@@ -55,6 +55,8 @@ typedef struct	s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
+	double	x_step_div;
+	double	y_step_div;
 	int		x_multi;
 	int		y_multi;
 	char	flag;
