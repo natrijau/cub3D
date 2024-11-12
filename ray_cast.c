@@ -18,44 +18,7 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
 	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
 	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
-	ray->x_step_div = ray->x_step * 0.1;
-	ray->y_step_div = ray->y_step * 0.1;
-}
-
-/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
-int    ray_cast_protection(t_data *data, t_ray *ray)
-{
-    int        i;
-
-    // Vérifie si le rayon sort de la carte ou rencontre un mur
-    if (ray->y >= 0 && ray->y <= data->height_and_case
-        && ray->x >= 0 && ray->x <= data->width_and_case
-        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
-        return (0);
-    //! a partir de la on est sur un semi dda
-    ray->x -= ray->x_step;
-    ray->y -= ray->y_step;
-    i = 0;
-    while (ray->y >= 0 && ray->y <= data->height_and_case
-        && ray->x >= 0 && ray->x <= data->width_and_case
-        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] == '0')
-    {
-        if (i++ % 2)
-        {
-            ray->x += ray->x_step_div;
-            ray->flag = 'y';
-        }
-        else
-        {
-            ray->y += ray->y_step_div;
-            ray->flag = 'x';
-        }
-    }
-    return (-1);
+	ray->flag = 'x';
 }
 
 int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
@@ -128,6 +91,47 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	}
 }
 
+/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
+void    ray_cast_projection(t_data *data, t_ray *ray)
+{
+
+    // Vérifie si le rayon sort de la carte ou rencontre un mur
+    if (ray->y >= 0 && ray->y <= data->height_and_case
+        && ray->x >= 0 && ray->x <= data->width_and_case
+        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+        && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
+	{
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= HEIGHT / 10)
+		{
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + HEIGHT / 10) - ray->x_step / 2, MINIMAP_IMG_POS_Y + (ray->y - data->y + HEIGHT / 10) - ray->y_step / 2, 0x00FFFFFF); // pour faire un jolie rayon
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + HEIGHT / 10), MINIMAP_IMG_POS_Y + (ray->y - data->y + HEIGHT / 10), 0x00FFFFFF);
+		}
+		if (ray->flag == 'x')
+		{
+    		ray->x += ray->x_step;
+			ray->flag = 'y';
+		}
+		else
+		{
+    		ray->y += ray->y_step;
+			ray->flag = 'x';
+		}
+		ray_cast_projection(data, ray);
+        return ;
+	}
+	if (fabs(ray->x_step) > 0.01 || fabs(ray->y_step) > 0.01)
+	{
+		
+		ray->x_step /= 2;
+		ray->y_step /= 2;
+    	ray->x -= ray->x_step;
+    	ray->y -= ray->y_step;
+		ray_cast_projection(data, ray);
+        return ;
+	}
+}
+
 /*c'est la boucle principale qui parcourt l'écran en projetant des rayons, calcul 
 les collisions, et dessine les murs ?*/
 void	ray_cast(t_data *data)
@@ -140,19 +144,9 @@ void	ray_cast(t_data *data)
 	while (i_ray < WIDTH)  // Parcourir la largeur de l'écran
 	{
 		ray_setup(data, &ray);  // Préparer le rayon
-		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
-		{
-			ray.x += ray.x_step;
-			ray.y += ray.y_step;
-			if (ray_cast_protection(data, &ray) == -1)  // Vérifier les collisions
-				break;
-			if (sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2)) <= HEIGHT / 10)
-			{
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray.x - data->x + HEIGHT / 10) - ray.x_step / 2, MINIMAP_IMG_POS_Y + (ray.y - data->y + HEIGHT / 10) - ray.y_step / 2, 0x00FFFFFF); // pour faire un jolie rayon
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray.x - data->x + HEIGHT / 10), MINIMAP_IMG_POS_Y + (ray.y - data->y + HEIGHT / 10), 0x00FFFFFF);
-			}
-		}
-		// draw_line(&data->minimap.space, (t_vec){data->x, data->y}, (t_vec){ray.x, ray.y});
+		ray.x += ray.x_step;
+		ray.y += ray.y_step;
+		ray_cast_projection(data, &ray);
 		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
 		++i_ray;
 		ray.angle += data->angle_step;  // Incrémenter l'angle du rayon pour le prochain
