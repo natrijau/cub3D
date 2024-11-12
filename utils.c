@@ -1,14 +1,13 @@
 #include "cub3d.h"
 
-int  map_len(char *file)
+int	map_len(char *file)
 {
-	int	 fd;
+	int		fd;
 	char	*line;
-	int	 len;
+	int		len;
 
 	fd = open(file, O_RDONLY);
-	//!printf("Error\nCould not open file.\n");
-	if (fd < 0)
+	if (fd < 0 && printf("Error\nCould not open file.\n"))
 		return (-1);
 	len = 0;
 	line = get_next_line(fd);
@@ -44,7 +43,7 @@ int	ft_strtablen(char **map)
 	return (i);
 }
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
 	if (c == ' ' || c == '	' || c == '\t' || c == '\n'
 		|| c == '\r' || c == '\f' || c == '\v')
@@ -52,7 +51,7 @@ int ft_isspace(char c)
 	return (0);
 }
 
-int is_empty_line(const char *line)
+int	is_empty_line(const char *line)
 {
 	int	i;
 

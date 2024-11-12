@@ -1,0 +1,22 @@
+digraph {
+	graph [fontname=Arial, nodesep=0.125, ranksep=0.25];
+	node [fontcolor=white, fontname=Arial, height=0, shape=box, style=filled, width=0];
+	edge [fontname=Arial];
+	1 [color="#f06302", fontcolor="#ffffff", fontsize="10.00", label="moove\n89.87%\n(0.00%)\n418×"];
+	1 -> 4 [arrowsize="0.82", color="#97cf07", fontcolor="#97cf07", fontsize="10.00", label="67.95%\n418×", labeldistance="2.72", penwidth="2.72"];
+	1 -> 6 [arrowsize="0.47", color="#0c7e8f", fontcolor="#0c7e8f", fontsize="10.00", label="21.74%\n418×", labeldistance="0.87", penwidth="0.87"];
+	2 [color="#f06302", fontcolor="#ffffff", fontsize="10.00", label="update_move\n89.87%\n(0.00%)\n418×"];
+	2 -> 1 [arrowsize="0.95", color="#f06302", fontcolor="#f06302", fontsize="10.00", label="89.87%\n418×", labeldistance="3.59", penwidth="3.59"];
+	3 [color="#f06302", fontcolor="#ffffff", fontsize="10.00", label="mlx_loop\n89.87%\n(0.00%)"];
+	3 -> 2 [arrowsize="0.95", color="#f06302", fontcolor="#f06302", fontsize="10.00", label="89.87%\n418×", labeldistance="3.59", penwidth="3.59"];
+	4 [color="#98d007", fontcolor="#ffffff", fontsize="10.00", label="ray_cast\n68.12%\n(2.17%)\n419×"];
+	4 -> 5 [arrowsize="0.81", color="#7ecb07", fontcolor="#7ecb07", fontsize="10.00", label="65.16%\n502800×", labeldistance="2.61", penwidth="2.61"];
+	4 -> 7 [arrowsize="0.35", color="#0d0f74", fontcolor="#0d0f74", fontsize="10.00", label="0.60%\n19542720×", labeldistance="0.50", penwidth="0.50"];
+	5 [color="#7ecb07", fontcolor="#ffffff", fontsize="10.00", label="draw_wall\n65.16%\n(58.33%)\n502800×"];
+	5 -> 7 [arrowsize="0.35", color="#0d2a7b", fontcolor="#0d2a7b", fontsize="10.00", label="6.65%\n217752881×", labeldistance="0.50", penwidth="0.50"];
+	6 [color="#0c7e8f", fontcolor="#ffffff", fontsize="10.00", label="init_img_win\n21.74%\n(21.74%)\n418×"];
+	7 [color="#0d2d7c", fontcolor="#ffffff", fontsize="10.00", label="ft_mlx_pixel_put\n7.25%\n(7.25%)\n237295601×"];
+	8 [color="#0d297b", fontcolor="#ffffff", fontsize="10.00", label="mlx_int_parse_xpm\n6.34%\n(6.34%)"];
+	9 [color="#0d1676", fontcolor="#ffffff", fontsize="10.00", label="mlx_int_str_str_cote\n2.17%\n(2.17%)"];
+	10 [color="#0d1174", fontcolor="#ffffff", fontsize="10.00", label="mlx_int_str_str\n1.09%\n(1.09%)"];
+}

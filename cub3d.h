@@ -142,4 +142,21 @@ int			add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
 double		get_angle(char direction);
 char		*clear_space(char *src);
 
+
+//utils_map.c
+int			find_map_start(char **file_content);
+int			flood_fil(char **map, char **space, int x, int i);
+char		**init_map(char **map_off);
+
+//utils.shift.c
+void    azerty_qwerty(int keycode, t_hook	*hook);
+int		key_press(int keycode, t_data *data);
+int		key_release(int keycode, t_data *data);
+int 	update_move(t_data *data);
+void	shift(t_data *data, int y, int x);
+
+
+//main.c
+void	replace_door(t_data *data);
+int		cub_close(t_data *data);
 #endif

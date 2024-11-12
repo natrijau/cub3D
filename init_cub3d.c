@@ -3,7 +3,8 @@
 void	creat_image(t_image *img, void *mlx, int width, int height)
 {
 	img->img = mlx_new_image(mlx, width, height);
-	img->addr = mlx_get_data_addr(img->img, &img->bpp, &img->line_len, &img->endian);
+	img->addr = mlx_get_data_addr(img->img, &img->bpp,
+			&img->line_len, &img->endian);
 }
 
 // Fonction pour placer un pixel de couleur spécifique dans une image
@@ -11,23 +12,24 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));  // Calcul de la position du pixel
-	*(unsigned int *)dst = color;  // Placer la couleur au bon endroit
+	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
 }
 
 // Fonction pour initialiser l'image représentant l'espace de la minimap
 void	init_minimap(t_data *data)
 {
 	double	distance;
-	int		x, y;
+	int		x;
+	int		y;
 
 	y = 0;
-	while (y < HEIGHT / 5)  // Parcourir les lignes de la minimap
+	while (y < HEIGHT / 5)
 	{
 		x = 0;
-		while (x < HEIGHT / 5)  // Parcourir les colonnes de la minimap
+		while (x < HEIGHT / 5)
 		{
-			distance = sqrt(pow(x - HEIGHT / 10, 2) + pow(y - HEIGHT / 10, 2));  // Calculer la distance entre le pixel et le centre du cercle
+			distance = sqrt(pow(x - HEIGHT / 10, 2) + pow(y - HEIGHT / 10, 2));
 			if (distance <= CASE / 2)
 				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FF0000);
 			else if (distance <= HEIGHT / 10)
@@ -55,7 +57,7 @@ void	init_img_win(t_data *data)
 	int			k;
 
 	raycast = data->raycast;
-	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);  // Créer une nouvelle image pour le raycasting
+	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);
 	k = 0;
 	while (k < HEIGHT)
 	{
@@ -75,11 +77,11 @@ void	init_img_win(t_data *data)
 // Fonction pour créer et afficher la minimap et ses composants
 int	init_cub3d(t_data *data)
 {
-	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");  // New windows
+	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");
 	if (!data->win)
 		return (-1);
-	data->minimap.height = ft_strtablen(data->map);  // Définir la hauteur de la minimap
-	data->minimap.width = ft_strlen(data->map[0]);  // Définir la largeur de la minimap
+	data->minimap.height = ft_strtablen(data->map);
+	data->minimap.width = ft_strlen(data->map[0]);
 	data->height_and_case = data->minimap.height * CASE;
 	data->width_and_case = data->minimap.width * CASE;
 	data->hook.keyboard_bool = FALSE;
@@ -92,9 +94,9 @@ int	init_cub3d(t_data *data)
 	data->hook.mouse_move = TRUE;
 	data->hook.old_x = WIDTH / 2;
 	mlx_mouse_move(data->mlx, data->win, data->hook.old_x, HEIGHT / 2);
-	init_img_win(data);  // Initialiser l'image du raycasting
-	init_minimap(data);  // Initialiser l'image de l'espace (fond de la minimap)
-	ray_cast(data);  // Lancer le calcul de raycasting (projection 3D simulée)
+	init_img_win(data);
+	init_minimap(data);
+	ray_cast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 	return (0);
 }
