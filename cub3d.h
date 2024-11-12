@@ -17,8 +17,8 @@
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1200
+# define HEIGHT 700
 # define MINIMAP_IMG_POS_X WIDTH - HEIGHT / 5
 # define MINIMAP_IMG_POS_Y HEIGHT - HEIGHT / 5
 # define PLAYER_IMG_POS_X WIDTH - HEIGHT / 10 - CASE / 2
@@ -55,8 +55,6 @@ typedef struct	s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
-	double	x_step_div;
-	double	y_step_div;
 	int		x_multi;
 	int		y_multi;
 	char	flag;
@@ -68,6 +66,7 @@ typedef struct	s_raycast
 	t_image	E_wall;
 	t_image	S_wall;
 	t_image	W_wall;
+	t_image	D_wall;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
@@ -105,6 +104,8 @@ typedef struct	s_data
 	t_minimap	minimap;
 	t_raycast	raycast;
 	t_hook		hook;
+	int			**tab_door;
+	int			door_closed;
 	double		angle;
 	double		fov_rad;
 	double		first_rayangle;

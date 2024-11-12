@@ -72,9 +72,9 @@ void	moove(t_data *data, int y, int x)
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
 	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	// printf("data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] %c\n",data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE]);
-	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] != '1'
-		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] != '1'
-		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] != '1')
+	if (data->map[(int)(data->y + new_y) / CASE][(int)(data->x + new_x) / CASE] == '0'
+		&& data->map[(int)(data->y + new_y) / CASE][(int)(data->x) / CASE] == '0'
+		&& data->map[(int)(data->y) / CASE][(int)(data->x + new_x) / CASE] == '0')
 	{
 		data->x += new_x;  // Update x position
 		data->y += new_y;  // Update y position
@@ -88,12 +88,47 @@ void	moove(t_data *data, int y, int x)
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 }
 
+void	replace_door(t_data *data)
+{
+	int i;
+
+	i = 0;
+	if (!data->tab_door)
+		return;	
+	while (data->tab_door[i])
+	{
+		if (data->door_closed == FALSE)
+		{
+			printf("%c\n", data->map[data->tab_door[i][0]][data->tab_door[i][1]]);
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = '0';
+		}
+		else if (data->door_closed == TRUE)
+		{
+			printf("%c\n", data->map[data->tab_door[i][0]][data->tab_door[i][1]]);
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = 'D';
+		}
+		i++;
+	}
+}
+
 // keyboard key events
 int	key_press(int keycode, t_data *data)
 {
 	t_hook	*hook;
 
 	hook = &data->hook;
+	if (keycode == 65293 && data->door_closed == TRUE) // touche ENTRER
+	{
+		data->door_closed = FALSE;
+		replace_door(data);
+		printf("open door\n");
+	}
+	else if (keycode == 65293 && data->door_closed == FALSE /*verifier si player sur la case*/) // touche ENTRER
+	{
+		data->door_closed = TRUE;
+		replace_door(data);
+		printf("close door\n");
+	}
 	// switch AZERTY or QWERTY
 	if (keycode == 119 && hook->keyboard_bool == FALSE)  // w
 		hook->keyboard_bool = TRUE;
@@ -192,6 +227,16 @@ void	data_init_img(t_data *data)
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
 	data->raycast.W_wall.img = NULL;
+	data->raycast.D_wall.img = mlx_xpm_file_to_image(data->mlx, "./textures/doortile.xpm", 
+													&data->raycast.D_wall.width, 
+													&data->raycast.D_wall.height);
+	if (!data->raycast.D_wall.img)
+		printf("Error\nFailed to load door texture: %s\n", "ures/doortile.xpm");
+	data->raycast.D_wall.addr = mlx_get_data_addr(data->raycast.D_wall.img, 
+													&data->raycast.D_wall.bpp, 
+													&data->raycast.D_wall.line_len, 
+													&data->raycast.D_wall.endian);
+	data->door_closed = TRUE;	
 	data->map = NULL;
 }
 

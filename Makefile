@@ -1,6 +1,6 @@
 NAME=cub3D
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -Werror -pg -O3
 SRCS=main.c parsing.c ray_cast.c init_cub3d.c init_data.c init_data_utils.c utils.c
 OBJS=$(SRCS:.c=.o)
 HEADERS=cub3d.h libft/libft.h minilibx-linux/mlx.h minilibx-linux/mlx_int.h

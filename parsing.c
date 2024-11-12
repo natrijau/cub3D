@@ -40,7 +40,7 @@ static int	find_map_start(char **file_content)
 	while (i >= 4)
 	{
 		j = 0;
-		while (file_content[i][j] && ft_strchr("01NSEW ", file_content[i][j]))
+		while (file_content[i][j] && ft_strchr("01NSEWD ", file_content[i][j]))
 			j++;
 		if (file_content[i][j] && i <= 6)
 			return (i);
@@ -98,6 +98,60 @@ static int	flood_fil(char **map, char **space, int x, int i)
 	return (0);
 }
 
+int	**init_door_tab(char **str)
+{
+	int	i;
+	int	j;
+	int	d;
+	int	**tab_door;
+
+	i = 0;
+	d = 0;
+	while (str[i])
+	{
+		j = 0;
+		while (str[i][j])
+		{
+			if (str[i][j] == 'D')
+				d++;
+			j++;
+		}
+		i++;
+	}
+
+	tab_door = malloc(sizeof(int *) * (d + 1));
+	if (!tab_door)
+		return (NULL);
+	tab_door[d] = NULL;
+
+	i = 0;
+	d = 0;
+	while (str[i])
+	{
+		j = 0;
+		while (str[i][j])
+		{
+			if (str[i][j] == 'D')
+			{
+				tab_door[d] = malloc(sizeof(int) * 2);
+				if (!tab_door[d])
+					return (NULL);
+				tab_door[d][0] = i;
+				tab_door[d][1] = j;
+				d++;
+			}
+			j++;
+		}
+		i++;
+	}
+
+	return (tab_door);
+	// for (int k = 0; tab_door[k]; k++)
+	// {
+	// 	printf("tab[%d],[%d] \n", tab_door[k][0], tab_door[k][1]);
+	// }
+}
+
 // Validate map
 int	parsing(t_data *data, char *path_file)
 {
@@ -125,6 +179,7 @@ int	parsing(t_data *data, char *path_file)
 		map_clear(file);
 		return (-1);
 	}
+	data->tab_door = init_door_tab(data->map);
 	map_clear(file);
 	return (0);
 }
