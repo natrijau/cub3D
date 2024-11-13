@@ -17,8 +17,8 @@
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1366
+# define HEIGHT 768
 # define MINIMAP_IMG_POS_X WIDTH - HEIGHT / 5
 # define MINIMAP_IMG_POS_Y HEIGHT - HEIGHT / 5
 # define PLAYER_IMG_POS_X WIDTH - HEIGHT / 10 - CASE / 2

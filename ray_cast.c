@@ -3,21 +3,21 @@
 /*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
-	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
-	if (ray->angle > W)               // Si l'angle est supérieur à W
-		ray->angle -= N;                                                                                                                                                                                        // Réduire l'angle de N pour le remettre dans la plage
-	ray->x = data->x;                 // Position en x du rayon égale à la position actuelle de l'utilisateur
-	ray->y = data->y;                 // Position en y du rayon égale à la position actuelle de l'utilisateur
-	ray->x_multi = -1;                // Initialisation de x_multi
-	if (ray->angle > W && ray->angle < E)  // Si l'angle est entre W et E
-		ray->x_multi = 1;             // Inverser x_multi
-	ray->y_multi = -1;                 // Initialisation de y_multi
-	if (ray->angle < N && ray->angle > S)  // Si l'angle n'est pas entre N et S
-		ray->y_multi = 1;        // Inverser y_multi
-	ray->x_step = cos(ray->angle) * ray->x_multi;  // Calculer le pas en x selon l'angle
-	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
-	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
-	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
+	ray->angle = fmod(ray->angle, N);
+	if (ray->angle > W)
+		ray->angle -= N;
+	ray->x = data->x;
+	ray->y = data->y;
+	ray->x_multi = -1;
+	if (ray->angle > W && ray->angle < E)
+		ray->x_multi = 1;
+	ray->y_multi = -1;
+	if (ray->angle < N && ray->angle > S)
+		ray->y_multi = 1;
+	ray->x_step = cos(ray->angle) * ray->x_multi;
+	ray->y_step = sin(ray->angle) * ray->x_multi;
+	ray->x_step += cos(ray->angle + W) * ray->y_multi;
+	ray->y_step += sin(ray->angle + W) * ray->y_multi;
 	ray->flag = 'x';
 }
 
@@ -71,7 +71,7 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	set_texture_config(data, ray, &raycast);
 	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
-	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
+	raycast.distance *= cos(fmod(ray.angle - (data->angle + (M_PI / 4)), N));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));
 	factor = (double)raycast.actual_wall.height / raycast.distance;
 	y = (HEIGHT >> 1) - raycast.distance / 2;
@@ -95,17 +95,16 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 void    ray_cast_projection(t_data *data, t_ray *ray)
 {
 
-    // Vérifie si le rayon sort de la carte ou rencontre un mur
     if (ray->y >= 0 && ray->y <= data->height_and_case
         && ray->x >= 0 && ray->x <= data->width_and_case
         && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
         && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
         && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 	{
-		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= HEIGHT / 10)
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= (HEIGHT / 10))
 		{
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + HEIGHT / 10) - ray->x_step / 2, MINIMAP_IMG_POS_Y + (ray->y - data->y + HEIGHT / 10) - ray->y_step / 2, 0x00FFFFFF); // pour faire un jolie rayon
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + HEIGHT / 10), MINIMAP_IMG_POS_Y + (ray->y - data->y + HEIGHT / 10), 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT / 10)) - ray->x_step / 2, MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT / 10)) - ray->y_step / 2, 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT / 10)), MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT / 10)), 0x00FFFFFF);
 		}
 		if (ray->flag == 'x')
 		{
@@ -143,11 +142,11 @@ void	ray_cast(t_data *data)
 	i_ray = 0;
 	while (i_ray < WIDTH)
 	{
-		ray_setup(data, &ray);  // Préparer le rayon
+		ray_setup(data, &ray);
 		ray.x += ray.x_step;
 		ray.y += ray.y_step;
 		ray_cast_projection(data, &ray);
-		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
+		draw_wall(data, ray, i_ray);
 		++i_ray;
 		ray.angle += data->angle_step;
 	}
