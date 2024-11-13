@@ -4,21 +4,22 @@
 void	ray_setup(t_data *data, t_ray *ray)
 {
 	ray->angle = fmod(ray->angle, N);
-	if (ray->angle > W)
-		ray->angle -= N;
+	// if (ray->angle > W)
+	// 	ray->angle -= N;
 	ray->x = data->x;
 	ray->y = data->y;
-	ray->x_multi = -1;
-	if (ray->angle > W && ray->angle < E)
-		ray->x_multi = 1;
-	ray->y_multi = -1;
-	if (ray->angle < N && ray->angle > S)
-		ray->y_multi = 1;
-	ray->x_step = cos(ray->angle) * ray->x_multi;
-	ray->y_step = sin(ray->angle) * ray->x_multi;
-	ray->x_step += cos(ray->angle + W) * ray->y_multi;
-	ray->y_step += sin(ray->angle + W) * ray->y_multi;
-	ray->flag = 'x';
+	// ray->x_multi = -1;
+	// if (ray->angle > W && ray->angle < E)
+	// 	ray->x_multi = 1;
+	// ray->y_multi = -1;
+	// if (ray->angle < N && ray->angle > S)
+	// 	ray->y_multi = 1;
+	// printf("ray->y_multi %d\nray->x_multi %d\n\n", ray->y_multi, ray->x_multi);
+	ray->x_step = cos(ray->angle) * -1;
+	ray->y_step = sin(ray->angle) * -1;
+	ray->x_step += cos(ray->angle + W) * -1;
+	ray->y_step += sin(ray->angle + W) * -1;
+	// ray->flag = 'y';
 }
 
 int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
@@ -80,11 +81,15 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
+
+	int		test_opti_x = WIDTH - HEIGHT / 5;
+	int		test_opti_y = HEIGHT - HEIGHT / 5;
+	double 	test_opti_double = sqrt(pow(x - (WIDTH - HEIGHT * 0.1), 2) + pow(y - (HEIGHT - HEIGHT * 0.1), 2));
+
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
-		if ((x < WIDTH - HEIGHT / 5 && y < HEIGHT - HEIGHT / 5)
-			|| sqrt(pow(x - (WIDTH - HEIGHT / 10), 2) + pow(y - (HEIGHT - HEIGHT / 10), 2)) > HEIGHT / 10 + 1)
+		if ((x < test_opti_x && y < test_opti_y) || test_opti_double > HEIGHT * 0.1 + 1)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;
@@ -101,10 +106,10 @@ void    ray_cast_projection(t_data *data, t_ray *ray)
         && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
         && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 	{
-		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= (HEIGHT / 10))
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= (HEIGHT * 0.1))
 		{
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT / 10)) - ray->x_step / 2, MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT / 10)) - ray->y_step / 2, 0x00FFFFFF);
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT / 10)), MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT / 10)), 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT * 0.1)) - ray->x_step / 2, MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT * 0.1)) - ray->y_step / 2, 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray->x - data->x + (HEIGHT * 0.1)), MINIMAP_IMG_POS_Y + (ray->y - data->y + (HEIGHT * 0.1)), 0x00FFFFFF);
 		}
 		if (ray->flag == 'x')
 		{
