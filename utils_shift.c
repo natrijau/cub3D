@@ -118,7 +118,6 @@ void	shift(t_data *data, int y, int x)
 		data->x += new_x;
 		data->y += new_y;
 	}
-	mlx_destroy_image(data->mlx, data->img_win.img);
 	init_img_win(data);
 	init_minimap(data);
 	ray_cast(data);

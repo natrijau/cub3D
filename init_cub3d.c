@@ -24,30 +24,30 @@ void	init_minimap(t_data *data)
 	int		y;
 
 	y = 0;
-	while (y < HEIGHT / 5)
+	while (y < HEIGHT_DIV_PER_FIVE)
 	{
 		x = 0;
-		while (x < HEIGHT / 5)
+		while (x < HEIGHT_DIV_PER_FIVE)
 		{
-			distance = sqrt(pow(x - HEIGHT / 10, 2) + pow(y - HEIGHT / 10, 2));
-			if (distance <= CASE / 2)
+			distance = sqrt(pow(x - HEIGHT_DIV_PER_TEN, 2) + pow(y - HEIGHT_DIV_PER_TEN, 2));
+			if (distance <= CASE_DIV_PER_TWO)
 				ft_mlx_pixel_put(&data->img_win,
 					MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FF0000);
-			else if (distance <= HEIGHT / 10)
+			else if (distance <= HEIGHT_DIV_PER_TEN)
 			{
-				if (x + data->x - HEIGHT / 10 >= 0 && x + data->x - HEIGHT
-					/ 10 < data->minimap.width * CASE
-					&& y + data->y - HEIGHT / 10 >= 0 && y + data->y - HEIGHT
-					/ 10 < data->minimap.height * CASE
-					&& data->map[(int)((y + data->y - HEIGHT / 10) / CASE)]
-					[(int)((x + data->x - HEIGHT / 10) / CASE)] == '0')
+				if (x + data->x - HEIGHT_DIV_PER_TEN >= 0
+					&& y + data->y - HEIGHT_DIV_PER_TEN >= 0
+					&& x + data->x - HEIGHT_DIV_PER_TEN < data->width_and_case
+					&& y + data->y - HEIGHT_DIV_PER_TEN < data->height_and_case
+					&& data->map[(int)((y + data->y - HEIGHT_DIV_PER_TEN) / CASE)]
+					[(int)((x + data->x - HEIGHT_DIV_PER_TEN) / CASE)] == '0')
 					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
 						MINIMAP_IMG_POS_Y + y, 0x00A0A0A0);
 				else
 					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
 						MINIMAP_IMG_POS_Y + y, 0x00000000);
 			}
-			else if (distance <= HEIGHT / 10 + 1)
+			else if (distance <= HEIGHT_DIV_PER_TEN + 1)
 				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
 					MINIMAP_IMG_POS_Y + y, 0x00FFFFFF);
 			++x;
@@ -64,7 +64,6 @@ void	init_img_win(t_data *data)
 	int			k;
 
 	raycast = data->raycast;
-	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);
 	k = 0;
 	while (k < HEIGHT)
 	{
@@ -101,6 +100,7 @@ int	init_cub3d(t_data *data)
 	data->hook.mouse_move = TRUE;
 	data->hook.old_x = WIDTH / 2;
 	mlx_mouse_move(data->mlx, data->win, data->hook.old_x, HEIGHT / 2);
+	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);
 	init_img_win(data);
 	init_minimap(data);
 	ray_cast(data);
