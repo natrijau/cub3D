@@ -1,5 +1,5 @@
 #include "cub3d.h"
-	
+
 /*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
@@ -21,7 +21,7 @@ void	ray_setup(t_data *data, t_ray *ray)
 	ray->flag = 'x';
 }
 
-int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
+int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
 
@@ -31,11 +31,11 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D') // Cas du mur 'P'
+	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
 	{
-		raycast->actual_wall = raycast->D_wall; // Texture spécifique pour 'P'
-		raycast->x = fmod(ray.x, CASE); 
-	}	
+		raycast->actual_wall = raycast->D_wall;
+		raycast->x = fmod(ray.x, CASE);
+	}
 	else if (ray.flag == 'x')
 	{
 		raycast->x = fmod(ray.x, CASE);
@@ -72,9 +72,9 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
+	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));
 	factor = (double)raycast.actual_wall.height / raycast.distance;
-	y = (HEIGHT >> 1) - raycast.distance / 2;  // Position de départ du dessin du mur
+	y = (HEIGHT >> 1) - raycast.distance / 2;
 	if (y < 0)
 		y = 0;
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
@@ -82,7 +82,7 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 		raycast.y = 0;
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
 		if ((x < WIDTH - HEIGHT / 5 && y < HEIGHT - HEIGHT / 5)
 			|| sqrt(pow(x - (WIDTH - HEIGHT / 10), 2) + pow(y - (HEIGHT - HEIGHT / 10), 2)) > HEIGHT / 10 + 1)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
@@ -139,9 +139,9 @@ void	ray_cast(t_data *data)
 	t_ray	ray;
 	int		i_ray;
 
-	ray.angle = data->angle - data->first_rayangle;  // Départ du rayon à l'angle de vision
+	ray.angle = data->angle - data->first_rayangle;
 	i_ray = 0;
-	while (i_ray < WIDTH)  // Parcourir la largeur de l'écran
+	while (i_ray < WIDTH)
 	{
 		ray_setup(data, &ray);  // Préparer le rayon
 		ray.x += ray.x_step;
@@ -149,6 +149,6 @@ void	ray_cast(t_data *data)
 		ray_cast_projection(data, &ray);
 		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
 		++i_ray;
-		ray.angle += data->angle_step;  // Incrémenter l'angle du rayon pour le prochain
+		ray.angle += data->angle_step;
 	}
 }
