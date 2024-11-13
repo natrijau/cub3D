@@ -30,53 +30,6 @@ static char	**get_file(char *file)
 	return (map);
 }
 
-int	**init_door_tab(char **str)
-{
-	int	i;
-	int	j;
-	int	d;
-	int	**tab_door;
-
-	i = 0;
-	d = 0;
-	while (str[i])
-	{
-		j = 0;
-		while (str[i][j])
-		{
-			if (str[i][j] == 'D')
-				d++;
-			j++;
-		}
-		i++;
-	}
-	tab_door = malloc(sizeof(int *) * (d + 1));
-	if (!tab_door)
-		return (NULL);
-	tab_door[d] = NULL;
-	i = 0;
-	d = 0;
-	while (str[i])
-	{
-		j = 0;
-		while (str[i][j])
-		{
-			if (str[i][j] == 'D')
-			{
-				tab_door[d] = malloc(sizeof(int) * 2);
-				if (!tab_door[d])
-					return (NULL);
-				tab_door[d][0] = i;
-				tab_door[d][1] = j;
-				d++;
-			}
-			j++;
-		}
-		i++;
-	}
-	return (tab_door);
-}
-
 // Validate map
 int	parsing(t_data *data, char *path_file)
 {

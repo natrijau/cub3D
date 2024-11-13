@@ -1,64 +1,63 @@
 #include "cub3d.h"
-	
+
 /*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
-	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
-	if (ray->angle > W)               // Si l'angle est supérieur à W
-		ray->angle -= N;                                                                                                                                                                                        // Réduire l'angle de N pour le remettre dans la plage
-	ray->x = data->x;                 // Position en x du rayon égale à la position actuelle de l'utilisateur
-	ray->y = data->y;                 // Position en y du rayon égale à la position actuelle de l'utilisateur
-	ray->x_multi = -1;                // Initialisation de x_multi
-	if (ray->angle > W && ray->angle < E)  // Si l'angle est entre W et E
-		ray->x_multi = 1;             // Inverser x_multi
-	ray->y_multi = -1;                 // Initialisation de y_multi
-	if (ray->angle < N && ray->angle > S)  // Si l'angle n'est pas entre N et S
-		ray->y_multi = 1;        // Inverser y_multi
-	ray->x_step = cos(ray->angle) * ray->x_multi;  // Calculer le pas en x selon l'angle
-	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
-	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
-	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
+	ray->angle = fmod(ray->angle, N);
+	if (ray->angle > W)
+		ray->angle -= N;
+	ray->x = data->x;
+	ray->y = data->y;
+	ray->x_multi = -1;
+	if (ray->angle > W && ray->angle < E)
+		ray->x_multi = 1;
+	ray->y_multi = -1;
+	if (ray->angle < N && ray->angle > S)
+		ray->y_multi = 1;
+	ray->x_step = cos(ray->angle) * ray->x_multi;
+	ray->y_step = sin(ray->angle) * ray->x_multi;
+	ray->x_step += cos(ray->angle + W) * ray->y_multi;
+	ray->y_step += sin(ray->angle + W) * ray->y_multi;
 	ray->x_step_div = ray->x_step * 0.1;
 	ray->y_step_div = ray->y_step * 0.1;
 }
 
-/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
-int    ray_cast_protection(t_data *data, t_ray *ray)
+/* vérifie que le rayon ne sort pas de la carte ou ne 
+	rencontre pas un espace vide ( collision) ? */
+int	ray_cast_protection(t_data *data, t_ray *ray)
 {
-    int        i;
+	int	i;
 
-    // Vérifie si le rayon sort de la carte ou rencontre un mur
-    if (ray->y >= 0 && ray->y <= data->height_and_case
-        && ray->x >= 0 && ray->x <= data->width_and_case
-        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
-        return (0);
-    //! a partir de la on est sur un semi dda
-    ray->x -= ray->x_step;
-    ray->y -= ray->y_step;
-    i = 0;
-    while (ray->y >= 0 && ray->y <= data->height_and_case
-        && ray->x >= 0 && ray->x <= data->width_and_case
-        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] == '0')
-    {
-        if (i++ % 2)
-        {
-            ray->x += ray->x_step_div;
-            ray->flag = 'y';
-        }
-        else
-        {
-            ray->y += ray->y_step_div;
-            ray->flag = 'x';
-        }
-    }
-    return (-1);
+	if (ray->y >= 0 && ray->y <= data->height_and_case
+		&& ray->x >= 0 && ray->x <= data->width_and_case
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
+		return (0);
+	ray->x -= ray->x_step;
+	ray->y -= ray->y_step;
+	i = 0;
+	while (ray->y >= 0 && ray->y <= data->height_and_case
+		&& ray->x >= 0 && ray->x <= data->width_and_case
+		&& data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)(ray->y - ray->y_step_div) / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step_div) / CASE] == '0')
+	{
+		if (i++ % 2)
+		{
+			ray->x += ray->x_step_div;
+			ray->flag = 'y';
+		}
+		else
+		{
+			ray->y += ray->y_step_div;
+			ray->flag = 'x';
+		}
+	}
+	return (-1);
 }
 
-int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
+int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
 
@@ -68,11 +67,11 @@ int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D') // Cas du mur 'P'
+	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
 	{
-		raycast->actual_wall = raycast->D_wall; // Texture spécifique pour 'P'
-		raycast->x = fmod(ray.x, CASE); 
-	}	
+		raycast->actual_wall = raycast->D_wall;
+		raycast->x = fmod(ray.x, CASE);
+	}
 	else if (ray.flag == 'x')
 	{
 		raycast->x = fmod(ray.x, CASE);
@@ -109,9 +108,9 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
+	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));
 	factor = (double)raycast.actual_wall.height / raycast.distance;
-	y = (HEIGHT >> 1) - raycast.distance / 2;  // Position de départ du dessin du mur
+	y = (HEIGHT >> 1) - raycast.distance / 2;
 	if (y < 0)
 		y = 0;
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
@@ -119,7 +118,7 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 		raycast.y = 0;
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
+		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
 		if ((x < WIDTH - HEIGHT / 5 && y < HEIGHT - HEIGHT / 5)
 			|| sqrt(pow(x - (WIDTH - HEIGHT / 10), 2) + pow(y - (HEIGHT - HEIGHT / 10), 2)) > HEIGHT / 10 + 1)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
@@ -135,26 +134,25 @@ void	ray_cast(t_data *data)
 	t_ray	ray;
 	int		i_ray;
 
-	ray.angle = data->angle - data->first_rayangle;  // Départ du rayon à l'angle de vision
+	ray.angle = data->angle - data->first_rayangle;
 	i_ray = 0;
-	while (i_ray < WIDTH)  // Parcourir la largeur de l'écran
+	while (i_ray < WIDTH)
 	{
-		ray_setup(data, &ray);  // Préparer le rayon
-		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
+		ray_setup(data, &ray);
+		while (TRUE)
 		{
 			ray.x += ray.x_step;
 			ray.y += ray.y_step;
-			if (ray_cast_protection(data, &ray) == -1)  // Vérifier les collisions
-				break;
+			if (ray_cast_protection(data, &ray) == -1)
+				break ;
 			if (sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2)) <= HEIGHT / 10)
 			{
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray.x - data->x + HEIGHT / 10) - ray.x_step / 2, MINIMAP_IMG_POS_Y + (ray.y - data->y + HEIGHT / 10) - ray.y_step / 2, 0x00FFFFFF); // pour faire un jolie rayon
+				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray.x - data->x + HEIGHT / 10) - ray.x_step / 2, MINIMAP_IMG_POS_Y + (ray.y - data->y + HEIGHT / 10) - ray.y_step / 2, 0x00FFFFFF);
 				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + (ray.x - data->x + HEIGHT / 10), MINIMAP_IMG_POS_Y + (ray.y - data->y + HEIGHT / 10), 0x00FFFFFF);
 			}
 		}
-		// draw_line(&data->minimap.space, (t_vec){data->x, data->y}, (t_vec){ray.x, ray.y});
-		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
+		draw_wall(data, ray, i_ray);
 		++i_ray;
-		ray.angle += data->angle_step;  // Incrémenter l'angle du rayon pour le prochain
+		ray.angle += data->angle_step;
 	}
 }

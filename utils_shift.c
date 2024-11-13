@@ -30,13 +30,11 @@ int	key_press(int keycode, t_data *data)
 	{
 		data->door_closed = FALSE;
 		replace_door(data);
-		printf("open door\n");
 	}
 	else if (keycode == 65293 && data->door_closed == FALSE)
 	{
 		data->door_closed = TRUE;
 		replace_door(data);
-		printf("close door\n");
 	}
 	azerty_qwerty(keycode, hook);
 	if (keycode == 65307)

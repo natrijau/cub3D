@@ -31,18 +31,25 @@ void	init_minimap(t_data *data)
 		{
 			distance = sqrt(pow(x - HEIGHT / 10, 2) + pow(y - HEIGHT / 10, 2));
 			if (distance <= CASE / 2)
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FF0000);
+				ft_mlx_pixel_put(&data->img_win,
+					MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FF0000);
 			else if (distance <= HEIGHT / 10)
 			{
-				if (x + data->x - HEIGHT / 10 >= 0 && x + data->x - HEIGHT / 10 < data->minimap.width * CASE
-					&& y + data->y - HEIGHT / 10 >= 0 && y + data->y - HEIGHT / 10 < data->minimap.height * CASE
-					&& data->map[(int)((y + data->y - HEIGHT / 10) / CASE)][(int)((x + data->x - HEIGHT / 10) / CASE)] == '0')
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00A0A0A0);
+				if (x + data->x - HEIGHT / 10 >= 0 && x + data->x - HEIGHT
+					/ 10 < data->minimap.width * CASE
+					&& y + data->y - HEIGHT / 10 >= 0 && y + data->y - HEIGHT
+					/ 10 < data->minimap.height * CASE
+					&& data->map[(int)((y + data->y - HEIGHT / 10) / CASE)]
+					[(int)((x + data->x - HEIGHT / 10) / CASE)] == '0')
+					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
+						MINIMAP_IMG_POS_Y + y, 0x00A0A0A0);
 				else
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00000000);
+					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
+						MINIMAP_IMG_POS_Y + y, 0x00000000);
 			}
 			else if (distance <= HEIGHT / 10 + 1)
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FFFFFF);
+				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
+					MINIMAP_IMG_POS_Y + y, 0x00FFFFFF);
 			++x;
 		}
 		++y;
