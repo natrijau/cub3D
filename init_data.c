@@ -12,7 +12,7 @@ static int	init_color(t_data *data, char *str)
 	if (check_color_value(tab))
 	{
 		map_clear(tab);
-        printf("Error\nInvalid color value\n");
+		printf("Error\nInvalid color value\n");
 		return (-1);
 	}
 	color = (ft_atoi(tab[0]) << 16) | (ft_atoi(tab[1]) << 8) | ft_atoi(tab[2]);
@@ -46,7 +46,7 @@ static int	init_texture(t_data *data, char *str)
 	return (0);
 }
 
-static int is_map_line(char *line_map, char *str)
+int	is_map_line(char *line_map, char *str)
 {
 	int	i;
 	int	j;
@@ -60,7 +60,7 @@ static int is_map_line(char *line_map, char *str)
 			if (str[j] == line_map[i])
 			{
 				j = 0;
-				break;
+				break ;
 			}
 			j++;
 		}
@@ -85,10 +85,10 @@ static int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
 				printf("Error\nMultiple player positions\n");
 				return (-1);
 			}
-			data->x = ((double)x + 0.5) * CASE;  // Player's horizontal position
-			data->y = ((double)y + 0.5) * CASE;  // Player's vertical position
-			data->angle = get_angle(line[x]);  // Initializes the angle based on the direction found
-			data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
+			data->x = ((double)x + 0.5) * CASE;
+			data->y = ((double)y + 0.5) * CASE;
+			data->angle = get_angle(line[x]);
+			data->fov_rad = (FOV * M_PI) / 180;
 			data->first_rayangle = (data->fov_rad / 2.0) - M_PI / 4.0;
 			data->angle_step = data->fov_rad / WIDTH;
 			line[x] = '0';
@@ -103,6 +103,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 {
 	int	i;
 	int	plyr_bool;
+
 	if (((--map_start == -1) && printf("Error\nInvalid element information\n"))
 		|| ((!tab[map_start + 1]) && printf("Error\nMap not found\n")))
 		return (-1);
