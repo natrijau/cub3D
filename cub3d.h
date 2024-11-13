@@ -55,6 +55,8 @@ typedef struct	s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
+	double	x_step_div;
+	double	y_step_div;
 	int		x_multi;
 	int		y_multi;
 	char	flag;
@@ -105,7 +107,7 @@ typedef struct	s_data
 	t_raycast	raycast;
 	t_hook		hook;
 	int			**tab_door;
-	int			door;
+	int			door_closed;
 	double		angle;
 	double		fov_rad;
 	double		first_rayangle;
@@ -126,8 +128,6 @@ t_image		get_wall(void *mlx, char *file);
 void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 int			parsing(t_data *data, char *file);
 void		print_map(char **map, int erase_bool);
-int			map_len(char *file);
-void		map_clear(char **map);
 int			ft_strtablen(char **map);
 int			get_max_tab_len(char **map);
 char		*clear_space(char *str);
@@ -140,4 +140,28 @@ int			add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
 double		get_angle(char direction);
 char		*clear_space(char *src);
 
+
+//utils_map.c
+int			map_len(char *file);
+void		map_clear(char **map);
+int			find_map_start(char **file_content);
+int			flood_fil(char **map, char **space, int x, int i);
+char		**init_map(char **map_off);
+
+
+//utils_shift.c
+void    azerty_qwerty(int keycode, t_hook	*hook);
+int		key_press(int keycode, t_data *data);
+int		key_release(int keycode, t_data *data);
+int 	update_move(t_data *data);
+void	shift(t_data *data, int y, int x);
+
+//utils_bonus.c
+int		find_door_in_map(char **str);
+int		**malloc_door_tab(int	**tab_door, char **str, int i, int j);
+int		**init_door_tab(char **str);
+
+//main.c
+void	replace_door(t_data *data);
+int		cub_close(t_data *data);
 #endif
