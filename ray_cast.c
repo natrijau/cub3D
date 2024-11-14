@@ -120,10 +120,11 @@ void    ray_cast_projection(t_data *data, t_ray *ray)
 			ray->flag = 'x';
 		}
 	}
-	if (fabs(ray->x_step) > 0.001 || fabs(ray->y_step) > 0.001)
+	if (fabs(ray->x_step) > 0.1 || fabs(ray->y_step) > 0.1)
 	{
     	ray->x -= ray->x_step;
-    	ray->y -= ray->y_step;
+		if (ray->flag == 'x')
+    		ray->y -= ray->y_step;
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;
 		ray_cast_projection(data, ray);

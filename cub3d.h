@@ -18,8 +18,8 @@
 # define FOV 80
 # define CASE 12
 # define CASE_DIV_PER_TWO CASE / 2
-# define WIDTH 1366
-# define HEIGHT 768
+# define WIDTH 1920
+# define HEIGHT 1080
 # define HEIGHT_DIV_PER_TEN HEIGHT / 10
 # define HEIGHT_DIV_PER_FIVE HEIGHT / 5
 # define MINIMAP_IMG_POS_X WIDTH - HEIGHT_DIV_PER_FIVE
