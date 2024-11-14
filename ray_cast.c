@@ -1,27 +1,5 @@
 #include "cub3d.h"
 
-/*initializes the radius parameters for each angle.*/
-void	ray_setup(t_data *data, t_ray *ray)
-{
-	ray->angle = fmod(ray->angle, N);
-	// if (ray->angle > W)
-	// 	ray->angle -= N;
-	ray->x = data->x;
-	ray->y = data->y;
-	// ray->x_multi = -1;
-	// if (ray->angle > W && ray->angle < E)
-	// 	ray->x_multi = 1;
-	// ray->y_multi = -1;
-	// if (ray->angle < N && ray->angle > S)
-	// 	ray->y_multi = 1;
-	// printf("ray->y_multi %d\nray->x_multi %d\n\n", ray->y_multi, ray->x_multi);
-	ray->x_step = cos(ray->angle) * -1;
-	ray->y_step = sin(ray->angle) * -1;
-	ray->x_step += cos(ray->angle + W) * -1;
-	ray->y_step += sin(ray->angle + W) * -1;
-	ray->flag = 'x';
-}
-
 int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
@@ -37,7 +15,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		raycast->actual_wall = raycast->D_wall;
 		raycast->x = fmod(ray.x, CASE);
 	}
-	else if (ray.flag == 'x')
+	else if (data->map[(int)(ray.y - ray.y_step) / CASE][(int)ray.x / CASE] == '0')
 	{
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
@@ -98,37 +76,31 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 /* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
 void    ray_cast_projection(t_data *data, t_ray *ray)
 {
-    while (ray->y >= 0 && ray->y <= data->height_and_case
-        && ray->x >= 0 && ray->x <= data->width_and_case
-        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+	double  x_fabs_step;
+	double  y_fabs_step;
+
+	x_fabs_step = fabs(ray->x_step);
+	y_fabs_step = fabs(ray->y_step);
+    while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
         && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
         && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 	{
-		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= (HEIGHT * 0.1))
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= HEIGHT_DIV_PER_TEN)
 		{
-			ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x) - ray->x_step / 2, RAY_PIXEL_PUT_POS_Y + (ray->y - data->y) - ray->y_step / 2, 0x00FFFFFF);
+			if (x_fabs_step > 1 || y_fabs_step > 1)
+				ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x) - ray->x_step / 2, RAY_PIXEL_PUT_POS_Y + (ray->y - data->y) - ray->y_step / 2, 0x00FFFFFF);
 			ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x), RAY_PIXEL_PUT_POS_Y + (ray->y - data->y), 0x00FFFFFF);
 		}
-		if (ray->flag == 'x')
-		{
-    		ray->x += ray->x_step;
-			ray->flag = 'y';
-		}
-		else
-		{
-    		ray->y += ray->y_step;
-			ray->flag = 'x';
-		}
+    	ray->x += ray->x_step;
+    	ray->y += ray->y_step;
 	}
-	if (fabs(ray->x_step) > 0.1 || fabs(ray->y_step) > 0.1)
+	if (x_fabs_step > 0.1 || y_fabs_step > 0.1)
 	{
     	ray->x -= ray->x_step;
-		if (ray->flag == 'x')
-    		ray->y -= ray->y_step;
+		ray->y -= ray->y_step;
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;
 		ray_cast_projection(data, ray);
-        return ;
 	}
 }
 
@@ -143,9 +115,11 @@ void	ray_cast(t_data *data)
 	i_ray = 0;
 	while (i_ray < WIDTH)
 	{
-		ray_setup(data, &ray);
-		ray.x += ray.x_step;
-		ray.y += ray.y_step;
+		ray.angle = fmod(ray.angle, N);
+		ray.x_step = cos(ray.angle + M_PI) + cos(ray.angle + E);
+		ray.y_step = sin(ray.angle + M_PI) + sin(ray.angle + E);
+		ray.x = data->x + ray.x_step;
+		ray.y = data->y + ray.y_step;
 		ray_cast_projection(data, &ray);
 		draw_wall(data, ray, i_ray);
 		++i_ray;

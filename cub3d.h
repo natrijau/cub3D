@@ -30,16 +30,11 @@
 # define PLAYER_IMG_POS_Y HEIGHT - HEIGHT_DIV_PER_TEN - CASE_DIV_PER_TWO
 # define TRUE 1
 # define FALSE 0
+# define ADD_ANGLE_STEP (M_PI * 2.5)
 # define N (M_PI * 2)
 # define E (M_PI * 1.5)
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
-
-typedef struct	s_vec
-{
-	double	x;
-	double	y;
-}				t_vec;
 
 typedef struct	s_image
 {
@@ -60,11 +55,6 @@ typedef struct	s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
-	double	x_step_div;
-	double	y_step_div;
-	int		x_multi;
-	int		y_multi;
-	char	flag;
 }				t_ray;
 
 typedef struct	s_raycast
