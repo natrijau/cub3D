@@ -1,44 +1,64 @@
 #include "cub3d.h"
-	
+
 /*initializes the radius parameters for each angle.*/
 void	ray_setup(t_data *data, t_ray *ray)
 {
-	ray->angle = fmod(ray->angle, N); // Limiter l'angle à une valeur comprise entre 0 et N
-	if (ray->angle > W)               // Si l'angle est supérieur à W
-		ray->angle -= N;              // Réduire l'angle de N pour le remettre dans la plage
-	ray->x = data->x;                 // Position en x du rayon égale à la position actuelle de l'utilisateur
-	ray->y = data->y;                 // Position en y du rayon égale à la position actuelle de l'utilisateur
-	ray->x_multi = -1;                // Initialisation de x_multi
-	if (ray->angle > W && ray->angle < E)  // Si l'angle est entre W et E
-		ray->x_multi = 1;             // Inverser x_multi
-	ray->y_multi = 1;                 // Initialisation de y_multi
-	if (!(ray->angle < N && ray->angle > S))  // Si l'angle n'est pas entre N et S
-		ray->y_multi = -1;            // Inverser y_multi
-	ray->x_step = cos(ray->angle) * ray->x_multi;  // Calculer le pas en x selon l'angle
-	ray->y_step = sin(ray->angle) * ray->x_multi;  // Calculer le pas en y selon l'angle
-	ray->x_step += cos(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour x
-	ray->y_step += sin(ray->angle + W) * ray->y_multi;  // Ajouter la composante de rotation W pour y
+	ray->angle = fmod(ray->angle, N);
+	// if (ray->angle > W)
+	// 	ray->angle -= N;
+	ray->x = data->x;
+	ray->y = data->y;
+	// ray->x_multi = -1;
+	// if (ray->angle > W && ray->angle < E)
+	// 	ray->x_multi = 1;
+	// ray->y_multi = -1;
+	// if (ray->angle < N && ray->angle > S)
+	// 	ray->y_multi = 1;
+	// printf("ray->y_multi %d\nray->x_multi %d\n\n", ray->y_multi, ray->x_multi);
+	ray->x_step = cos(ray->angle) * -1;
+	ray->y_step = sin(ray->angle) * -1;
+	ray->x_step += cos(ray->angle + W) * -1;
+	ray->y_step += sin(ray->angle + W) * -1;
+	ray->flag = 'x';
 }
 
-/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
-int	ray_cast_protection(t_data *data, t_ray ray)
-{
-	// Vérifie si le rayon sort de la carte ou rencontre un mur
-	if (ray.y < 0 || ray.y > data->minimap.height * CASE
-		|| ray.x < 0 || ray.x > data->minimap.width * CASE)
-		return (-1);
-	if (data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '1'
-		|| data->map[(int)ray.y / CASE][(int)(ray.x) / CASE] == '3')
-		return (-1);
-	return (0);
-}
-
-int		ft_mlx_get_pixel_color(t_image *img, int x, int y)
+int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
 
-	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	dst = img->addr + (y * img->line_len + x * (img->bpp >> 3));
 	return (*(unsigned int *)dst);
+}
+
+void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
+{
+	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
+	{
+		raycast->actual_wall = raycast->D_wall;
+		raycast->x = fmod(ray.x, CASE);
+	}
+	else if (ray.flag == 'x')
+	{
+		raycast->x = fmod(ray.x, CASE);
+		if (ray.y > data->y)
+		{
+			raycast->actual_wall = raycast->N_wall;
+			raycast->x = CASE - raycast->x; // fonctionne sans ?
+		}
+		else
+			raycast->actual_wall = raycast->S_wall;
+	}
+	else
+	{
+		raycast->x = fmod(ray.y, CASE);
+		if (ray.x > data->x)
+			raycast->actual_wall = raycast->W_wall;
+		else
+		{
+			raycast->x = CASE - raycast->x; // fonctionne sans ?
+			raycast->actual_wall = raycast->E_wall;
+		}
+	}
 }
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
@@ -49,27 +69,65 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	double		y;
 
 	raycast = data->raycast;
-	if (ray.flag == 'y')
-		raycast.x = fmod(ray.x, CASE);
-	else
-		raycast.x = fmod(ray.y, CASE);
-	raycast.x *= (double)raycast.N_wall.width / CASE;
+	set_texture_config(data, ray, &raycast);
+	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
-	raycast.distance *= cos(fmod(ray.angle - (data->angle + M_PI / 4), N));
-	raycast.distance = (CASE / raycast.distance) * ((WIDTH / 2) / tan(data->fov_rad / 2));  // Calcul de la distance corrigée pour le rendu
-	factor = (double)raycast.N_wall.height / raycast.distance;
-	y = raycast.pitch - raycast.distance / 2;  // Position de départ du dessin du mur
+	raycast.distance *= cos(fmod(ray.angle - (data->angle + (M_PI / 4)), N));
+	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));
+	factor = (double)raycast.actual_wall.height / raycast.distance;
+	y = (HEIGHT >> 1) - raycast.distance / 2;
 	if (y < 0)
 		y = 0;
-	raycast.y = (y - raycast.pitch + (raycast.distance / 2)) * factor;
+	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
-	while (y < raycast.pitch + raycast.distance / 2 && y <= HEIGHT)
+
+	double 	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
+
+	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.N_wall, raycast.x, raycast.y); // decommenter pour afficher avec les textures
-		ft_mlx_pixel_put(&data->raycast.raycast, x, y, raycast.wall_color);
+		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
+		if ((x < MINIMAP_IMG_POS_X && y < MINIMAP_IMG_POS_Y)
+			|| sqrt(x_pow + pow(y - (HEIGHT - HEIGHT_DIV_PER_TEN), 2)) > HEIGHT_DIV_PER_TEN + 1)
+			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;
+	}
+}
+
+/* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
+void    ray_cast_projection(t_data *data, t_ray *ray)
+{
+    while (ray->y >= 0 && ray->y <= data->height_and_case
+        && ray->x >= 0 && ray->x <= data->width_and_case
+        && data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+        && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
+	{
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= (HEIGHT * 0.1))
+		{
+			ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x) - ray->x_step / 2, RAY_PIXEL_PUT_POS_Y + (ray->y - data->y) - ray->y_step / 2, 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x), RAY_PIXEL_PUT_POS_Y + (ray->y - data->y), 0x00FFFFFF);
+		}
+		if (ray->flag == 'x')
+		{
+    		ray->x += ray->x_step;
+			ray->flag = 'y';
+		}
+		else
+		{
+    		ray->y += ray->y_step;
+			ray->flag = 'x';
+		}
+	}
+	if (fabs(ray->x_step) > 0.001 || fabs(ray->y_step) > 0.001)
+	{
+    	ray->x -= ray->x_step;
+    	ray->y -= ray->y_step;
+		ray->x_step *= 0.1;
+		ray->y_step *= 0.1;
+		ray_cast_projection(data, ray);
+        return ;
 	}
 }
 
@@ -80,25 +138,16 @@ void	ray_cast(t_data *data)
 	t_ray	ray;
 	int		i_ray;
 
-	ray.angle = data->angle - (data->fov_rad / 2.0) + M_PI / 4;  // Départ du rayon à l'angle de vision
+	ray.angle = data->angle - data->first_rayangle;
 	i_ray = 0;
-	while (i_ray < WIDTH)  // Parcourir la largeur de l'écran
+	while (i_ray < WIDTH)
 	{
-		ray_setup(data, &ray);  // Préparer le rayon
-		while (TRUE)  // Lancer le rayon jusqu'à ce qu'il rencontre un obstacle
-		{
-			ray.x += ray.x_step / 10;
-			ray.flag = 'x';
-			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
-				break;
-			ray.y += ray.y_step / 10;
-			ray.flag = 'y';
-			if (ray_cast_protection(data, ray) == -1)  // Vérifier les collisions
-				break;
-			ft_mlx_pixel_put(&data->minimap.space, ray.x, ray.y, 0x000000FF);  // Dessiner le rayon (en bleu ici)
-		}
-		draw_wall(data, ray, i_ray);  // Dessiner le mur à cette distance
+		ray_setup(data, &ray);
+		ray.x += ray.x_step;
+		ray.y += ray.y_step;
+		ray_cast_projection(data, &ray);
+		draw_wall(data, ray, i_ray);
 		++i_ray;
-		ray.angle += data->fov_rad / WIDTH;  // Incrémenter l'angle du rayon pour le prochain
+		ray.angle += data->angle_step;
 	}
 }

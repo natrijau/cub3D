@@ -13,7 +13,7 @@ SRCS=ft_isalpha.c ft_isdigit.c ft_isalnum.c ft_isascii.c ft_isprint.c \
 	get_next_line.c get_next_line_utils.c
 HEADER=libft.h ft_printf.h get_next_line.h
 OBJS=$(SRCS:.c=.o)
-CFLAGS=-Wall -Werror -Wextra
+CFLAGS=-Wall -Werror -Wextra -fPIE
 
 all: $(NAME)
 

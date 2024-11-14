@@ -1,80 +1,19 @@
 #include "cub3d.h"
 
-int  map_len(char *file)
+void free_door_tab(int **tab_door)
 {
-	int	 fd;
-	char	*line;
-	int	 len;
+	int i = 0;
 
-	fd = open(file, O_RDONLY);
-	if (fd < 0)
-		return (-1);
-	len = 0;
-	line = get_next_line(fd);
-	while (line)
+	if (!tab_door)
+		return;
+	while (tab_door && tab_door[i])
 	{
-		len++;
-		free(line);
-		line = get_next_line(fd);
+		free(tab_door[i]);
+		i++;
 	}
-	close(fd);
-	return (len);
+	free(tab_door);
 }
 
-// returns the starting angle based on the direction
-double get_angle(char direction)
-{
-    if (direction == 'N')  // north
-        return (N);
-    if (direction == 'E')  // East
-        return (E);
-    if (direction == 'S')  // south
-        return (S);
-    if (direction == 'W')  // west
-        return (W);
-    return (-1);
-}
-
-
-// initialize player position on map
-int init_start(char **map, t_data *data)
-{
-    int i;
-    int j;
-
-    i = 0;
-    if (!map)
-        return (-1);
-
-    while (map[i])
-    {
-        j = 0;
-        while (map[i][j])
-        {
-            if (ft_strchr("NSEW", map[i][j]))  // Finds the player's position based on his direction
-            {
-                data->x = j * CASE + CASE / 2;  // Player's horizontal position
-                data->y = i * CASE + CASE / 2;  // Player's vertical position
-                data->angle = get_angle(map[i][j]);  // Initializes the angle based on the direction found
-                data->fov_rad = (FOV * M_PI) / 180;  // vision converted to radians
-                return (0);
-            }
-            ++j;
-        }
-        ++i;
-    }
-    return (-1);
-}
-
-void	map_clear(char **map)
-{
-	int	i;
-
-	i = 0;
-	while (map[i])
-		free(map[i++]);
-	free(map);
-}
 
 int	ft_strtablen(char **map)
 {
@@ -84,4 +23,46 @@ int	ft_strtablen(char **map)
 	while (map[i])
 		++i;
 	return (i);
+}
+
+int	ft_isspace(char c)
+{
+	if (c == ' ' || c == '	' || c == '\t' || c == '\n'
+		|| c == '\r' || c == '\f' || c == '\v')
+		return (1);
+	return (0);
+}
+
+int	is_empty_line(const char *line)
+{
+	int	i;
+
+	i = 0;
+	while (line[i])
+	{
+		if (!ft_isspace(line[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+// returns the length of the longest line on map
+int	get_max_tab_len(char **map)
+{
+	int	max_len;
+	int	tmp_len;
+	int	i;
+
+	i = 1;
+	tmp_len = 0;
+	max_len = ft_strlen(map[0]);
+	while (map[i])
+	{
+		tmp_len = ft_strlen(map[i]);
+		if (tmp_len > max_len)
+			max_len = tmp_len;
+		i++;
+	}
+	return (max_len);
 }
