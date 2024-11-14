@@ -43,7 +43,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		if (ray.y > data->y)
 		{
 			raycast->actual_wall = raycast->N_wall;
-			raycast->x = CASE - raycast->x;
+			raycast->x = CASE - raycast->x; // fonctionne sans ?
 		}
 		else
 			raycast->actual_wall = raycast->S_wall;
@@ -55,7 +55,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 			raycast->actual_wall = raycast->W_wall;
 		else
 		{
-			raycast->x = CASE - raycast->x;
+			raycast->x = CASE - raycast->x; // fonctionne sans ?
 			raycast->actual_wall = raycast->E_wall;
 		}
 	}

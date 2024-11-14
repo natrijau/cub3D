@@ -2,10 +2,8 @@ NO textures/diamand.xpm
 SO textures/locharve.xpm
 WE textures/porte_close.xpm
 EA textures/rune.xpm
-
+D 51,153,255
 F 96,96,96
-C 51,153,255
-
         1111111111111111111111111
         1000000000100000000000001
         1011000000100000000000001

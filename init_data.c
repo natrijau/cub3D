@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-static int	init_color(t_data *data, char *str)
+int	init_color(t_data *data, char *str)
 {
 	int		color;
 	char	**tab;
@@ -26,12 +26,17 @@ static int	init_color(t_data *data, char *str)
 	return (0);
 }
 
-static int	init_texture(t_data *data, char *str)
+int	init_texture(t_data *data, char *str)
 {
 	t_image	img;
 
 	if (str[0] == 'F' || str[0] == 'C')
 		return (0);
+	if (!ft_strchr("NSWE", str[0]) && !ft_strchr("OEA", str[1]))
+	{
+		printf("Error\nBad argument starting with \"%c\"\n", str[0]);
+		return (-1);
+	}
 	img = get_wall(data->mlx, &str[2]);
 	if (!img.img)
 		return (-1);
@@ -71,7 +76,7 @@ int	is_map_line(char *line_map, char *str)
 	return (1);
 }
 
-static int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
+int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
 {
 	int	x;
 
@@ -104,7 +109,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 	int	i;
 	int	plyr_bool;
 
-	if (((--map_start == -1) && printf("Error\nInvalid element information\n"))
+	if ((((--map_start == -1) && printf("Error\nInvalid element information\n")))
 		|| ((!tab[map_start + 1]) && printf("Error\nMap not found\n")))
 		return (-1);
 	data->raycast.floor_color = 0;
