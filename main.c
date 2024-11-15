@@ -24,13 +24,29 @@ void	print_map(char **map, int erase_bool)
 	line_count = 0;
 	while (map[i])
 	{
+	int	char_count;
+	int	line_count;
+	int	i;
+
+	i = 0;
+	char_count = 0;
+	line_count = 0;
+	while (map[i])
+	{
 		char_count += printf("%s\n", map[i]);
 		line_count++;
+		i++;
 		i++;
 	}
 	usleep(15000);
 	if (!erase_bool)
 		return ;
+	i = 0;
+	while (i++ < line_count)
+		printf("\033[A");
+	i = 0;
+	while (i++ < char_count)
+		printf("\b \b");
 	i = 0;
 	while (i++ < line_count)
 		printf("\033[A");
@@ -68,12 +84,35 @@ int	cub_close(t_data *data)
 }
 
 void	replace_door(t_data *data)
+void	replace_door(t_data *data)
 {
 	int	i;
 
 	i = 0;
 	if (!data->tab_door)
+	int	i;
+
+	i = 0;
+	if (!data->tab_door)
 		return ;
+	while (data->tab_door[i])
+	{
+		if (data->door_closed == FALSE)
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = '0';
+		else if (data->door_closed == TRUE)
+			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = 'D';
+		i++;
+	}
+}
+
+//! DECOMMENTE POUR JOUER AVEC MOI
+// ___|___|_X_
+// ___|_X_|___
+//    |   | O 
+// X = Nathan
+// O = Yann
+
+void	data_init_img(t_data *data)
 	while (data->tab_door[i])
 	{
 		if (data->door_closed == FALSE)
@@ -112,17 +151,41 @@ void	data_init_img(t_data *data)
 			&data->raycast.D_wall.endian);
 	data->door_closed = TRUE;
 	data->map = NULL;
+	data->win = NULL;
+	data->img_win.img = NULL;
+	data->raycast.N_wall.img = NULL;
+	data->raycast.E_wall.img = NULL;
+	data->raycast.S_wall.img = NULL;
+	data->raycast.W_wall.img = NULL;
+	data->raycast.D_wall.img = mlx_xpm_file_to_image(
+			data->mlx, "./textures/doortile.xpm",
+			&data->raycast.D_wall.width,
+			&data->raycast.D_wall.height);
+	if (!data->raycast.D_wall.img)
+		printf("Error\nFailed to load door texture: %s\n", "ures/doortile.xpm");
+	data->raycast.D_wall.addr = mlx_get_data_addr(
+			data->raycast.D_wall.img,
+			&data->raycast.D_wall.bpp,
+			&data->raycast.D_wall.line_len,
+			&data->raycast.D_wall.endian);
+	data->door_closed = TRUE;
+	data->map = NULL;
 }
 
+int	main(int ac, char **av)
 int	main(int ac, char **av)
 {
 	t_data	data;
 
 	if (ac != 2)
+	if (ac != 2)
 	{
+		printf("Error\nInvalid number of arguments\n");
 		printf("Error\nInvalid number of arguments\n");
 		return (1);
 	}
+	data.mlx = mlx_init();
+	if (!data.mlx)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (1);
@@ -141,6 +204,9 @@ int	main(int ac, char **av)
 	return (0);
 }
 
+//TODO PORTES ?????? pas sur
+//TODO NORMER DES FONCTIONS
+//TODO TRIER LES FICHIERS
 //TODO PORTES ?????? pas sur
 //TODO NORMER DES FONCTIONS
 //TODO TRIER LES FICHIERS
