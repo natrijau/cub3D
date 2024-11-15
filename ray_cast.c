@@ -1,32 +1,9 @@
 #include "cub3d.h"
 
-/*initializes the radius parameters for each angle.*/
-void	ray_setup(t_data *data, t_ray *ray)
-{
-	ray->angle = fmod(ray->angle, N);
-	// if (ray->angle > W)
-	// 	ray->angle -= N;
-	ray->x = data->x;
-	ray->y = data->y;
-	// ray->x_multi = -1;
-	// if (ray->angle > W && ray->angle < E)
-	// 	ray->x_multi = 1;
-	// ray->y_multi = -1;
-	// if (ray->angle < N && ray->angle > S)
-	// 	ray->y_multi = 1;
-	// printf("ray->y_multi %d\nray->x_multi %d\n\n", ray->y_multi, ray->x_multi);
-	ray->x_step = cos(ray->angle) * -1;
-	ray->y_step = sin(ray->angle) * -1;
-	ray->x_step += cos(ray->angle + W) * -1;
-	ray->y_step += sin(ray->angle + W) * -1;
-	ray->flag = 'x';
-}
-
 int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 {
 	char	*dst;
 
-	dst = img->addr + (y * img->line_len + x * (img->bpp >> 3));
 	dst = img->addr + (y * img->line_len + x * (img->bpp >> 3));
 	return (*(unsigned int *)dst);
 }
@@ -62,37 +39,6 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 	}
 }
 
-void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
-{
-	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
-	{
-		raycast->actual_wall = raycast->D_wall;
-		raycast->x = fmod(ray.x, CASE);
-	}
-	else if (ray.flag == 'x')
-	{
-		raycast->x = fmod(ray.x, CASE);
-		if (ray.y > data->y)
-		{
-			raycast->actual_wall = raycast->N_wall;
-			raycast->x = CASE - raycast->x; // fonctionne sans ?
-		}
-		else
-			raycast->actual_wall = raycast->S_wall;
-	}
-	else
-	{
-		raycast->x = fmod(ray.y, CASE);
-		if (ray.x > data->x)
-			raycast->actual_wall = raycast->W_wall;
-		else
-		{
-			raycast->x = CASE - raycast->x; // fonctionne sans ?
-			raycast->actual_wall = raycast->E_wall;
-		}
-	}
-}
-
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
@@ -103,8 +49,6 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast = data->raycast;
 	set_texture_config(data, ray, &raycast);
 	raycast.x *= (double)raycast.actual_wall.width / CASE;
-	set_texture_config(data, ray, &raycast);
-	raycast.x *= (double)raycast.actual_wall.width / CASE;
 	raycast.distance = sqrt(pow(ray.x - data->x, 2) + pow(ray.y - data->y, 2));
 	raycast.distance *= cos(fmod(ray.angle - (data->angle + (M_PI / 4)), N));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1) / tan(data->fov_rad / 2));
@@ -113,22 +57,13 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	if (y < 0)
 		y = 0;
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
-	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
 
 	double 	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
 
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
-
-	double 	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
-
-	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
-		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
-		if ((x < MINIMAP_IMG_POS_X && y < MINIMAP_IMG_POS_Y)
-			|| sqrt(x_pow + pow(y - (HEIGHT - HEIGHT_DIV_PER_TEN), 2)) > HEIGHT_DIV_PER_TEN + 1)
-			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
 		if ((x < MINIMAP_IMG_POS_X && y < MINIMAP_IMG_POS_Y)
 			|| sqrt(x_pow + pow(y - (HEIGHT - HEIGHT_DIV_PER_TEN), 2)) > HEIGHT_DIV_PER_TEN + 1)
@@ -177,9 +112,7 @@ void	ray_cast(t_data *data)
 	int		i_ray;
 
 	ray.angle = data->angle - data->first_rayangle;
-	ray.angle = data->angle - data->first_rayangle;
 	i_ray = 0;
-	while (i_ray < WIDTH)
 	while (i_ray < WIDTH)
 	{
 		ray.angle = fmod(ray.angle, N);
@@ -190,7 +123,6 @@ void	ray_cast(t_data *data)
 		ray_cast_projection(data, &ray);
 		draw_wall(data, ray, i_ray);
 		++i_ray;
-		ray.angle += data->angle_step;
 		ray.angle += data->angle_step;
 	}
 }

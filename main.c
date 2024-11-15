@@ -6,12 +6,11 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/14 17:18:50 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/10/13 11:19:37 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
-
 // Display the map in console
 void	print_map(char **map, int erase_bool)
 {
@@ -24,29 +23,13 @@ void	print_map(char **map, int erase_bool)
 	line_count = 0;
 	while (map[i])
 	{
-	int	char_count;
-	int	line_count;
-	int	i;
-
-	i = 0;
-	char_count = 0;
-	line_count = 0;
-	while (map[i])
-	{
 		char_count += printf("%s\n", map[i]);
 		line_count++;
-		i++;
 		i++;
 	}
 	usleep(15000);
 	if (!erase_bool)
 		return ;
-	i = 0;
-	while (i++ < line_count)
-		printf("\033[A");
-	i = 0;
-	while (i++ < char_count)
-		printf("\b \b");
 	i = 0;
 	while (i++ < line_count)
 		printf("\033[A");
@@ -75,21 +58,15 @@ int	cub_close(t_data *data)
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
 	if (data->raycast.D_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);
+		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);	
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
-	free_door_tab(data->tab_door);
 	exit(EXIT_SUCCESS);
 }
 
 void	replace_door(t_data *data)
-void	replace_door(t_data *data)
 {
-	int	i;
-
-	i = 0;
-	if (!data->tab_door)
 	int	i;
 
 	i = 0;
@@ -113,24 +90,6 @@ void	replace_door(t_data *data)
 // O = Yann
 
 void	data_init_img(t_data *data)
-	while (data->tab_door[i])
-	{
-		if (data->door_closed == FALSE)
-			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = '0';
-		else if (data->door_closed == TRUE)
-			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = 'D';
-		i++;
-	}
-}
-
-//! DECOMMENTE POUR JOUER AVEC MOI
-// ___|___|_X_
-// ___|_X_|___
-//    |   | O 
-// X = Nathan
-// O = Yann
-
-void	data_init_img(t_data *data)
 {
 	data->win = NULL;
 	data->img_win.img = NULL;
@@ -151,41 +110,17 @@ void	data_init_img(t_data *data)
 			&data->raycast.D_wall.endian);
 	data->door_closed = TRUE;
 	data->map = NULL;
-	data->win = NULL;
-	data->img_win.img = NULL;
-	data->raycast.N_wall.img = NULL;
-	data->raycast.E_wall.img = NULL;
-	data->raycast.S_wall.img = NULL;
-	data->raycast.W_wall.img = NULL;
-	data->raycast.D_wall.img = mlx_xpm_file_to_image(
-			data->mlx, "./textures/doortile.xpm",
-			&data->raycast.D_wall.width,
-			&data->raycast.D_wall.height);
-	if (!data->raycast.D_wall.img)
-		printf("Error\nFailed to load door texture: %s\n", "ures/doortile.xpm");
-	data->raycast.D_wall.addr = mlx_get_data_addr(
-			data->raycast.D_wall.img,
-			&data->raycast.D_wall.bpp,
-			&data->raycast.D_wall.line_len,
-			&data->raycast.D_wall.endian);
-	data->door_closed = TRUE;
-	data->map = NULL;
 }
 
-int	main(int ac, char **av)
 int	main(int ac, char **av)
 {
 	t_data	data;
 
 	if (ac != 2)
-	if (ac != 2)
 	{
-		printf("Error\nInvalid number of arguments\n");
 		printf("Error\nInvalid number of arguments\n");
 		return (1);
 	}
-	data.mlx = mlx_init();
-	if (!data.mlx)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (1);
@@ -194,7 +129,7 @@ int	main(int ac, char **av)
 		cub_close(&data);
 	printf("Map:\n");
 	print_map(data.map, FALSE);
-	// mlx_mouse_hide(data.mlx, data.win);
+	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
@@ -203,10 +138,3 @@ int	main(int ac, char **av)
 	cub_close(&data);
 	return (0);
 }
-
-//TODO PORTES ?????? pas sur
-//TODO NORMER DES FONCTIONS
-//TODO TRIER LES FICHIERS
-//TODO PORTES ?????? pas sur
-//TODO NORMER DES FONCTIONS
-//TODO TRIER LES FICHIERS
