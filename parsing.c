@@ -37,20 +37,12 @@ int	check_texture(t_data *data)
 	{
 		printf("Error\nOne of the textures is not initialized\n");
 		return (-1);
-	}	
+	}
 	return (0);
 }
 
-// Validate map
-int	parsing(t_data *data, char *path_file)
+int	init(t_data *data, char **file, int map_start)
 {
-	char	**file;
-	int		map_start;
-
-	file = get_file(path_file);
-	if (!file)
-		return (-1);
-	map_start = find_map_start(file) + 1;
 	if (init_data(data, file, map_start) == -1)
 	{
 		map_clear(file);
@@ -69,6 +61,21 @@ int	parsing(t_data *data, char *path_file)
 		map_clear(file);
 		return (-1);
 	}
+	return (0);
+}
+
+// Validate map
+int	parsing(t_data *data, char *path_file)
+{
+	char	**file;
+	int		map_start;
+
+	file = get_file(path_file);
+	if (!file)
+		return (-1);
+	map_start = find_map_start(file) + 1;
+	if (init(data, file, map_start) == -1)
+		return (-1);
 	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");
