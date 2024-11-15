@@ -30,6 +30,17 @@ static char	**get_file(char *file)
 	return (map);
 }
 
+int	check_texture(t_data *data)
+{
+	if (data->raycast.N_wall.img == NULL || data->raycast.S_wall.img == NULL
+		|| data->raycast.W_wall.img == NULL || data->raycast.E_wall.img == NULL)
+	{
+		printf("Error\nOne of the textures is not initialized\n");
+		return (-1);
+	}	
+	return (0);
+}
+
 // Validate map
 int	parsing(t_data *data, char *path_file)
 {
@@ -66,5 +77,7 @@ int	parsing(t_data *data, char *path_file)
 	}
 	data->tab_door = init_door_tab(data->map);
 	map_clear(file);
+	if (check_texture(data) == -1)
+		return (-1);
 	return (0);
 }

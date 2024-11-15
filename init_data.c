@@ -32,7 +32,7 @@ int	init_texture(t_data *data, char *str)
 
 	if (str[0] == 'F' || str[0] == 'C')
 		return (0);
-	if (!ft_strchr("NSWE", str[0]) && !ft_strchr("OEA", str[1]))
+	if (!ft_strchr("NSWE", str[0]) || !ft_strchr("OEA", str[1]))
 	{
 		printf("Error\nBad argument starting with \"%c\"\n", str[0]);
 		return (-1);
