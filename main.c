@@ -58,7 +58,7 @@ int	cub_close(t_data *data)
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
 	if (data->raycast.D_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);	
+		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);

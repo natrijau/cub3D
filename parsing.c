@@ -50,7 +50,7 @@ int	parsing(t_data *data, char *path_file)
 	{
 		printf("Error\nOne of the colors in the month have not been defined\n");
 		map_clear(file);
-		return (-1);		
+		return (-1);
 	}
 	data->map = init_map(&file[map_start]);
 	if (!data->map)

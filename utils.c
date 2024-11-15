@@ -1,11 +1,12 @@
 #include "cub3d.h"
 
-void free_door_tab(int **tab_door)
+void	free_door_tab(int **tab_door)
 {
-	int i = 0;
+	int	i;
 
+	i = 0;
 	if (!tab_door)
-		return;
+		return ;
 	while (tab_door && tab_door[i])
 	{
 		free(tab_door[i]);
@@ -13,7 +14,6 @@ void free_door_tab(int **tab_door)
 	}
 	free(tab_door);
 }
-
 
 int	ft_strtablen(char **map)
 {
@@ -66,4 +66,3 @@ int	get_max_tab_len(char **map)
 	}
 	return (max_len);
 }
-

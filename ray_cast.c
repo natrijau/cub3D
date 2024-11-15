@@ -59,9 +59,8 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
-
-	double 	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
-
+	double	x_pow;
+	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
@@ -74,16 +73,16 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 }
 
 /* vérifie que le rayon ne sort pas de la carte ou ne rencontre pas un espace vide ( collision) ? */
-void    ray_cast_projection(t_data *data, t_ray *ray)
+void	ray_cast_projection(t_data *data, t_ray *ray)
 {
-	double  x_fabs_step;
-	double  y_fabs_step;
+	double	x_fabs_step;
+	double	y_fabs_step;
 
 	x_fabs_step = fabs(ray->x_step);
 	y_fabs_step = fabs(ray->y_step);
-    while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
-        && data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
+	while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 	{
 		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= HEIGHT_DIV_PER_TEN)
 		{
@@ -91,12 +90,12 @@ void    ray_cast_projection(t_data *data, t_ray *ray)
 				ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x) - ray->x_step / 2, RAY_PIXEL_PUT_POS_Y + (ray->y - data->y) - ray->y_step / 2, 0x00FFFFFF);
 			ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x), RAY_PIXEL_PUT_POS_Y + (ray->y - data->y), 0x00FFFFFF);
 		}
-    	ray->x += ray->x_step;
-    	ray->y += ray->y_step;
+		ray->x += ray->x_step;
+		ray->y += ray->y_step;
 	}
 	if (x_fabs_step > 0.1 || y_fabs_step > 0.1)
 	{
-    	ray->x -= ray->x_step;
+		ray->x -= ray->x_step;
 		ray->y -= ray->y_step;
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;

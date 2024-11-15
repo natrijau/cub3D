@@ -29,8 +29,8 @@ int	init_color(t_data *data, char *str)
 int	init_texture(t_data *data, char *str)
 {
 	t_image	img;
-	if (str[0] == 'F' || str[0] == 'C')
 
+	if (str[0] == 'F' || str[0] == 'C')
 		return (0);
 	if (!ft_strchr("NSWE", str[0]) && !ft_strchr("OEA", str[1]))
 	{
