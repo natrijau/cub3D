@@ -36,7 +36,7 @@ t_image	get_wall(void *mlx, char *file)
 	return (img);
 }
 
-int	add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
+int	add_direction_img(t_image *dest, t_data *data, char *str, char *direction)
 {
 	if (!ft_strncmp(str, direction, 2))
 	{
@@ -45,7 +45,9 @@ int	add_direction_img(t_image *dest, t_image *src, char *str, char *direction)
 			printf("Error\nDouble texture definition: %s\n", direction);
 			return (-1);
 		}
-		*dest = *src;
+		*dest = get_wall(data->mlx, &str[2]);
+		if (!dest->img)
+			return (-1);
 	}
 	return (0);
 }
@@ -63,24 +65,4 @@ double	get_angle(char direction)
 		return (E);
 	printf("Error\nInvalid player direction: %c\n", direction);
 	return (-1);
-}
-
-char	*clear_space(char *src)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (src[i])
-	{
-		if (!ft_isspace(src[i]))
-		{
-			src[j] = src[i];
-			j++;
-		}
-		i++;
-	}
-	src[j] = '\0';
-	return (src);
 }

@@ -28,8 +28,6 @@ int	init_color(t_data *data, char *str)
 
 int	init_texture(t_data *data, char *str)
 {
-	t_image	img;
-
 	if (str[0] == 'F' || str[0] == 'C')
 		return (0);
 	if (!ft_strchr("NSWE", str[0]) || !ft_strchr("OEA", str[1]))
@@ -37,59 +35,15 @@ int	init_texture(t_data *data, char *str)
 		printf("Error\nBad argument starting with \"%c\"\n", str[0]);
 		return (-1);
 	}
-	img = get_wall(data->mlx, &str[2]);
-	if (!img.img)
+	if (add_direction_img(&data->raycast.N_wall, data, str, "NO") == -1)
 		return (-1);
-	if (add_direction_img(&data->raycast.N_wall, &img, str, "NO") == -1)
-	{
-		if (data->raycast.N_wall.img)
-			mlx_destroy_image(data->mlx, img.img);
+	if (add_direction_img(&data->raycast.S_wall, data, str, "SO") == -1)
 		return (-1);
-	}
-	if (add_direction_img(&data->raycast.S_wall, &img, str, "SO") == -1)
-	{
-		if (data->raycast.S_wall.img)
-			mlx_destroy_image(data->mlx, img.img);
+	if (add_direction_img(&data->raycast.W_wall, data, str, "WE") == -1)
 		return (-1);
-	}
-	if (add_direction_img(&data->raycast.W_wall, &img, str, "WE") == -1)
-	{
-		if (data->raycast.W_wall.img)
-			mlx_destroy_image(data->mlx, img.img);
+	if (add_direction_img(&data->raycast.E_wall, data, str, "EA") == -1)
 		return (-1);
-	}
-	if (add_direction_img(&data->raycast.E_wall, &img, str, "EA") == -1)
-	{
-		if (data->raycast.E_wall.img)
-			mlx_destroy_image(data->mlx, img.img);
-		return (-1);
-	}
 	return (0);
-}
-
-int	is_map_line(char *line_map, char *str)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (line_map[i])
-	{
-		while (str[j])
-		{
-			if (str[j] == line_map[i])
-			{
-				j = 0;
-				break ;
-			}
-			j++;
-		}
-		if (str[j] == '\0' && printf("Error\nInvalid map line\n"))
-			return (0);
-		i++;
-	}
-	return (1);
 }
 
 int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
@@ -120,13 +74,27 @@ int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
 	return (0);
 }
 
+int	error_map_start(int start, char **tab)
+{
+	if (start == 0)
+	{
+		printf("Error\nInvalid element information\n");
+		return (-1);
+	}
+	else if ((!tab[start + 1]))
+	{
+		printf("Error\nMap not found\n");
+		return (-1);
+	}
+	return (0);
+}
+
 int	init_data(t_data *data, char **tab, int map_start)
 {
 	int	i;
 	int	plyr_bool;
 
-	if ((((--map_start == -1) && printf("Error\nInvalid element information\n")))
-		|| ((!tab[map_start + 1]) && printf("Error\nMap not found\n")))
+	if (error_map_start(map_start, tab))
 		return (-1);
 	data->raycast.floor_color = 0;
 	data->raycast.ceiling_color = 0;

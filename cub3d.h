@@ -121,53 +121,75 @@ typedef struct	s_data
 	int			width_and_case;
 }				t_data;
 
-int			init_data(t_data *data, char **tab, int map_start);
-void		ray_cast(t_data *data);
-void		init_minimap(t_data *data);
-void		init_img_win(t_data *data);
-int			init_cub3d(t_data *data);
-void		creat_image(t_image *img, void *mlx, int width, int height);
-t_image		get_wall(void *mlx, char *file);
-void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
-int			parsing(t_data *data, char *file);
-void		print_map(char **map, int erase_bool);
-int			get_max_tab_len(char **map);
-char		*clear_space(char *str);
-
-// init_data_utils
-int			check_color_value(char **tab);
-t_image		get_wall(void *mlx, char *file);
-int			add_direction_img(t_image *dest, t_image *src, char *str, char *direction);
-double		get_angle(char direction);
-char		*clear_space(char *src);
-
 //utils_map.c
+int			is_map_line(char *line_map, char *str);
+char		*clear_space(char *src);
 int			map_len(char *file);
 void		map_clear(char **map);
 int			find_map_start(char **file_content);
-int			flood_fil(char **map, char **space, int x, int i);
-char		**init_map(char **map_off);
 
 //utils_shift.c
-void    azerty_qwerty(int keycode, t_hook	*hook);
-int		key_press(int keycode, t_data *data);
-int		key_release(int keycode, t_data *data);
-int 	update_move(t_data *data);
-void	shift(t_data *data, int y, int x);
+void    	azerty_qwerty(int keycode, t_hook	*hook);
+int			key_press(int keycode, t_data *data);
+int			key_release(int keycode, t_data *data);
+int 		update_move(t_data *data);
+void		shift(t_data *data, int y, int x);
 
 //utils_bonus.c
-int		find_door_in_map(char **str);
-int		**malloc_door_tab(int	**tab_door, char **str, int i, int j);
-int		**init_door_tab(char **str);
+int			find_door_in_map(char **str);
+int			**malloc_door_tab(int	**tab_door, char **str, int i, int j);
+int			**init_door_tab(char **str);
 
 //utils.c
-void	free_door_tab(int **tab);
-int		ft_strtablen(char **map);
-int		ft_isspace(char c);
-int		is_empty_line(const char *line);
+void		free_door_tab(int **tab);
+int			ft_strtablen(char **map);
+int			ft_isspace(char c);
+int			is_empty_line(const char *line);
+int			get_max_tab_len(char **map);
+
+//parsing.c
+char		**get_file(char *file);
+int			check_texture(t_data *data);
+int			init(t_data *data, char **file, int map_start);
+int			parsing(t_data *data, char *path_file);
+
+//ray_cast.c
+int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
+void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
+void		draw_wall(t_data *data, t_ray ray, int x);
+void		ray_cast_projection(t_data *data, t_ray *ray);
+void		ray_cast(t_data *data);
+
+//map.c
+int			check_zero_inside(char **tab, int start);
+int			valid_zero_map(int start, char **tab);
+char		**init_map(char **map_off);
+int			flood_fil(char **map, char **space, int x, int i);
+
+//init_cub3d.c
+void		creat_image(t_image *img, void *mlx, int width, int height);
+void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
+void		init_minimap(t_data *data);
+void		init_img_win(t_data *data);
+int			init_cub3d(t_data *data);
+
+//init_data.c
+int			init_color(t_data *data, char *str);
+int			init_texture(t_data *data, char *str);
+int			find_plyr_pos(t_data *data, char *line, int y, int *find_plyr);
+int			init_data(t_data *data, char **tab, int map_start);
+
+// init_data_utils.c
+int			check_color_value(char **tab);
+t_image		get_wall(void *mlx, char *file);
+int			add_direction_img(t_image *dest, t_data *data, char *str, char *direction);
+double		get_angle(char direction);
 
 //main.c
-void	replace_door(t_data *data);
-int		cub_close(t_data *data);
+void		print_map(char **map, int erase_bool);
+int			cub_close(t_data *data);
+void		replace_door(t_data *data);
+void		data_init_img(t_data *data);
+int			main(int ac, char **av);
 
 #endif

@@ -1,7 +1,7 @@
 #include "cub3d.h"
 
 //  Read map since file and return tab map
-static char	**get_file(char *file)
+char	**get_file(char *file)
 {
 	char	**map;
 	int		fd;
@@ -76,7 +76,8 @@ int	parsing(t_data *data, char *path_file)
 	map_start = find_map_start(file) + 1;
 	if (init(data, file, map_start) == -1)
 		return (-1);
-	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
+	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE)
+		|| valid_zero_map(map_start, file))
 	{
 		printf("Error\nInvalid map\n");
 		map_clear(file);

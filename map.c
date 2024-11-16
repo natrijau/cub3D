@@ -1,5 +1,51 @@
 #include "cub3d.h"
 
+int	check_zero_inside(char **tab, int start)
+{
+	int	i;
+	int	j;
+
+	i = start + 1;
+	j = 1;
+	while (tab[i])
+	{
+		while (tab[i][j + 1])
+		{
+			if (tab[i][j] == '0')
+			{
+				if (!ft_strchr("D01", tab[i - 1][j])
+					|| !ft_strchr("D01", tab[i + 1][j]))
+					return (-1);
+				if (!ft_strchr("D01", tab[i][j + 1])
+					|| !ft_strchr("D01", tab[i][j - 1]))
+					return (-1);
+			}
+			j++;
+		}
+		j = 1;
+		i++;
+	}
+	return (0);
+}
+
+int	valid_zero_map(int start, char **tab)
+{
+	int	i;
+
+	i = start;
+	if (!ft_strchr(tab[start], '0') || !ft_strchr(tab[ft_strtablen(tab)], '0'))
+		return (-1);
+	while (tab[i])
+	{
+		if (tab[i][0] == '0' || tab[i][ft_strlen(tab[i])] == '0')
+			return (-1);
+		i++;
+	}
+	if (check_zero_inside(tab, start) == -1)
+		return (-1);
+	return (0);
+}
+
 // Add space to map to equalize the length of the lines
 char	**init_map(char **map_off)
 {
