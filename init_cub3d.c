@@ -24,32 +24,32 @@ void	init_minimap(t_data *data)
 	int		y;
 
 	y = 0;
-	while (y < HEIGHT_DIV_PER_FIVE)
+	while (y < H_DIV_FIVE)
 	{
 		x = 0;
-		while (x < HEIGHT_DIV_PER_FIVE)
+		while (x < H_DIV_FIVE)
 		{
-			distance = sqrt(pow(x - HEIGHT_DIV_PER_TEN, 2) + pow(y - HEIGHT_DIV_PER_TEN, 2));
+			distance = sqrt(pow(x - H_DIV_TEN, 2) + pow(y - H_DIV_TEN, 2));
 			if (distance <= CASE_DIV_PER_TWO)
 				ft_mlx_pixel_put(&data->img_win,
-					MINIMAP_IMG_POS_X + x, MINIMAP_IMG_POS_Y + y, 0x00FF0000);
-			else if (distance <= HEIGHT_DIV_PER_TEN)
+					MINIMAP_IMG_X + x, MINIMAP_IMG_Y + y, 0x00FF0000);
+			else if (distance <= H_DIV_TEN)
 			{
-				if (x + data->x - HEIGHT_DIV_PER_TEN >= 0
-					&& y + data->y - HEIGHT_DIV_PER_TEN >= 0
-					&& x + data->x - HEIGHT_DIV_PER_TEN < data->width_and_case
-					&& y + data->y - HEIGHT_DIV_PER_TEN < data->height_and_case
-					&& data->map[(int)((y + data->y - HEIGHT_DIV_PER_TEN) / CASE)]
-					[(int)((x + data->x - HEIGHT_DIV_PER_TEN) / CASE)] == '0')
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
-						MINIMAP_IMG_POS_Y + y, 0x00A0A0A0);
+				if (x + data->x - H_DIV_TEN >= 0
+					&& y + data->y - H_DIV_TEN >= 0
+					&& x + data->x - H_DIV_TEN < data->width_and_case
+					&& y + data->y - H_DIV_TEN < data->height_and_case
+					&& data->map[(int)((y + data->y - H_DIV_TEN) / CASE)]
+					[(int)((x + data->x - H_DIV_TEN) / CASE)] == '0')
+					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_X + x,
+						MINIMAP_IMG_Y + y, 0x00A0A0A0);
 				else
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
-						MINIMAP_IMG_POS_Y + y, 0x00000000);
+					ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_X + x,
+						MINIMAP_IMG_Y + y, 0x00000000);
 			}
-			else if (distance <= HEIGHT_DIV_PER_TEN + 1)
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_POS_X + x,
-					MINIMAP_IMG_POS_Y + y, 0x00FFFFFF);
+			else if (distance <= H_DIV_TEN + 1)
+				ft_mlx_pixel_put(&data->img_win, MINIMAP_IMG_X + x,
+					MINIMAP_IMG_Y + y, 0x00FFFFFF);
 			++x;
 		}
 		++y;

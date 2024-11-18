@@ -21,7 +21,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		if (ray.y > data->y)
 		{
 			raycast->actual_wall = raycast->N_wall;
-			raycast->x = CASE - raycast->x; // fonctionne sans ?
+			raycast->x = CASE - raycast->x;
 		}
 		else
 			raycast->actual_wall = raycast->S_wall;
@@ -33,7 +33,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 			raycast->actual_wall = raycast->W_wall;
 		else
 		{
-			raycast->x = CASE - raycast->x; // fonctionne sans ?
+			raycast->x = CASE - raycast->x;
 			raycast->actual_wall = raycast->E_wall;
 		}
 	}
@@ -60,12 +60,12 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	if (raycast.y < 0)
 		raycast.y = 0;
 	double	x_pow;
-	x_pow = pow(x - (WIDTH - HEIGHT_DIV_PER_TEN), 2);
+	x_pow = pow(x - (WIDTH - H_DIV_TEN), 2);
 	while (y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall, raycast.x, raycast.y);
-		if ((x < MINIMAP_IMG_POS_X && y < MINIMAP_IMG_POS_Y)
-			|| sqrt(x_pow + pow(y - (HEIGHT - HEIGHT_DIV_PER_TEN), 2)) > HEIGHT_DIV_PER_TEN + 1)
+		if ((x < MINIMAP_IMG_X && y < MINIMAP_IMG_Y)
+			|| sqrt(x_pow + pow(y - (HEIGHT - H_DIV_TEN), 2)) > H_DIV_TEN + 1)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.y += factor;
 		++y;
@@ -84,7 +84,7 @@ void	ray_cast_projection(t_data *data, t_ray *ray)
 		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
 		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
 	{
-		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= HEIGHT_DIV_PER_TEN)
+		if (sqrt(pow(ray->x - data->x, 2) + pow(ray->y - data->y, 2)) <= H_DIV_TEN)
 		{
 			if (x_fabs_step > 1 || y_fabs_step > 1)
 				ft_mlx_pixel_put(&data->img_win, RAY_PIXEL_PUT_POS_X + (ray->x - data->x) - ray->x_step / 2, RAY_PIXEL_PUT_POS_Y + (ray->y - data->y) - ray->y_step / 2, 0x00FFFFFF);

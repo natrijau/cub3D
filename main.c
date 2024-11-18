@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/18 10:27:55 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:12:21 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,26 @@ void	data_init_img(t_data *data)
 			&data->raycast.D_wall.endian);
 	data->door_closed = TRUE;
 	data->map = NULL;
+	data->tab_door = NULL;
+}
+
+int	check_type(char *str)
+{
+	int	i;
+
+	i = ft_strlen(str) - 4;
+	if (str[i] != '.' || str[i + 1] != 'c' || str[i + 2] != 'u' || str[i + 3] != 'b')
+		return (-1);		
+	return (0);
 }
 
 int	main(int ac, char **av)
 {
 	t_data	data;
 
-	if (ac != 2)
+	if (ac != 2 || check_type(av[1]))
 	{
-		printf("Error\nInvalid number of arguments\n");
+		printf("Error\nInvalid arguments\n");
 		return (1);
 	}
 	data.mlx = mlx_init();

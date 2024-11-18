@@ -20,14 +20,14 @@
 # define CASE_DIV_PER_TWO CASE / 2
 # define WIDTH 1920
 # define HEIGHT 960
-# define HEIGHT_DIV_PER_TEN HEIGHT / 10
-# define HEIGHT_DIV_PER_FIVE HEIGHT / 5
-# define MINIMAP_IMG_POS_X WIDTH - HEIGHT_DIV_PER_FIVE
-# define MINIMAP_IMG_POS_Y HEIGHT - HEIGHT_DIV_PER_FIVE
-# define RAY_PIXEL_PUT_POS_X MINIMAP_IMG_POS_X + HEIGHT_DIV_PER_TEN
-# define RAY_PIXEL_PUT_POS_Y MINIMAP_IMG_POS_Y + HEIGHT_DIV_PER_TEN
-# define PLAYER_IMG_POS_X WIDTH - HEIGHT_DIV_PER_TEN - CASE_DIV_PER_TWO
-# define PLAYER_IMG_POS_Y HEIGHT - HEIGHT_DIV_PER_TEN - CASE_DIV_PER_TWO
+# define H_DIV_TEN HEIGHT / 10
+# define H_DIV_FIVE HEIGHT / 5
+# define MINIMAP_IMG_X WIDTH - H_DIV_FIVE
+# define MINIMAP_IMG_Y HEIGHT - H_DIV_FIVE
+# define RAY_PIXEL_PUT_POS_X MINIMAP_IMG_X + H_DIV_TEN
+# define RAY_PIXEL_PUT_POS_Y MINIMAP_IMG_Y + H_DIV_TEN
+# define PLAYER_IMG_POS_X WIDTH - H_DIV_TEN - CASE_DIV_PER_TWO
+# define PLAYER_IMG_POS_Y HEIGHT - H_DIV_TEN - CASE_DIV_PER_TWO
 # define TRUE 1
 # define FALSE 0
 # define ADD_ANGLE_STEP (M_PI * 2.5)
@@ -161,7 +161,6 @@ void		ray_cast_projection(t_data *data, t_ray *ray);
 void		ray_cast(t_data *data);
 
 //map.c
-void		free_tab_door(int **door);
 int			check_zero_inside(char **tab, int start);
 int			valid_zero_map(int start, char **tab);
 char		**init_map(char **map_off);
