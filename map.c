@@ -33,11 +33,12 @@ int	valid_zero_map(int start, char **tab)
 	int	i;
 
 	i = start;
-	if (!ft_strchr(tab[start], '0') || !ft_strchr(tab[ft_strtablen(tab)], '0'))
+	if (ft_strchr(tab[start], '0') || ft_strchr(tab[ft_strtablen(tab)], '0'))
 		return (-1);
+	i++;
 	while (tab[i])
 	{
-		if (tab[i][0] == '0' || tab[i][ft_strlen(tab[i])] == '0')
+		if (tab[i][0] == '0' || tab[i][ft_strlen(tab[i]) - 1] == '0')
 			return (-1);
 		i++;
 	}

@@ -19,7 +19,7 @@
 # define CASE 12
 # define CASE_DIV_PER_TWO CASE / 2
 # define WIDTH 1920
-# define HEIGHT 1080
+# define HEIGHT 960
 # define HEIGHT_DIV_PER_TEN HEIGHT / 10
 # define HEIGHT_DIV_PER_FIVE HEIGHT / 5
 # define MINIMAP_IMG_POS_X WIDTH - HEIGHT_DIV_PER_FIVE
@@ -161,6 +161,7 @@ void		ray_cast_projection(t_data *data, t_ray *ray);
 void		ray_cast(t_data *data);
 
 //map.c
+void		free_tab_door(int **door);
 int			check_zero_inside(char **tab, int start);
 int			valid_zero_map(int start, char **tab);
 char		**init_map(char **map_off);

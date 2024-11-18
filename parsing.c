@@ -76,8 +76,7 @@ int	parsing(t_data *data, char *path_file)
 	map_start = find_map_start(file) + 1;
 	if (init(data, file, map_start) == -1)
 		return (-1);
-	if (flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE)
-		|| valid_zero_map(map_start, file))
+	if (valid_zero_map(map_start, file) || flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");
 		map_clear(file);

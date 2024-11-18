@@ -100,6 +100,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 	data->raycast.ceiling_color = 0;
 	plyr_bool = FALSE;
 	i = -1;
+	map_start--;
 	while (tab[++i])
 	{
 		if (i <= map_start)

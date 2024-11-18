@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/16 16:37:57 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/11/18 10:27:55 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ int	cub_close(t_data *data)
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
+	free_door_tab(data->tab_door);
 	exit(EXIT_SUCCESS);
 }
 
@@ -129,7 +130,7 @@ int	main(int ac, char **av)
 		cub_close(&data);
 	printf("Map:\n");
 	print_map(data.map, FALSE);
-	mlx_mouse_hide(data.mlx, data.win);
+	// mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
