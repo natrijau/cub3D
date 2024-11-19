@@ -31,7 +31,7 @@ int	key_press(int keycode, t_data *data)
 		data->door_closed = FALSE;
 		replace_door(data);
 	}
-	else if (keycode == 65293 && data->door_closed == FALSE)
+	else if (keycode == 65293 && data->door_closed == FALSE && !player_case(data))
 	{
 		data->door_closed = TRUE;
 		replace_door(data);
