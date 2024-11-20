@@ -17,30 +17,24 @@
 # define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define CASE_DIV_PER_TWO CASE / 2
+# define CASE_DIV_TWO CASE / 2
+# define CASE_MULT_TWO CASE * 2
 # define WIDTH 1920
 # define HEIGHT 960
 # define H_DIV_TEN HEIGHT / 10
 # define H_DIV_FIVE HEIGHT / 5
-# define MINIMAP_IMG_X WIDTH - H_DIV_FIVE
-# define MINIMAP_IMG_Y HEIGHT - H_DIV_FIVE
-# define RAY_PIXEL_PUT_POS_X MINIMAP_IMG_X + H_DIV_TEN
-# define RAY_PIXEL_PUT_POS_Y MINIMAP_IMG_Y + H_DIV_TEN
-# define PLAYER_IMG_POS_X WIDTH - H_DIV_TEN - CASE_DIV_PER_TWO
-# define PLAYER_IMG_POS_Y HEIGHT - H_DIV_TEN - CASE_DIV_PER_TWO
+# define MINIMAP_POS_X WIDTH - H_DIV_FIVE
+# define MINIMAP_POS_Y HEIGHT - H_DIV_FIVE
+# define RAY_POS_X MINIMAP_POS_X + H_DIV_TEN
+# define RAY_POS_Y MINIMAP_POS_Y + H_DIV_TEN
+# define PLAYER_POS_X WIDTH - H_DIV_TEN - CASE_DIV_TWO
+# define PLAYER_POS_Y HEIGHT - H_DIV_TEN - CASE_DIV_TWO
 # define TRUE 1
 # define FALSE 0
-# define ADD_ANGLE_STEP (M_PI * 2.5)
 # define N (M_PI * 2)
 # define E (M_PI * 1.5)
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
-
-typedef struct	s_vec
-{
-	double	x;
-	double	y;
-}				t_vec;
 
 typedef struct	s_image
 {
@@ -61,8 +55,8 @@ typedef struct	s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
-	double	x_step_div;
-	double	y_step_div;
+	double	x_fabs_step;
+	double	y_fabs_step;
 }				t_ray;
 
 typedef struct	s_raycast
@@ -110,7 +104,7 @@ typedef struct	s_data
 	t_raycast	raycast;
 	t_hook		hook;
 	int			**tab_door;
-	int			door_closed;
+	int			change_state_door;
 	double		angle;
 	double		fov_rad;
 	double		first_rayangle;
@@ -157,7 +151,7 @@ int			parsing(t_data *data, char *path_file);
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
 void		draw_wall(t_data *data, t_ray ray, int x);
-void		ray_cast_projection(t_data *data, t_ray *ray);
+void		ray_cast_projection(t_data *data, t_ray *ray, int check_wall);
 void		ray_cast(t_data *data);
 
 //map.c
@@ -188,7 +182,6 @@ double		get_angle(char direction);
 //main.c
 void		print_map(char **map, int erase_bool);
 int			cub_close(t_data *data);
-void		replace_door(t_data *data);
 void		data_init_img(t_data *data);
 int			main(int ac, char **av);
 

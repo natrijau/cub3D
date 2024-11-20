@@ -1,22 +1,5 @@
 #include "cub3d.h"
 
-int	player_case(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	if (!data->tab_door)
-		return (0);
-	while (data->tab_door && data->tab_door[i])
-	{
-		if (data->tab_door[i][0] == (int)(data->y / CASE)
-			&& data->tab_door[i][1] == (int)(data->x / CASE))
-			return (-1);
-		i++;
-	}
-	return (0);
-}
-
 int	find_door_in_map(char **str)
 {
 	int	i;
@@ -54,8 +37,8 @@ int	**malloc_door_tab(int	**tab_door, char **str, int i, int j)
 				tab_door[d] = malloc(sizeof(int) * 2);
 				if (!tab_door[d])
 					return (NULL);
-				tab_door[d][0] = i;
-				tab_door[d][1] = j;
+				tab_door[d][0] = j;
+				tab_door[d][1] = i;
 				d++;
 			}
 			j++;

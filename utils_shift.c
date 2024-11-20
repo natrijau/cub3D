@@ -26,16 +26,8 @@ int	key_press(int keycode, t_data *data)
 	t_hook	*hook;
 
 	hook = &data->hook;
-	if (keycode == 65293 && data->door_closed == TRUE)
-	{
-		data->door_closed = FALSE;
-		replace_door(data);
-	}
-	else if (keycode == 65293 && data->door_closed == FALSE && !player_case(data))
-	{
-		data->door_closed = TRUE;
-		replace_door(data);
-	}
+	if (keycode == 65293)
+		data->change_state_door = TRUE;
 	azerty_qwerty(keycode, hook);
 	if (keycode == 65307)
 		cub_close(data);
@@ -51,6 +43,8 @@ int	key_release(int keycode, t_data *data)
 	t_hook	*hook;
 
 	hook = &data->hook;
+	if (keycode == 65293)
+		data->change_state_door = FALSE;
 	if ((keycode == 119 && hook->keyboard_bool == TRUE)
 		|| (keycode == 122 && hook->keyboard_bool == FALSE))
 		hook->move_forward = FALSE;

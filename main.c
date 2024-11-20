@@ -66,30 +66,6 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-void	replace_door(t_data *data)
-{
-	int	i;
-
-	i = 0;
-	if (!data->tab_door)
-		return ;
-	while (data->tab_door[i])
-	{
-		if (data->door_closed == FALSE)
-			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = '0';
-		else if (data->door_closed == TRUE)
-			data->map[data->tab_door[i][0]][data->tab_door[i][1]] = 'D';
-		i++;
-	}
-}
-
-//! DECOMMENTE POUR JOUER AVEC MOI
-// ___|___|_X_
-// ___|_X_|___
-//    |   | O 
-// X = Nathan
-// O = Yann
-
 void	data_init_img(t_data *data)
 {
 	data->win = NULL;
@@ -109,7 +85,7 @@ void	data_init_img(t_data *data)
 			&data->raycast.D_wall.bpp,
 			&data->raycast.D_wall.line_len,
 			&data->raycast.D_wall.endian);
-	data->door_closed = TRUE;
+	data->change_state_door = FALSE;
 	data->map = NULL;
 	data->tab_door = NULL;
 }
