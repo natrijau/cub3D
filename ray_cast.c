@@ -98,8 +98,8 @@ void	ray_cast_projection(t_data *data, t_ray *ray, int check_wall)
 	ray->x_fabs_step = fabs(ray->x_step);
 	ray->y_fabs_step = fabs(ray->y_step);
 	while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-		&& data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
-		&& data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0')
+		&& (data->map[(int)(ray->y - ray->y_step) / CASE][(int)ray->x / CASE] == '0'
+		|| data->map[(int)ray->y / CASE][(int)(ray->x - ray->x_step) / CASE] == '0'))
 	{
 		if (data->raycast.distance <= H_DIV_TEN)
 		{
