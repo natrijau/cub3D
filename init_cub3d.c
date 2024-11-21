@@ -16,6 +16,29 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
+void	draw_minimap_pixel(t_data *data, double distance, int x, int y)
+{
+	if (distance <= CASE_DIV_TWO)
+		ft_mlx_pixel_put(&data->img_win,
+			MINIMAP_POS_X + x, MINIMAP_POS_Y + y, 0x00FF0000);
+	else if (distance <= H_DIV_TEN)
+	{
+		if (x + data->x - H_DIV_TEN >= 0 && y + data->y - H_DIV_TEN >= 0
+			&& x + data->x - H_DIV_TEN < data->width_and_case
+			&& y + data->y - H_DIV_TEN < data->height_and_case
+			&& data->map[(int)((y + data->y - H_DIV_TEN) / CASE)]
+			[(int)((x + data->x - H_DIV_TEN) / CASE)] == '0')
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
+				MINIMAP_POS_Y + y, 0x00A0A0A0);
+		else
+			ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
+				MINIMAP_POS_Y + y, 0x00000000);
+	}
+	else if (distance <= H_DIV_TEN + 1)
+		ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
+			MINIMAP_POS_Y + y, 0x00FFFFFF);
+}
+
 // Fonction pour initialiser l'image représentant l'espace de la minimap
 void	init_minimap(t_data *data)
 {
@@ -30,26 +53,7 @@ void	init_minimap(t_data *data)
 		while (x < H_DIV_FIVE)
 		{
 			distance = sqrt(pow(x - H_DIV_TEN, 2) + pow(y - H_DIV_TEN, 2));
-			if (distance <= CASE_DIV_TWO)
-				ft_mlx_pixel_put(&data->img_win,
-					MINIMAP_POS_X + x, MINIMAP_POS_Y + y, 0x00FF0000);
-			else if (distance <= H_DIV_TEN)
-			{
-				if (x + data->x - H_DIV_TEN >= 0
-					&& y + data->y - H_DIV_TEN >= 0
-					&& x + data->x - H_DIV_TEN < data->width_and_case
-					&& y + data->y - H_DIV_TEN < data->height_and_case
-					&& data->map[(int)((y + data->y - H_DIV_TEN) / CASE)]
-					[(int)((x + data->x - H_DIV_TEN) / CASE)] == '0')
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-						MINIMAP_POS_Y + y, 0x00A0A0A0);
-				else
-					ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-						MINIMAP_POS_Y + y, 0x00000000);
-			}
-			else if (distance <= H_DIV_TEN + 1)
-				ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-					MINIMAP_POS_Y + y, 0x00FFFFFF);
+			draw_minimap_pixel(data, distance, x, y);
 			++x;
 		}
 		++y;
@@ -97,13 +101,12 @@ int	init_cub3d(t_data *data)
 	data->hook.move_left = FALSE;
 	data->hook.rotate_left = FALSE;
 	data->hook.rotate_right = FALSE;
-	data->hook.mouse_move = TRUE;
 	data->hook.old_x = WIDTH / 2;
 	mlx_mouse_move(data->mlx, data->win, data->hook.old_x, HEIGHT / 2);
 	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);
 	init_img_win(data);
 	init_minimap(data);
-	ray_cast(data);
+	raycast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 	return (0);
 }

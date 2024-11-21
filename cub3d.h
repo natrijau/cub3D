@@ -90,7 +90,6 @@ typedef struct s_hook
 	int			move_left;
 	int			rotate_right;
 	int			rotate_left;
-	int			mouse_move;
 	int			old_x;
 }				t_hook;
 
@@ -127,7 +126,7 @@ void    	azerty_qwerty(int keycode, t_hook	*hook);
 int			key_press(int keycode, t_data *data);
 int			key_release(int keycode, t_data *data);
 int 		update_move(t_data *data);
-void		shift(t_data *data, int y, int x);
+void		shift_collision(t_data *data, double x, double y);
 
 //utils_bonus.c
 int			find_door_in_map(char **str);
@@ -147,12 +146,16 @@ int			check_texture(t_data *data);
 int			init(t_data *data, char **file, int map_start);
 int			parsing(t_data *data, char *path_file);
 
-//ray_cast.c
+//raycast.c
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
 void		draw_wall(t_data *data, t_ray ray, int x);
-void		ray_cast_projection(t_data *data, t_ray *ray, int check_wall);
-void		ray_cast(t_data *data);
+void		raycast_projection(t_data *data, t_ray *ray, int check_wall);
+void		raycast(t_data *data);
+
+//raycast_utils.c
+void		steps_progression(t_data *data, t_ray *ray, int *check_wall);
+int			change_door_case(t_data *data, int x, int y);
 
 //map.c
 int			check_zero_inside(char **tab, int start);
@@ -180,9 +183,9 @@ int			add_direction_img(t_image *dest, t_data *data, char *str, char *direction)
 double		get_angle(char direction);
 
 //main.c
-void		print_map(char **map, int erase_bool);
 int			cub_close(t_data *data);
 void		data_init_img(t_data *data);
+void		shift(t_data *data, int y, int x);
 int			main(int ac, char **av);
 
 #endif

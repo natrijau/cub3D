@@ -11,32 +11,6 @@
 /* ************************************************************************** */
 
 #include "cub3d.h"
-// Display the map in console
-void	print_map(char **map, int erase_bool)
-{
-	int	char_count;
-	int	line_count;
-	int	i;
-
-	i = 0;
-	char_count = 0;
-	line_count = 0;
-	while (map[i])
-	{
-		char_count += printf("%s\n", map[i]);
-		line_count++;
-		i++;
-	}
-	usleep(15000);
-	if (!erase_bool)
-		return ;
-	i = 0;
-	while (i++ < line_count)
-		printf("\033[A");
-	i = 0;
-	while (i++ < char_count)
-		printf("\b \b");
-}
 
 // close the window and free
 int	cub_close(t_data *data)
@@ -90,6 +64,23 @@ void	data_init_img(t_data *data)
 	data->tab_door = NULL;
 }
 
+// Move the character according to user input
+void	shift(t_data *data, int y, int x)
+{
+	double	new_x;
+	double	new_y;
+
+	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
+	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
+	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
+	shift_collision(data, new_x, new_y);
+	init_img_win(data);
+	init_minimap(data);
+	raycast(data);
+	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
+}
+
 int	check_type(char *str)
 {
 	int	i;
@@ -115,9 +106,7 @@ int	main(int ac, char **av)
 	data_init_img(&data);
 	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
 		cub_close(&data);
-	printf("Map:\n");
-	print_map(data.map, FALSE);
-	// mlx_mouse_hide(data.mlx, data.win);
+	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);

@@ -92,36 +92,24 @@ int	update_move(t_data *data)
 	return (0);
 }
 
-// Move the character according to user input
-void	shift(t_data *data, int y, int x)
+void	shift_collision(t_data *data, double x, double y)
 {
-	double	new_x;
-	double	new_y;
-
-	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
-	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
-	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
-	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	if (data->map[(int)(data->y)
-		/ CASE][(int)(data->x + new_x) / CASE] == '1')
+		/ CASE][(int)(data->x + x) / CASE] != '0')
 	{
-		new_y *= 1.5;
-		new_x = 0;
+		y *= 1.5;
+		x = 0;
 	}
-	if (data->map[(int)(data->y + new_y)
-		/ CASE][(int)(data->x) / CASE] == '1')
+	if (data->map[(int)(data->y + y)
+		/ CASE][(int)(data->x) / CASE] != '0')
 	{
-		new_x *= 1.5;
-		new_y = 0;
+		x *= 1.5;
+		y = 0;
 	}
-	if (data->map[(int)(data->y + new_y)
-		/ CASE][(int)(data->x + new_x) / CASE] == '0')
+	if (data->map[(int)(data->y + y)
+		/ CASE][(int)(data->x + x) / CASE] == '0')
 	{
-		data->x += new_x;
-		data->y += new_y;
+		data->x += x;
+		data->y += y;
 	}
-	init_img_win(data);
-	init_minimap(data);
-	ray_cast(data);
-	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 }
