@@ -31,8 +31,8 @@ int	cub_close(t_data *data)
 		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
 	if (data->raycast.W_wall.img)
 		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
-	if (data->raycast.D_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.D_wall.img);
+	if (data->raycast.Door.img)
+		mlx_destroy_image(data->mlx, data->raycast.Door.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -40,7 +40,7 @@ int	cub_close(t_data *data)
 	exit(EXIT_SUCCESS);
 }
 
-void	data_init_img(t_data *data)
+void	data_init(t_data *data)
 {
 	data->win = NULL;
 	data->img_win.img = NULL;
@@ -48,17 +48,9 @@ void	data_init_img(t_data *data)
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
 	data->raycast.W_wall.img = NULL;
-	data->raycast.D_wall.img = mlx_xpm_file_to_image(
-			data->mlx, "./textures/doortile.xpm",
-			&data->raycast.D_wall.width,
-			&data->raycast.D_wall.height);
-	if (!data->raycast.D_wall.img)
-		printf("Error\nFailed to load door texture: %s\n", "ures/doortile.xpm");
-	data->raycast.D_wall.addr = mlx_get_data_addr(
-			data->raycast.D_wall.img,
-			&data->raycast.D_wall.bpp,
-			&data->raycast.D_wall.line_len,
-			&data->raycast.D_wall.endian);
+	data->raycast.Door.img = NULL;
+	data->raycast.floor_color = 0x606060;
+	data->raycast.ceiling_color = 0x3399ff;
 	data->change_state_door = FALSE;
 	data->map = NULL;
 	data->tab_door = NULL;
@@ -103,7 +95,7 @@ int	main(int ac, char **av)
 	data.mlx = mlx_init();
 	if (!data.mlx)
 		return (1);
-	data_init_img(&data);
+	data_init(&data);
 	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
 		cub_close(&data);
 	mlx_mouse_hide(data.mlx, data.win);

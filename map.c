@@ -76,24 +76,26 @@ char	**init_map(char **map_off)
 }
 
 // Recursive parsing function to validate and format map
-int	flood_fil(char **map, char **space, int x, int i)
+int	flood_fil(t_data *data, char **map, char **space, int x, int i)
 {
-	if ((!x || !i || x >= ft_strtablen(map) - 1 || i >= ft_strlen(map[x]) - 1
-			|| map[x][i] == ' '))
+	if ((!x || !i || x >= ft_strtablen(map) - 1
+		|| i >= ft_strlen(map[x]) - 1 || map[x][i] == ' '))
 		return (-1);
+	if (map[x][i] == 'D' && !data->raycast.Door.img)
+		map[x][i] = '0';
 	space[x][i] = map[x][i];
 	map[x][i] = '1';
 	if (map[x][i + 1] && map[x][i + 1] != '1'
-		&& flood_fil(map, space, x, i + 1))
+		&& flood_fil(data, map, space, x, i + 1))
 		return (-1);
 	if (map[x + 1][i] && map[x + 1][i] != '1'
-		&& flood_fil(map, space, x + 1, i))
+		&& flood_fil(data, map, space, x + 1, i))
 		return (-1);
 	if (map[x][i - 1] && map[x][i - 1] != '1'
-		&& flood_fil(map, space, x, i - 1))
+		&& flood_fil(data, map, space, x, i - 1))
 		return (-1);
 	if (map[x - 1][i] && map[x - 1][i] != '1'
-		&& flood_fil(map, space, x - 1, i))
+		&& flood_fil(data, map, space, x - 1, i))
 		return (-1);
 	return (0);
 }

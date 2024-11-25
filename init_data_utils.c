@@ -47,7 +47,10 @@ int	add_direction_img(t_image *dest, t_data *data, char *str, char *direction)
 		}
 		*dest = get_wall(data->mlx, &str[2]);
 		if (!dest->img)
+		{
+			printf("Error\nFailed texture importation: %s\n", &str[2]);
 			return (-1);
+		}
 	}
 	return (0);
 }

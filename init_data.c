@@ -2,8 +2,9 @@
 
 int	init_color(t_data *data, char *str)
 {
-	int		color;
-	char	**tab;
+	static int	count = 0;
+	int			color;
+	char		**tab;
 
 	color = 0;
 	if (str[0] != 'F' && str[0] != 'C')
@@ -16,11 +17,11 @@ int	init_color(t_data *data, char *str)
 		return (-1);
 	}
 	color = (ft_atoi(tab[0]) << 16) | (ft_atoi(tab[1]) << 8) | ft_atoi(tab[2]);
-	if (str[0] == 'F' && !data->raycast.floor_color)
+	if (str[0] == 'F')
 		data->raycast.floor_color = color;
-	else if (str[0] == 'C' && !data->raycast.ceiling_color)
+	else if (str[0] == 'C')
 		data->raycast.ceiling_color = color;
-	else if (printf("Error\nDouble color definition\n"))
+	if (++count > 2 && printf("Error\nToo many color definition\n"))
 		return (-1);
 	map_clear(tab);
 	return (0);
@@ -30,9 +31,11 @@ int	init_texture(t_data *data, char *str)
 {
 	if (str[0] == 'F' || str[0] == 'C')
 		return (0);
-	if (!ft_strchr("NSWE", str[0]) || !ft_strchr("OEA", str[1]))
+	if (ft_strncmp(str, "NO", 2) && ft_strncmp(str, "SO", 2)
+		&& ft_strncmp(str, "WE", 2) && ft_strncmp(str, "EA", 2)
+		&& ft_strncmp(str, "DO", 2))
 	{
-		printf("Error\nBad argument starting with \"%c\"\n", str[0]);
+		printf("Error\nBad argument: \"%c%c\"\n", str[0], str[1]);
 		return (-1);
 	}
 	if (add_direction_img(&data->raycast.N_wall, data, str, "NO") == -1)
@@ -42,6 +45,8 @@ int	init_texture(t_data *data, char *str)
 	if (add_direction_img(&data->raycast.W_wall, data, str, "WE") == -1)
 		return (-1);
 	if (add_direction_img(&data->raycast.E_wall, data, str, "EA") == -1)
+		return (-1);
+	if (add_direction_img(&data->raycast.Door, data, str, "DO") == -1)
 		return (-1);
 	return (0);
 }
@@ -96,8 +101,6 @@ int	init_data(t_data *data, char **tab, int map_start)
 
 	if (error_map_start(map_start, tab))
 		return (-1);
-	data->raycast.floor_color = 0;
-	data->raycast.ceiling_color = 0;
 	plyr_bool = FALSE;
 	i = -1;
 	map_start--;

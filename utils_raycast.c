@@ -33,7 +33,7 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		}
 	}
 	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
-		raycast->actual_wall = raycast->D_wall;
+		raycast->actual_wall = raycast->Door;
 	raycast->x *= (double)raycast->actual_wall.width / CASE;
 }
 

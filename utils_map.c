@@ -89,7 +89,7 @@ int	find_map_start(char **file_content)
 		j = 0;
 		while (file_content[i][j] && ft_strchr("01NSEWD ", file_content[i][j]))
 			j++;
-		if (file_content[i][j] && i <= 6)
+		if (file_content[i][j] && i <= 7)
 			return (i);
 		else if (file_content[i][j])
 			break ;

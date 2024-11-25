@@ -65,7 +65,7 @@ typedef struct	s_raycast
 	t_image	E_wall;
 	t_image	S_wall;
 	t_image	W_wall;
-	t_image	D_wall;
+	t_image	Door;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
@@ -104,14 +104,14 @@ typedef struct	s_data
 	t_hook		hook;
 	int			**tab_door;
 	int			change_state_door;
+	int			height_and_case;
+	int			width_and_case;
 	double		angle;
 	double		fov_rad;
 	double		first_rayangle;
 	double		angle_step;
 	double		x;
 	double		y;
-	int			height_and_case;
-	int			width_and_case;
 }				t_data;
 
 //utils_map.c
@@ -161,7 +161,7 @@ int			change_door_case(t_data *data, int x, int y);
 int			check_zero_inside(char **tab, int start);
 int			valid_zero_map(int start, char **tab);
 char		**init_map(char **map_off);
-int			flood_fil(char **map, char **space, int x, int i);
+int			flood_fil(t_data *data, char **map, char **space, int x, int i);
 
 //init_cub3d.c
 void		creat_image(t_image *img, void *mlx, int width, int height);
@@ -184,7 +184,7 @@ double		get_angle(char direction);
 
 //main.c
 int			cub_close(t_data *data);
-void		data_init_img(t_data *data);
+void		data_init(t_data *data);
 void		shift(t_data *data, int y, int x);
 int			main(int ac, char **av);
 

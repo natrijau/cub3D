@@ -32,8 +32,8 @@ char	**get_file(char *file)
 
 int	check_texture(t_data *data)
 {
-	if (data->raycast.N_wall.img == NULL || data->raycast.S_wall.img == NULL
-		|| data->raycast.W_wall.img == NULL || data->raycast.E_wall.img == NULL)
+	if (!data->raycast.N_wall.img || !data->raycast.S_wall.img
+		|| !data->raycast.W_wall.img || !data->raycast.E_wall.img)
 	{
 		printf("Error\nOne of the textures is not initialized\n");
 		return (-1);
@@ -45,13 +45,6 @@ int	init(t_data *data, char **file, int map_start)
 {
 	if (init_data(data, file, map_start) == -1)
 	{
-		map_clear(file);
-		return (-1);
-	}
-	if ((data->raycast.floor_color && !data->raycast.ceiling_color)
-		|| (!data->raycast.floor_color && data->raycast.ceiling_color))
-	{
-		printf("Error\nOne of the colors in the month have not been defined\n");
 		map_clear(file);
 		return (-1);
 	}
@@ -76,7 +69,8 @@ int	parsing(t_data *data, char *path_file)
 	map_start = find_map_start(file) + 1;
 	if (init(data, file, map_start) == -1)
 		return (-1);
-	if (valid_zero_map(map_start, file) || flood_fil(&file[map_start], data->map, data->y / CASE, data->x / CASE))
+	if (valid_zero_map(map_start, file) || flood_fil(data, &file[map_start],
+		data->map, data->y / CASE, data->x / CASE))
 	{
 		printf("Error\nInvalid map\n");
 		map_clear(file);
