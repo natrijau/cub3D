@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/18 16:12:21 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/11/26 15:20:13 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,9 @@ int	check_type(char *str)
 	int	i;
 
 	i = ft_strlen(str) - 4;
-	if (str[i] != '.' || str[i + 1] != 'c' || str[i + 2] != 'u' || str[i + 3] != 'b')
-		return (-1);		
+	if (str[i] != '.' || str[i + 1] != 'c'
+		|| str[i + 2] != 'u' || str[i + 3] != 'b')
+		return (-1);
 	return (0);
 }
 

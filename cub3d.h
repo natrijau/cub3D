@@ -149,7 +149,7 @@ int			parsing(t_data *data, char *path_file);
 //raycast.c
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
-void		draw_wall(t_data *data, t_ray ray, int x);
+void		draw_wall(t_data *data, int x);
 void		raycast_projection(t_data *data, t_ray *ray, int check_wall);
 void		raycast(t_data *data);
 
@@ -157,16 +157,19 @@ void		raycast(t_data *data);
 void		steps_progression(t_data *data, t_ray *ray, int *check_wall);
 int			change_door_case(t_data *data, int x, int y);
 
+//minimap.c
+void    	draw_minimap(t_data *data, double distance, int x, int y);
+void		init_minimap(t_data *data);
+
 //map.c
 int			check_zero_inside(char **tab, int start);
 int			valid_zero_map(int start, char **tab);
 char		**init_map(char **map_off);
-int			flood_fil(t_data *data, char **map, char **space, int x, int i);
+int			flood_fil(t_data *data, char **map, int x, int i);
 
 //init_cub3d.c
 void		creat_image(t_image *img, void *mlx, int width, int height);
 void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
-void		init_minimap(t_data *data);
 void		init_img_win(t_data *data);
 int			init_cub3d(t_data *data);
 

@@ -44,7 +44,7 @@ int	change_door_case(t_data *data, int x, int y)
 	if (x == ((int)data->x / CASE) && y == ((int)data->y / CASE))
 		return (0);
 	i = 0;
-	while(data->tab_door[i])
+	while (data->tab_door[i])
 	{
 		if (data->tab_door[i][0] == x && data->tab_door[i][1] == y)
 		{
