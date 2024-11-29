@@ -21,9 +21,9 @@ int	init_color(t_data *data, char *str)
 		data->raycast.floor_color = color;
 	else if (str[0] == 'C')
 		data->raycast.ceiling_color = color;
+	map_clear(tab);
 	if (++count > 2 && printf("Error\nToo many color definition\n"))
 		return (-1);
-	map_clear(tab);
 	return (0);
 }
 
@@ -114,5 +114,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
+	if (!data->raycast.floor_color || !data->raycast.ceiling_color)
+		return (-1);	
 	return (0);
 }

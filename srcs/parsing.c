@@ -67,6 +67,7 @@ int	parsing(t_data *data, char *path_file)
 	if (!file)
 		return (-1);
 	map_start = find_map_start(file) + 1;
+	printf("map start %d\n", map_start);
 	if (init(data, file, map_start) == -1)
 		return (-1);
 	if (valid_zero_map(map_start, file) || flood_fil(data, &file[map_start],
