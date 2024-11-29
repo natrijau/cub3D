@@ -115,6 +115,9 @@ int	init_data(t_data *data, char **tab, int map_start)
 			return (-1);
 	}
 	if (!data->raycast.floor_color || !data->raycast.ceiling_color)
+	{
+		printf("Error\nOne of the colors is not initialized\n");
 		return (-1);
+	}
 	return (0);
 }

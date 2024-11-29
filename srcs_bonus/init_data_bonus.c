@@ -21,9 +21,9 @@ int	init_color(t_data *data, char *str)
 		data->raycast.floor_color = color;
 	else if (str[0] == 'C')
 		data->raycast.ceiling_color = color;
+	map_clear(tab);
 	if (++count > 2 && printf("Error\nToo many color definition\n"))
 		return (-1);
-	map_clear(tab);
 	return (0);
 }
 

@@ -31,8 +31,6 @@ t_image	get_wall(void *mlx, char *file)
 	if (img.img)
 		img.addr = mlx_get_data_addr(img.img,
 				&img.bpp, &img.line_len, &img.endian);
-	else
-		printf("Error\nInvalid texture path: %s\n", file);
 	return (img);
 }
 

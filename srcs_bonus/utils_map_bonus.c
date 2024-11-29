@@ -84,12 +84,12 @@ int	find_map_start(char **file_content)
 	int	j;
 
 	i = ft_strtablen(file_content) - 1;
-	while (i >= 4)
+	while (i >= 3)
 	{
 		j = 0;
 		while (file_content[i][j] && ft_strchr("01NSEWD ", file_content[i][j]))
 			j++;
-		if (file_content[i][j] && i <= 7)
+		if (file_content[i][j] && i <= 6)
 			return (i);
 		else if (file_content[i][j])
 			break ;
