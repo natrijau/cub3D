@@ -102,7 +102,7 @@ void	raycast(t_data *data)
 		raycast_projection(data, &ray);
 		data->raycast.distance = sqrt(pow(data->x - ray.x, 2)
 				+ pow(data->y - ray.y, 2)) * cos(fmod(ray.angle
-				- (data->angle + (M_PI / 4)), N));
+					- (data->angle + (M_PI / 4)), N));
 		set_texture_config(data, ray, &data->raycast);
 		draw_wall(data, i_ray);
 		++i_ray;
