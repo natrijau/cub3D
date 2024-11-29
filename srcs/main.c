@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/26 15:20:13 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:12:29 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ void	shift(t_data *data, int y, int x)
 	data->x += new_x;
 	data->y += new_y;
 	init_img_win(data);
-	if (data->x > 1 && data->x < data->width - 1
-		&& data->y > 1 && data->y < data->height - 1
+	if (data->x > 2 && data->x < data->width - 2
+		&& data->y > 2 && data->y < data->height - 2
 		&& ft_strchr("01", data->map[(int)data->y / CASE][(int)data->x / CASE]))
 		raycast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
