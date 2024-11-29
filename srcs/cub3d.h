@@ -71,7 +71,6 @@ typedef struct s_hook
 	int			move_left;
 	int			rotate_right;
 	int			rotate_left;
-	int			old_x;
 }				t_hook;
 
 typedef struct	s_data

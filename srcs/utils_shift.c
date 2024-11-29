@@ -58,22 +58,9 @@ int	update_move(t_data *data)
 	int	x;
 	int	y;
 
-	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
-	if (x != data->hook.old_x)
-	{
-		data->angle += (x - data->hook.old_x) * 0.001;
-		if (x > WIDTH - 200)
-			x = WIDTH - 200;
-		else if (x < 200)
-			x = 200;
-		mlx_mouse_move(data->mlx, data->win, x, y);
-		data->hook.old_x = x;
-	}
-	x = 0;
-	y = 0;
+	y = data->hook.move_back;
 	y -= data->hook.move_forward;
-	y += data->hook.move_back;
-	x += data->hook.move_right;
+	x = data->hook.move_right;
 	x -= data->hook.move_left;
 	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
 	data->angle += ROTATE_SPEED * data->hook.rotate_left;

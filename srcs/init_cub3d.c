@@ -55,8 +55,6 @@ int	init_cub3d(t_data *data)
 	data->hook.move_left = FALSE;
 	data->hook.rotate_left = FALSE;
 	data->hook.rotate_right = FALSE;
-	data->hook.old_x = WIDTH / 2;
-	mlx_mouse_move(data->mlx, data->win, data->hook.old_x, HEIGHT / 2);
 	creat_image(&data->img_win, data->mlx, WIDTH, HEIGHT);
 	init_img_win(data);
 	raycast(data);

@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/29 16:12:29 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/11/29 16:17:57 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	cub_close(t_data *data)
 {
 	if (data->win)
 	{
-		mlx_mouse_show(data->mlx, data->win);
 		mlx_clear_window(data->mlx, data->win);
 		mlx_destroy_window(data->mlx, data->win);
 	}
@@ -45,8 +44,8 @@ void	data_init(t_data *data)
 	data->raycast.E_wall.img = NULL;
 	data->raycast.S_wall.img = NULL;
 	data->raycast.W_wall.img = NULL;
-	data->raycast.floor_color = 0x606060;
-	data->raycast.ceiling_color = 0x3399ff;
+	data->raycast.floor_color = 0;
+	data->raycast.ceiling_color = 0;
 	data->map = NULL;
 }
 
@@ -96,7 +95,6 @@ int	main(int ac, char **av)
 	data_init(&data);
 	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
 		cub_close(&data);
-	mlx_mouse_hide(data.mlx, data.win);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
