@@ -1,10 +1,12 @@
-NO textures/NO_brick_wall.xpm
-SO textures/SO_brick_wall.xpm
-WE textures/WE_brick_wall.xpm
-EA textures/EA_brick_wall.xpm
-DO textures/doortile.xpm
+NO textures/greenwood_wall.xpm
+SO textures/greenwood_wall.xpm
+WE textures/greenwood_wall.xpm
+EA textures/greenwood_wall.xpm
+DO textures/greenwood_door.xpm
+
 F 96,96,96
-F 96,96,96
+C 51,153,255
+
         1111111111111111111111111
         1000000000100000000000001
         1001000000100000000000001
@@ -19,6 +21,3 @@ F 96,96,96
 11000001010101011111011110001
 1111011101110101 101111010001
 1111111111111111 111111111111
-
-
-!!!!!! a tester avec valgrind .. ne devrais pas se lancer
