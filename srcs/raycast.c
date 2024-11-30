@@ -75,12 +75,16 @@ void	raycast_projection(t_data *data, t_ray *ray)
 	}
 	if (fabs(ray->x_step) > 0.1 || fabs(ray->y_step) > 0.1)
 	{
-		ray->x -= ray->x_step;
-		ray->y -= ray->y_step;
+		if (ray->x != data->x && ray->y != data->y)
+		{
+			ray->x -= ray->x_step;
+			ray->y -= ray->y_step;
+		}
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;
 		raycast_projection(data, ray);
 	}
+	
 }
 
 /*c'est la boucle principale qui parcourt l'écran en projetant des rayons, 
@@ -97,8 +101,8 @@ void	raycast(t_data *data)
 		ray.angle = fmod(ray.angle, N);
 		ray.x_step = cos(ray.angle + M_PI) + cos(ray.angle + E);
 		ray.y_step = sin(ray.angle + M_PI) + sin(ray.angle + E);
-		ray.x = data->x + ray.x_step;
-		ray.y = data->y + ray.y_step;
+		ray.x = data->x;
+		ray.y = data->y;
 		raycast_projection(data, &ray);
 		data->raycast.distance = sqrt(pow(data->x - ray.x, 2)
 				+ pow(data->y - ray.y, 2)) * cos(fmod(ray.angle
@@ -106,6 +110,9 @@ void	raycast(t_data *data)
 		set_texture_config(data, ray, &data->raycast);
 		draw_wall(data, i_ray);
 		++i_ray;
+		printf("ray angle %f\n", ray.angle);
+		if (ray.angle <= N + 1 && ray.angle >= N - 1)
+			printf("x %f, y %f\n", ray.x, ray.y);
 		ray.angle += data->angle_step;
 	}
 }

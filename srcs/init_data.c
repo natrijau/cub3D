@@ -114,10 +114,8 @@ int	init_data(t_data *data, char **tab, int map_start)
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
-	if (!data->raycast.floor_color || !data->raycast.ceiling_color)
-	{
-		printf("Error\nOne of the colors is not initialized\n");
+	if ((!data->raycast.floor_color || !data->raycast.ceiling_color)
+		&& printf("Error\nOne of the colors is not initialized\n"))
 		return (-1);
-	}
 	return (0);
 }

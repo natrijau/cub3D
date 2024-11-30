@@ -128,10 +128,9 @@ void    	draw_minimap(t_data *data, double distance, int x, int y);
 void		init_minimap(t_data *data);
 
 //map.c
-int			check_zero_inside(char **tab, int start);
-int			valid_zero_map(int start, char **tab);
+int			check_zero_inside(char **tab);
+int			valid_zero_map(char **tab);
 char		**init_map(char **map_off);
-int			flood_fil(t_data *data, char **map, int x, int i);
 
 //init_cub3d.c
 void		creat_image(t_image *img, void *mlx, int width, int height);
