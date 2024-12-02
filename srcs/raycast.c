@@ -10,7 +10,7 @@ int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (data->map[(int)(ray.y - ray.y_step) / CASE][(int)ray.x / CASE] == '0')
+	if (data->map[(int)((ray.y - ray.y_step) / CASE)][(int)(ray.x / CASE)] == '0')
 	{
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
@@ -65,26 +65,22 @@ void	draw_wall(t_data *data, int x)
 ne rencontre pas un espace vide ( collision) ? */
 void	raycast_projection(t_data *data, t_ray *ray)
 {
-	while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
-		&& (data->map[(int)(ray->y - ray->y_step) / CASE]
-		[(int)ray->x / CASE] == '0' || data->map[(int)ray->y / CASE]
-		[(int)(ray->x - ray->x_step) / CASE] == '0'))
+	while (data->map[(int)(ray->y / CASE)][(int)(ray->x / CASE)] == '0'
+		&& (data->map[(int)((ray->y - ray->y_step) / CASE)]
+		[(int)(ray->x / CASE)] == '0' || data->map[(int)(ray->y / CASE)]
+		[(int)((ray->x - ray->x_step) / CASE)] == '0'))
 	{
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
 	}
 	if (fabs(ray->x_step) > 0.1 || fabs(ray->y_step) > 0.1)
 	{
-		if (ray->x != data->x && ray->y != data->y)
-		{
-			ray->x -= ray->x_step;
-			ray->y -= ray->y_step;
-		}
+		ray->x -= ray->x_step;
+		ray->y -= ray->y_step;
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;
 		raycast_projection(data, ray);
 	}
-	
 }
 
 /*c'est la boucle principale qui parcourt l'écran en projetant des rayons, 
@@ -101,8 +97,8 @@ void	raycast(t_data *data)
 		ray.angle = fmod(ray.angle, N);
 		ray.x_step = cos(ray.angle + M_PI) + cos(ray.angle + E);
 		ray.y_step = sin(ray.angle + M_PI) + sin(ray.angle + E);
-		ray.x = data->x;
-		ray.y = data->y;
+		ray.x = data->x + ray.x_step;
+		ray.y = data->y + ray.y_step;
 		raycast_projection(data, &ray);
 		data->raycast.distance = sqrt(pow(data->x - ray.x, 2)
 				+ pow(data->y - ray.y, 2)) * cos(fmod(ray.angle
@@ -110,9 +106,6 @@ void	raycast(t_data *data)
 		set_texture_config(data, ray, &data->raycast);
 		draw_wall(data, i_ray);
 		++i_ray;
-		printf("ray angle %f\n", ray.angle);
-		if (ray.angle <= N + 1 && ray.angle >= N - 1)
-			printf("x %f, y %f\n", ray.x, ray.y);
 		ray.angle += data->angle_step;
 	}
 }

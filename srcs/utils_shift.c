@@ -52,19 +52,3 @@ int	key_release(int keycode, t_data *data)
 		hook->rotate_left = FALSE;
 	return (0);
 }
-
-int	update_move(t_data *data)
-{
-	int	x;
-	int	y;
-
-	y = data->hook.move_back;
-	y -= data->hook.move_forward;
-	x = data->hook.move_right;
-	x -= data->hook.move_left;
-	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
-	data->angle += ROTATE_SPEED * data->hook.rotate_left;
-	data->angle = fmod(data->angle, N);
-	shift(data, y, x);
-	return (0);
-}

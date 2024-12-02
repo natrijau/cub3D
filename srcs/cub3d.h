@@ -84,6 +84,7 @@ typedef struct	s_data
 	double		height;
 	double		width;
 	double		angle;
+	double		old_angle;
 	double		fov_rad;
 	double		first_rayangle;
 	double		angle_step;
@@ -101,7 +102,6 @@ int			find_map_start(char **file_content);
 //utils_shift.c
 int			key_press(int keycode, t_data *data);
 int			key_release(int keycode, t_data *data);
-int 		update_move(t_data *data);
 
 //utils.c
 void		free_door_tab(int **tab);
@@ -153,7 +153,7 @@ double		get_angle(char direction);
 //main.c
 int			cub_close(t_data *data);
 void		data_init(t_data *data);
-void		shift(t_data *data, int y, int x);
+int			shift(t_data *data);
 int			main(int ac, char **av);
 
 #endif

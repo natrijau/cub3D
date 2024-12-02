@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/30 14:54:55 by natrijau         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "cub3d.h"
 
 // close the window and free
@@ -50,11 +38,21 @@ void	data_init(t_data *data)
 }
 
 // Move the character according to user input
-void	shift(t_data *data, int y, int x)
+int	shift(t_data *data)
 {
+	int		x;
+	int		y;
 	double	new_x;
 	double	new_y;
 
+	y = data->hook.move_back - data->hook.move_forward;
+	x = data->hook.move_right - data->hook.move_left;
+	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
+	data->angle += ROTATE_SPEED * data->hook.rotate_left;
+	data->angle = fmod(data->angle, N);
+	if (!x && !y && data->angle == data->old_angle)
+		return (0);
+	data->old_angle = data->angle;
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
@@ -62,11 +60,12 @@ void	shift(t_data *data, int y, int x)
 	data->x += new_x;
 	data->y += new_y;
 	init_img_win(data);
-	if (data->x > 0 && data->x < data->width
-		&& data->y > 0 && data->y < data->height
+	if (data->x > sqrt(2) && data->x < data->width - sqrt(2)
+		&& data->y > sqrt(2) && data->y < data->height - sqrt(2)
 		&& ft_strchr("01", data->map[(int)(data->y / CASE)][(int)(data->x / CASE)]))
 		raycast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
+	return (0);
 }
 
 int	check_type(char *str)
@@ -98,7 +97,7 @@ int	main(int ac, char **av)
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);
-	mlx_loop_hook(data.mlx, update_move, &data);
+	mlx_loop_hook(data.mlx, shift, &data);
 	mlx_loop(data.mlx);
 	cub_close(&data);
 	return (0);
