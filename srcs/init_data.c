@@ -10,7 +10,7 @@ int	init_color(t_data *data, char *str)
 	if (str[0] != 'F' && str[0] != 'C')
 		return (0);
 	tab = ft_split(&str[1], ',');
-	if (check_color_value(tab))
+	if (check_color_value(tab) || ft_strtablen(tab) != 3)
 	{
 		map_clear(tab);
 		printf("Error\nInvalid color value\n");
