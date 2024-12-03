@@ -60,7 +60,7 @@ int	init_cub3d(t_data *data)
 		return (-1);
 	data->height = ft_strtablen(data->map) * CASE;
 	data->width = ft_strlen(data->map[0]) * CASE;
-	data->hook.keyboard_bool = TRUE;
+	data->hook.keyboard_bool = FALSE;
 	data->hook.move_forward = FALSE;
 	data->hook.move_back = FALSE;
 	data->hook.move_right = FALSE;

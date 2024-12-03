@@ -28,8 +28,8 @@
 # define MOOVE_SPEED 2
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 960
+# define WIDTH 1360
+# define HEIGHT 700
 # define TRUE 1
 # define FALSE 0
 
