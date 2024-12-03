@@ -20,10 +20,10 @@
 # define HEIGHT 1080
 # define TRUE 1
 # define FALSE 0
-# define N (M_PI * 2)
-# define E (M_PI * 1.5)
-# define S (M_PI * 1)
-# define W (M_PI * 0.5)
+// # define N (M_PI * 2)
+// # define E (M_PI * 1.5)
+// # define S (M_PI * 1)
+// # define W (M_PI * 0.5)
 
 typedef struct s_calculs
 {

@@ -95,15 +95,15 @@ void	raycast(t_data *data)
 	i_ray = 0;
 	while (i_ray < WIDTH)
 	{
-		ray.angle = fmod(ray.angle, N);
-		ray.x_step = (cos(ray.angle + M_PI) + cos(ray.angle + E)) * 0.1;
-		ray.y_step = (sin(ray.angle + M_PI) + sin(ray.angle + E)) * 0.1;
+		ray.angle = fmod(ray.angle, data->calculs.north);
+		ray.x_step = (cos(ray.angle + M_PI) + cos(ray.angle + data->calculs.east)) * 0.1;
+		ray.y_step = (sin(ray.angle + M_PI) + sin(ray.angle + data->calculs.east)) * 0.1;
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
 		raycast_projection(data, &ray);
 		data->raycast.distance = sqrt(pow(data->x - ray.x, 2)
 				+ pow(data->y - ray.y, 2)) * cos(fmod(ray.angle
-					- (data->angle + (M_PI / 4)), N));
+					- (data->angle + (M_PI / 4)), data->calculs.north));
 		set_texture_config(data, ray, &data->raycast);
 		draw_wall(data, i_ray);
 		++i_ray;

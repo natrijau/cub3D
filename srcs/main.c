@@ -35,6 +35,7 @@ void	data_init(t_data *data)
 	data->raycast.floor_color = 0;
 	data->raycast.ceiling_color = 0;
 	data->map = NULL;
+	init_calculs(data);
 }
 
 // Move the character according to user input
@@ -47,14 +48,14 @@ int	shift(t_data *data)
 	x = data->hook.move_right - data->hook.move_left;
 	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
 	data->angle += ROTATE_SPEED * data->hook.rotate_left;
-	data->angle = fmod(data->angle, N);
+	data->angle = fmod(data->angle, data->calculs.north);
 	if (!x && !y && data->angle == data->old_angle)
 		return (0);
 	data->old_angle = data->angle;
 	data->x += (cos(data->angle) * MOOVE_SPEED) * x;
-	data->x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	data->x += (cos(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	data->y += (sin(data->angle) * MOOVE_SPEED) * x;
-	data->y += (sin(data->angle + W) * MOOVE_SPEED) * y;
+	data->y += (sin(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	init_img_win(data);
 	if (data->x > sqrt(2) && data->x < data->width - sqrt(2)
 		&& data->y > sqrt(2) && data->y < data->height - sqrt(2)

@@ -1,5 +1,14 @@
 #include "cub3d.h"
 
+void	init_calculs(t_data *data)
+{
+	data->calculs.rotate_speed = (2 * M_PI / 90);
+	data->calculs.north = M_PI * 2;
+	data->calculs.east = M_PI * 1.5;
+	data->calculs.south = M_PI * 1;
+	data->calculs.west = M_PI * 0.5;
+}
+
 int	check_color_value(char **tab)
 {
 	int	i;
@@ -49,13 +58,13 @@ int	get_wall(t_image *dest, t_data *data, char *str, char *direction)
 double	get_angle(t_data *data, char direction)
 {
 	if (direction == 'N')
-		return (N);
+		return (data->calculs.north);
 	if (direction == 'E')
-		return (W);
+		return (data->calculs.west);
 	if (direction == 'S')
-		return (S);
+		return (data->calculs.south);
 	if (direction == 'W')
-		return (E);
+		return (data->calculs.west);
 	printf("Error\nInvalid player direction: %c\n", direction);
 	return (-1);
 }

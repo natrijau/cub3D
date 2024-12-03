@@ -21,10 +21,19 @@
 # define HEIGHT 960
 # define TRUE 1
 # define FALSE 0
-# define N (M_PI * 2)
-# define E (M_PI * 1.5)
-# define S (M_PI * 1)
-# define W (M_PI * 0.5)
+// # define N (M_PI * 2)
+// # define E (M_PI * 1.5)
+// # define S (M_PI * 1)
+// # define W (M_PI * 0.5)
+
+typedef struct s_calculs
+{
+	double	rotate_speed;
+	double	north;
+	double	east;
+	double	south;
+	double	west;
+}				t_calculs;
 
 typedef struct s_image
 {
@@ -80,6 +89,7 @@ typedef struct s_data
 	void		*win;
 	t_image		img_win;
 	t_raycast	raycast;
+	t_calculs	calculs;
 	t_hook		hook;
 	double		height;
 	double		width;
@@ -144,6 +154,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
 double		get_angle(t_data *data, char direction);
+void		init_calculs(t_data *data);
 
 //main.c
 int			cub_close(t_data *data);
