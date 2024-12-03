@@ -22,11 +22,14 @@ int	find_door_in_map(char **str)
 	return (d);
 }
 
-int	**malloc_door_tab(int	**tab_door, char **str, int i, int j)
+int	malloc_door_tab(int	**tab_door, char **str)
 {
+	int	i;
+	int	j;
 	int	d;
 
-	d = 0;
+	i = 0;
+	d = -1;
 	while (str[i])
 	{
 		j = 0;
@@ -34,34 +37,31 @@ int	**malloc_door_tab(int	**tab_door, char **str, int i, int j)
 		{
 			if (str[i][j] == 'D')
 			{
-				tab_door[d] = malloc(sizeof(int) * 2);
+				tab_door[++d] = malloc(sizeof(int) * 2);
 				if (!tab_door[d])
-					return (NULL);
+					return (-1);
 				tab_door[d][0] = j;
 				tab_door[d][1] = i;
-				d++;
 			}
 			j++;
 		}
 		i++;
 	}
-	return (tab_door);
+	tab_door[++d] = NULL;
+	return (0);
 }
 
-int	**init_door_tab(char **str)
+int	**init_door_tab(char **map)
 {
-	int	i;
-	int	j;
-	int	d;
 	int	**tab_door;
 
-	i = 0;
-	j = 0;
-	d = find_door_in_map(str);
-	tab_door = malloc(sizeof(int *) * (d + 1));
+	tab_door = malloc(sizeof(int *) * (find_door_in_map(map) + 1));
 	if (!tab_door)
 		return (NULL);
-	tab_door[d] = NULL;
-	tab_door = malloc_door_tab(tab_door, str, i, j);
+	if (malloc_door_tab(tab_door, map) == -1)
+	{
+		free_door_tab(tab_door);
+		return (NULL);
+	}
 	return (tab_door);
 }

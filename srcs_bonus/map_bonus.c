@@ -6,23 +6,20 @@ int	check_zero_inside(char **tab, int start)
 	int	j;
 
 	i = start + 1;
-	j = 1;
 	while (tab[i])
 	{
+		j = 1;
 		while (tab[i][j + 1])
 		{
-			if (tab[i][j] == '0')
-			{
-				if (!ft_strchr("D01", tab[i - 1][j])
-					|| !ft_strchr("D01", tab[i + 1][j]))
-					return (-1);
-				if (!ft_strchr("D01", tab[i][j + 1])
-					|| !ft_strchr("D01", tab[i][j - 1]))
-					return (-1);
-			}
+			if (tab[i][j] == '0' && (j >= ft_strlen(tab[i - 1])
+				|| !ft_strchr("D01", tab[i - 1][j]) || !tab[i + 1]
+				|| j >= ft_strlen(tab[i + 1])
+				|| !ft_strchr("D01", tab[i + 1][j])
+				|| !ft_strchr("D01", tab[i][j - 1])
+				|| !ft_strchr("D01", tab[i][j + 1])))
+				return (-1);
 			j++;
 		}
-		j = 1;
 		i++;
 	}
 	return (0);

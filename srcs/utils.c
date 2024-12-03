@@ -7,7 +7,7 @@ void	free_door_tab(int **tab_door)
 	i = 0;
 	if (!tab_door)
 		return ;
-	while (tab_door && tab_door[i])
+	while (tab_door[i])
 	{
 		free(tab_door[i]);
 		i++;

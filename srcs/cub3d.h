@@ -26,7 +26,7 @@
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
 
-typedef struct	s_image
+typedef struct s_image
 {
 	void	*img;
 	char	*addr;
@@ -37,7 +37,7 @@ typedef struct	s_image
 	int		endian;
 }				t_image;
 
-typedef struct	s_ray
+typedef struct s_ray
 {
 	char	**map;
 	double	angle;
@@ -47,7 +47,7 @@ typedef struct	s_ray
 	double	y_step;
 }				t_ray;
 
-typedef struct	s_raycast
+typedef struct s_raycast
 {
 	t_image	N_wall;
 	t_image	E_wall;
@@ -73,7 +73,7 @@ typedef struct s_hook
 	int			rotate_left;
 }				t_hook;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	char		**map;
 	void		*mlx;
@@ -123,10 +123,6 @@ void		draw_wall(t_data *data, int x);
 void		raycast_projection(t_data *data, t_ray *ray);
 void		raycast(t_data *data);
 
-//minimap.c
-void    	draw_minimap(t_data *data, double distance, int x, int y);
-void		init_minimap(t_data *data);
-
 //map.c
 int			check_zero_inside(char **tab);
 int			valid_zero_map(char **tab);
@@ -146,8 +142,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 
 // init_data_utils.c
 int			check_color_value(char **tab);
-t_image		get_wall(void *mlx, char *file);
-int			add_direction_img(t_image *dest, t_data *data, char *str, char *direction);
+int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
 double		get_angle(char direction);
 
 //main.c

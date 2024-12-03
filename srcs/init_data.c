@@ -37,13 +37,13 @@ int	init_texture(t_data *data, char *str)
 		printf("Error\nBad argument: \"%c%c\"\n", str[0], str[1]);
 		return (-1);
 	}
-	if (add_direction_img(&data->raycast.N_wall, data, str, "NO") == -1)
+	if (get_wall(&data->raycast.N_wall, data, str, "NO") == -1)
 		return (-1);
-	if (add_direction_img(&data->raycast.S_wall, data, str, "SO") == -1)
+	if (get_wall(&data->raycast.S_wall, data, str, "SO") == -1)
 		return (-1);
-	if (add_direction_img(&data->raycast.W_wall, data, str, "WE") == -1)
+	if (get_wall(&data->raycast.W_wall, data, str, "WE") == -1)
 		return (-1);
-	if (add_direction_img(&data->raycast.E_wall, data, str, "EA") == -1)
+	if (get_wall(&data->raycast.E_wall, data, str, "EA") == -1)
 		return (-1);
 	return (0);
 }
@@ -111,7 +111,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 				|| init_texture(data, tab[i]))
 				return (-1);
 		}
-		else if (!is_map_line(tab[i], "01NSEW ")
+		else if (is_map_line(tab[i], "01NSEW ") == -1
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}

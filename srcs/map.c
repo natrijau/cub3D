@@ -11,17 +11,12 @@ int	check_zero_inside(char **tab)
 		j = 1;
 		while (tab[i][j + 1])
 		{
-			if (tab[i][j] == '0')
-			{
-				if (j >= ft_strlen(tab[i - 1]) || !ft_strchr("01", tab[i - 1][j]))
-					return (-1);
-				if (!tab[i + 1] || j >= ft_strlen(tab[i + 1]) || !ft_strchr("01", tab[i + 1][j]))
-					return (-1);
-				if (!ft_strchr("01", tab[i][j - 1]))
-					return (-1);
-				if (!tab[i][j + 1] || !ft_strchr("01", tab[i][j + 1]))
-					return (-1);
-			}
+			if (tab[i][j] == '0' && (j >= ft_strlen(tab[i - 1])
+				|| !ft_strchr("01", tab[i - 1][j]) || !tab[i + 1]
+				|| j >= ft_strlen(tab[i + 1]) || !ft_strchr("01", tab[i + 1][j])
+				|| !ft_strchr("01", tab[i][j - 1])
+				|| !ft_strchr("01", tab[i][j + 1])))
+				return (-1);
 			j++;
 		}
 		i++;
@@ -48,7 +43,6 @@ int	valid_zero_map(char **tab)
 	return (0);
 }
 
-// Add space to map to equalize the length of the lines
 char	**init_map(char **map_off)
 {
 	char	**map;

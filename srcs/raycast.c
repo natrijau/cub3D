@@ -10,7 +10,8 @@ int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
 
 void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 {
-	if (data->map[(int)((ray.y - ray.y_step) / CASE)][(int)(ray.x / CASE)] == '0')
+	if (data->map[(int)((ray.y - ray.y_step) / CASE)]
+		[(int)(ray.x / CASE)] == '0')
 	{
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
@@ -73,7 +74,7 @@ void	raycast_projection(t_data *data, t_ray *ray)
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
 	}
-	if (fabs(ray->x_step) > 0.1 || fabs(ray->y_step) > 0.1)
+	if (fabs(ray->x_step) > 0.001 || fabs(ray->y_step) > 0.001)
 	{
 		ray->x -= ray->x_step;
 		ray->y -= ray->y_step;
@@ -95,8 +96,8 @@ void	raycast(t_data *data)
 	while (i_ray < WIDTH)
 	{
 		ray.angle = fmod(ray.angle, N);
-		ray.x_step = cos(ray.angle + M_PI) + cos(ray.angle + E);
-		ray.y_step = sin(ray.angle + M_PI) + sin(ray.angle + E);
+		ray.x_step = (cos(ray.angle + M_PI) + cos(ray.angle + E)) * 0.1;
+		ray.y_step = (sin(ray.angle + M_PI) + sin(ray.angle + E)) * 0.1;
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
 		raycast_projection(data, &ray);

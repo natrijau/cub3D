@@ -88,8 +88,8 @@ void	raycast(t_data *data)
 	while (i_ray < WIDTH)
 	{
 		ray.angle = fmod(ray.angle, N);
-		ray.x_step = cos(ray.angle + M_PI) + cos(ray.angle + E);
-		ray.y_step = sin(ray.angle + M_PI) + sin(ray.angle + E);
+		ray.x_step = (cos(ray.angle + M_PI) + cos(ray.angle + E)) * 0.1;
+		ray.y_step = (sin(ray.angle + M_PI) + sin(ray.angle + E)) * 0.1;
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
 		if (i_ray == WIDTH >> 1 && data->change_state_door)

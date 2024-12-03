@@ -3,26 +3,18 @@
 int	is_map_line(char *line_map, char *str)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
 	while (line_map[i])
 	{
-		while (str[j])
+		if (!ft_strchr(str, line_map[i]))
 		{
-			if (str[j] == line_map[i])
-			{
-				j = 0;
-				break ;
-			}
-			j++;
+			printf("Error\nInvalid map line\n");
+			return (-1);
 		}
-		if (str[j] == '\0' && printf("Error\nInvalid map line\n"))
-			return (0);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 char	*clear_space(char *src)

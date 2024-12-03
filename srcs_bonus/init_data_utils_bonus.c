@@ -23,18 +23,7 @@ int	check_color_value(char **tab)
 	return (0);
 }
 
-t_image	get_wall(void *mlx, char *file)
-{
-	t_image	img;
-
-	img.img = mlx_xpm_file_to_image(mlx, file, &img.width, &img.height);
-	if (img.img)
-		img.addr = mlx_get_data_addr(img.img,
-				&img.bpp, &img.line_len, &img.endian);
-	return (img);
-}
-
-int	add_direction_img(t_image *dest, t_data *data, char *str, char *direction)
+int	get_wall(t_image *dest, t_data *data, char *str, char *direction)
 {
 	if (!ft_strncmp(str, direction, 2))
 	{
@@ -43,12 +32,15 @@ int	add_direction_img(t_image *dest, t_data *data, char *str, char *direction)
 			printf("Error\nDouble texture definition: %s\n", direction);
 			return (-1);
 		}
-		*dest = get_wall(data->mlx, &str[2]);
+		dest->img = mlx_xpm_file_to_image(data->mlx, &str[2],
+				&dest->width, &dest->height);
 		if (!dest->img)
 		{
 			printf("Error\nFailed texture importation: %s\n", &str[2]);
 			return (-1);
 		}
+		dest->addr = mlx_get_data_addr(dest->img, &dest->bpp,
+				&dest->line_len, &dest->endian);
 	}
 	return (0);
 }

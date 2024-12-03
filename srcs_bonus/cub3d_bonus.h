@@ -36,7 +36,7 @@
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
 
-typedef struct	s_image
+typedef struct s_image
 {
 	void	*img;
 	char	*addr;
@@ -47,7 +47,7 @@ typedef struct	s_image
 	int		endian;
 }				t_image;
 
-typedef struct	s_ray
+typedef struct s_ray
 {
 	char	**map;
 	double	angle;
@@ -59,7 +59,7 @@ typedef struct	s_ray
 	double	y_fabs_step;
 }				t_ray;
 
-typedef struct	s_raycast
+typedef struct s_raycast
 {
 	t_image	N_wall;
 	t_image	E_wall;
@@ -75,7 +75,7 @@ typedef struct	s_raycast
 	double	y;
 }				t_raycast;
 
-typedef struct	s_minimap
+typedef struct s_minimap
 {
 	int		height;
 	int		width;
@@ -93,7 +93,7 @@ typedef struct s_hook
 	int			old_x;
 }				t_hook;
 
-typedef struct	s_data
+typedef struct s_data
 {
 	char		**map;
 	void		*mlx;
@@ -122,15 +122,15 @@ void		map_clear(char **map);
 int			find_map_start(char **file_content);
 
 //utils_shift.c
-void    	azerty_qwerty(int keycode, t_hook	*hook);
+void		azerty_qwerty(int keycode, t_hook *hook);
 int			key_press(int keycode, t_data *data);
 int			key_release(int keycode, t_data *data);
-int 		update_move(t_data *data);
+int			update_move(t_data *data);
 void		shift_collision(t_data *data, double x, double y);
 
 //utils_bonus.c
 int			find_door_in_map(char **str);
-int			**malloc_door_tab(int	**tab_door, char **str, int i, int j);
+int			malloc_door_tab(int	**tab_door, char **str);
 int			**init_door_tab(char **str);
 
 //utils.c
@@ -158,7 +158,7 @@ void		steps_progression(t_data *data, t_ray *ray, int *check_wall);
 int			change_door_case(t_data *data, int x, int y);
 
 //minimap.c
-void    	draw_minimap(t_data *data, double distance, int x, int y);
+void		draw_minimap(t_data *data, double distance, int x, int y);
 void		init_minimap(t_data *data);
 
 //map.c
@@ -181,8 +181,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 
 // init_data_utils.c
 int			check_color_value(char **tab);
-t_image		get_wall(void *mlx, char *file);
-int			add_direction_img(t_image *dest, t_data *data, char *str, char *direction);
+int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
 double		get_angle(char direction);
 
 //main.c

@@ -42,8 +42,6 @@ int	shift(t_data *data)
 {
 	int		x;
 	int		y;
-	double	new_x;
-	double	new_y;
 
 	y = data->hook.move_back - data->hook.move_forward;
 	x = data->hook.move_right - data->hook.move_left;
@@ -53,16 +51,15 @@ int	shift(t_data *data)
 	if (!x && !y && data->angle == data->old_angle)
 		return (0);
 	data->old_angle = data->angle;
-	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
-	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
-	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
-	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
-	data->x += new_x;
-	data->y += new_y;
+	data->x += (cos(data->angle) * MOOVE_SPEED) * x;
+	data->x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	data->y += (sin(data->angle) * MOOVE_SPEED) * x;
+	data->y += (sin(data->angle + W) * MOOVE_SPEED) * y;
 	init_img_win(data);
 	if (data->x > sqrt(2) && data->x < data->width - sqrt(2)
 		&& data->y > sqrt(2) && data->y < data->height - sqrt(2)
-		&& ft_strchr("01", data->map[(int)(data->y / CASE)][(int)(data->x / CASE)]))
+		&& ft_strchr("01", data->map[(int)(data->y / CASE)]
+		[(int)(data->x / CASE)]))
 		raycast(data);
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 	return (0);
