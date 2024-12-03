@@ -1,5 +1,17 @@
-#ifndef CUB3D_H
-# define CUB3D_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d_bonus.h                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:47:44 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:49:10 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#ifndef CUB3D_BONUS_H
+# define CUB3D_BONUS_H
 
 # include <stdio.h>
 # include <stdlib.h>
@@ -66,11 +78,11 @@ typedef struct s_ray
 
 typedef struct s_raycast
 {
-	t_image	N_wall;
-	t_image	E_wall;
-	t_image	S_wall;
-	t_image	W_wall;
-	t_image	Door;
+	t_image	n_wall;
+	t_image	e_wall;
+	t_image	s_wall;
+	t_image	w_wall;
+	t_image	door;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
@@ -188,7 +200,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 // init_data_utils.c
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
-double		get_angle(t_data* data, char direction);
+double		get_angle(t_data *data, char direction);
 void		init_calculs(t_data *data);
 
 //main.c

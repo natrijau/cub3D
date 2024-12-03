@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils_raycast_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:57:27 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:57:27 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 int	ft_mlx_get_pixel_color(t_image *img, int x, int y)
@@ -15,25 +27,25 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 		raycast->x = fmod(ray.x, CASE);
 		if (ray.y > data->y)
 		{
-			raycast->actual_wall = raycast->N_wall;
+			raycast->actual_wall = raycast->n_wall;
 			raycast->x = CASE - raycast->x;
 		}
 		else
-			raycast->actual_wall = raycast->S_wall;
+			raycast->actual_wall = raycast->s_wall;
 	}
 	else
 	{
 		raycast->x = fmod(ray.y, CASE);
 		if (ray.x > data->x)
-			raycast->actual_wall = raycast->W_wall;
+			raycast->actual_wall = raycast->w_wall;
 		else
 		{
 			raycast->x = CASE - raycast->x;
-			raycast->actual_wall = raycast->E_wall;
+			raycast->actual_wall = raycast->e_wall;
 		}
 	}
 	if (data->map[(int)ray.y / CASE][(int)ray.x / CASE] == 'D')
-		raycast->actual_wall = raycast->Door;
+		raycast->actual_wall = raycast->door;
 	raycast->x *= (double)raycast->actual_wall.width / CASE;
 }
 

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:59:03 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:59:38 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 // close the window and free
@@ -10,14 +22,14 @@ int	cub_close(t_data *data)
 	}
 	if (data->img_win.img)
 		mlx_destroy_image(data->mlx, data->img_win.img);
-	if (data->raycast.N_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
-	if (data->raycast.E_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.E_wall.img);
-	if (data->raycast.S_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
-	if (data->raycast.W_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
+	if (data->raycast.n_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.n_wall.img);
+	if (data->raycast.e_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.e_wall.img);
+	if (data->raycast.s_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.s_wall.img);
+	if (data->raycast.w_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.w_wall.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -28,10 +40,10 @@ void	data_init(t_data *data)
 {
 	data->win = NULL;
 	data->img_win.img = NULL;
-	data->raycast.N_wall.img = NULL;
-	data->raycast.E_wall.img = NULL;
-	data->raycast.S_wall.img = NULL;
-	data->raycast.W_wall.img = NULL;
+	data->raycast.n_wall.img = NULL;
+	data->raycast.e_wall.img = NULL;
+	data->raycast.s_wall.img = NULL;
+	data->raycast.w_wall.img = NULL;
 	data->raycast.floor_color = 0;
 	data->raycast.ceiling_color = 0;
 	data->map = NULL;
@@ -46,8 +58,8 @@ int	shift(t_data *data)
 
 	y = data->hook.move_back - data->hook.move_forward;
 	x = data->hook.move_right - data->hook.move_left;
-	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
-	data->angle += ROTATE_SPEED * data->hook.rotate_left;
+	data->angle -= data->calculs.rotate_speed * data->hook.rotate_right;
+	data->angle += data->calculs.rotate_speed * data->hook.rotate_left;
 	data->angle = fmod(data->angle, data->calculs.north);
 	if (!x && !y && data->angle == data->old_angle)
 		return (0);

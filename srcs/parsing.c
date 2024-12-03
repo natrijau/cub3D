@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:59:46 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:59:47 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
 //  Read map since file and return tab map
@@ -32,8 +44,8 @@ char	**get_file(char *file)
 
 int	check_texture(t_data *data)
 {
-	if (!data->raycast.N_wall.img || !data->raycast.S_wall.img
-		|| !data->raycast.W_wall.img || !data->raycast.E_wall.img)
+	if (!data->raycast.n_wall.img || !data->raycast.s_wall.img
+		|| !data->raycast.w_wall.img || !data->raycast.e_wall.img)
 	{
 		printf("Error\nOne of the textures is not initialized\n");
 		return (-1);

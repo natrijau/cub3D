@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_bonus.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:51:57 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:51:58 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 int	check_zero_inside(char **tab)
@@ -66,7 +78,7 @@ char	**init_map(char **map_off)
 // 	if ((!x || !i || x >= ft_strtablen(map) - 1
 // 			|| i >= ft_strlen(map[x]) - 1 || map[x][i] == ' '))
 // 		return (-1);
-// 	if (map[x][i] == 'D' && !data->raycast.Door.img)
+// 	if (map[x][i] == 'D' && !data->raycast.door.img)
 // 		map[x][i] = '0';
 // 	data->map[x][i] = map[x][i];
 // 	map[x][i] = '1';

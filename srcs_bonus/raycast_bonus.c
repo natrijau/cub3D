@@ -1,14 +1,24 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   raycast_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:53:46 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:57:08 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
-void	draw_wall(t_data *data, int x)
+void	draw_wall(t_data *data, t_raycast raycast, int x)
 {
-	t_raycast	raycast;
 	double		factor;
 	double		y;
 	double		x_pow;
 
-	raycast = data->raycast;
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1)
 			/ tan(data->fov_rad / 2));
 	factor = (double)raycast.actual_wall.height / raycast.distance;
@@ -24,7 +34,8 @@ void	draw_wall(t_data *data, int x)
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall,
 				raycast.x, raycast.y);
 		if ((x < data->calculs.minimap_pos_x && y < data->calculs.minimap_pos_y)
-			|| sqrt(x_pow + pow(y - (HEIGHT - data->calculs.h_div_ten), 2)) > data->calculs.h_div_ten + 1)
+			|| sqrt(x_pow + pow(y - (HEIGHT - data->calculs.h_div_ten), 2))
+			> data->calculs.h_div_ten + 1)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.y += factor;
 	}
@@ -40,12 +51,13 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 		if (data->raycast.distance <= data->calculs.h_div_ten)
 		{
 			if (ray->x_fabs_step > 1 || ray->y_fabs_step > 1)
-				ft_mlx_pixel_put(&data->img_win,
-					data->calculs.ray_pos_x + (ray->x - data->x) - ray->x_step / 2,
-					data->calculs.ray_pos_y + (ray->y - data->y) - ray->y_step / 2,
-					0x00FFFFFF);
-			ft_mlx_pixel_put(&data->img_win, data->calculs.ray_pos_x + (ray->x - data->x),
-				data->calculs.ray_pos_y + (ray->y - data->y), 0x00FFFFFF);
+				ft_mlx_pixel_put(&data->img_win, data->calculs.ray_pos_x
+					+ (ray->x - data->x) - ray->x_step / 2,
+					data->calculs.ray_pos_y + (ray->y - data->y)
+					- ray->y_step / 2, 0x00FFFFFF);
+			ft_mlx_pixel_put(&data->img_win, data->calculs.ray_pos_x
+				+ (ray->x - data->x), data->calculs.ray_pos_y
+				+ (ray->y - data->y), 0x00FFFFFF);
 		}
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
@@ -88,8 +100,10 @@ void	raycast(t_data *data)
 	while (i_ray < WIDTH)
 	{
 		ray.angle = fmod(ray.angle, data->calculs.north);
-		ray.x_step = (cos(ray.angle + M_PI) + cos(ray.angle + data->calculs.east)) * 0.1;
-		ray.y_step = (sin(ray.angle + M_PI) + sin(ray.angle + data->calculs.east)) * 0.1;
+		ray.x_step = (cos(ray.angle + M_PI)
+				+ cos(ray.angle + data->calculs.east)) * 0.1;
+		ray.y_step = (sin(ray.angle + M_PI)
+				+ sin(ray.angle + data->calculs.east)) * 0.1;
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
 		if (i_ray == WIDTH >> 1 && data->change_state_door)
@@ -99,7 +113,7 @@ void	raycast(t_data *data)
 		data->raycast.distance *= cos(fmod(ray.angle
 					- (data->angle + (M_PI / 4)), data->calculs.north));
 		set_texture_config(data, ray, &data->raycast);
-		draw_wall(data, i_ray);
+		draw_wall(data, data->raycast, i_ray);
 		++i_ray;
 		ray.angle += data->angle_step;
 	}

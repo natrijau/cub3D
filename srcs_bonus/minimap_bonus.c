@@ -1,10 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minimap_bonus.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:52:05 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:52:58 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 void	draw_minimap(t_data *data, double distance, int x, int y)
 {
 	if (distance <= data->calculs.case_div_two)
 		ft_mlx_pixel_put(&data->img_win,
-			data->calculs.minimap_pos_x + x, data->calculs.minimap_pos_y + y, 0x00FF0000);
+			data->calculs.minimap_pos_x + x,
+			data->calculs.minimap_pos_y + y, 0x00FF0000);
 	else if (distance <= data->calculs.h_div_ten)
 	{
 		if (x + data->x - data->calculs.h_div_ten >= 0
@@ -37,7 +50,8 @@ void	init_minimap(t_data *data)
 		x = 0;
 		while (x < data->calculs.h_div_five)
 		{
-			distance = sqrt(pow(x - data->calculs.h_div_ten, 2) + pow(y - data->calculs.h_div_ten, 2));
+			distance = sqrt(pow(x - data->calculs.h_div_ten, 2)
+					+ pow(y - data->calculs.h_div_ten, 2));
 			draw_minimap(data, distance, x, y);
 			++x;
 		}

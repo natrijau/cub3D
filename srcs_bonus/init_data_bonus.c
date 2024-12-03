@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_data_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:49:47 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:49:47 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 int	init_color(t_data *data, char *str)
@@ -38,15 +50,15 @@ int	init_texture(t_data *data, char *str)
 		printf("Error\nBad argument: \"%c%c\"\n", str[0], str[1]);
 		return (-1);
 	}
-	if (get_wall(&data->raycast.N_wall, data, str, "NO") == -1)
+	if (get_wall(&data->raycast.n_wall, data, str, "NO") == -1)
 		return (-1);
-	if (get_wall(&data->raycast.S_wall, data, str, "SO") == -1)
+	if (get_wall(&data->raycast.s_wall, data, str, "SO") == -1)
 		return (-1);
-	if (get_wall(&data->raycast.W_wall, data, str, "WE") == -1)
+	if (get_wall(&data->raycast.w_wall, data, str, "WE") == -1)
 		return (-1);
-	if (get_wall(&data->raycast.E_wall, data, str, "EA") == -1)
+	if (get_wall(&data->raycast.e_wall, data, str, "EA") == -1)
 		return (-1);
-	if (get_wall(&data->raycast.Door, data, str, "DO") == -1)
+	if (get_wall(&data->raycast.door, data, str, "DO") == -1)
 		return (-1);
 	return (0);
 }

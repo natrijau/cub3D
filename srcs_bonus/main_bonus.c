@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:29:25 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:51:42 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,16 +23,16 @@ int	cub_close(t_data *data)
 	}
 	if (data->img_win.img)
 		mlx_destroy_image(data->mlx, data->img_win.img);
-	if (data->raycast.N_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.N_wall.img);
-	if (data->raycast.E_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.E_wall.img);
-	if (data->raycast.S_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.S_wall.img);
-	if (data->raycast.W_wall.img)
-		mlx_destroy_image(data->mlx, data->raycast.W_wall.img);
-	if (data->raycast.Door.img)
-		mlx_destroy_image(data->mlx, data->raycast.Door.img);
+	if (data->raycast.n_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.n_wall.img);
+	if (data->raycast.e_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.e_wall.img);
+	if (data->raycast.s_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.s_wall.img);
+	if (data->raycast.w_wall.img)
+		mlx_destroy_image(data->mlx, data->raycast.w_wall.img);
+	if (data->raycast.door.img)
+		mlx_destroy_image(data->mlx, data->raycast.door.img);
 	mlx_destroy_display(data->mlx);
 	free(data->mlx);
 	map_clear(data->map);
@@ -44,11 +44,11 @@ void	data_init(t_data *data)
 {
 	data->win = NULL;
 	data->img_win.img = NULL;
-	data->raycast.N_wall.img = NULL;
-	data->raycast.E_wall.img = NULL;
-	data->raycast.S_wall.img = NULL;
-	data->raycast.W_wall.img = NULL;
-	data->raycast.Door.img = NULL;
+	data->raycast.n_wall.img = NULL;
+	data->raycast.e_wall.img = NULL;
+	data->raycast.s_wall.img = NULL;
+	data->raycast.w_wall.img = NULL;
+	data->raycast.door.img = NULL;
 	data->raycast.floor_color = 0x606060;
 	data->raycast.ceiling_color = 0x3399ff;
 	data->change_state_door = FALSE;

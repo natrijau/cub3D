@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_data_utils_bonus.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:49:56 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:49:56 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d_bonus.h"
 
 void	init_calculs(t_data *data)
@@ -8,8 +20,10 @@ void	init_calculs(t_data *data)
 	data->calculs.h_div_five = HEIGHT / 5;
 	data->calculs.minimap_pos_x = WIDTH - data->calculs.h_div_five;
 	data->calculs.minimap_pos_y = HEIGHT - data->calculs.h_div_five;
-	data->calculs.ray_pos_x = data->calculs.minimap_pos_x + data->calculs.h_div_ten;
-	data->calculs.ray_pos_y = data->calculs.minimap_pos_y + data->calculs.h_div_ten;
+	data->calculs.ray_pos_x = data->calculs.minimap_pos_x
+		+ data->calculs.h_div_ten;
+	data->calculs.ray_pos_y = data->calculs.minimap_pos_y
+		+ data->calculs.h_div_ten;
 	data->calculs.north = M_PI * 2;
 	data->calculs.east = M_PI * 1.5;
 	data->calculs.south = M_PI * 1;

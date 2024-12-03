@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/03 12:58:09 by yanolive          #+#    #+#             */
+/*   Updated: 2024/12/03 12:58:43 by yanolive         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -14,17 +26,12 @@
 # endif
 # define BUFFER_SIZE 100
 # define MOOVE_SPEED 2
-# define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
 # define WIDTH 1920
 # define HEIGHT 960
 # define TRUE 1
 # define FALSE 0
-// # define N (M_PI * 2)
-// # define E (M_PI * 1.5)
-// # define S (M_PI * 1)
-// # define W (M_PI * 0.5)
 
 typedef struct s_calculs
 {
@@ -58,10 +65,10 @@ typedef struct s_ray
 
 typedef struct s_raycast
 {
-	t_image	N_wall;
-	t_image	E_wall;
-	t_image	S_wall;
-	t_image	W_wall;
+	t_image	n_wall;
+	t_image	e_wall;
+	t_image	s_wall;
+	t_image	w_wall;
 	t_image	actual_wall;
 	int		floor_color;
 	int		ceiling_color;
