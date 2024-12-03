@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:21:59 by natrijau          #+#    #+#             */
-/*   Updated: 2024/12/03 13:24:36 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:06:40 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ int			parsing(t_data *data, char *path_file);
 //raycast.c
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
-void		draw_wall(t_data *data, int x);
+void		draw_wall(t_data *data, t_raycast raycast, int x);
 void		raycast_projection(t_data *data, t_ray *ray, int check_wall);
 void		raycast(t_data *data);
 
@@ -179,7 +179,7 @@ void		init_minimap(t_data *data);
 int			check_zero_inside(char **tab);
 int			valid_zero_map(char **tab);
 char		**init_map(char **map_off);
-int			flood_fil(t_data *data, char **map, int x, int i);
+// int			flood_fil(t_data *data, char **map, int x, int i);
 
 //init_cub3d.c
 void		creat_image(t_image *img, void *mlx, int width, int height);

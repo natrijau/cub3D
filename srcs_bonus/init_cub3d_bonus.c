@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:49:37 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:49:39 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:44:40 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ int	init_cub3d(t_data *data)
 	data->minimap.width = ft_strlen(data->map[0]);
 	data->height_and_case = data->minimap.height * CASE;
 	data->width_and_case = data->minimap.width * CASE;
-	data->hook.keyboard_bool = FALSE;
+	data->hook.keyboard_bool = TRUE;
 	data->hook.move_forward = FALSE;
 	data->hook.move_back = FALSE;
 	data->hook.move_right = FALSE;

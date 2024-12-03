@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:57:30 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:57:32 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/03 14:27:06 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,19 +84,18 @@ int	update_move(t_data *data)
 	if (x != data->hook.old_x)
 	{
 		data->angle += (x - data->hook.old_x) * 0.001;
-		if (x > WIDTH - 200)
-			x = WIDTH - 200;
-		else if (x < 200)
-			x = 200;
-		mlx_mouse_move(data->mlx, data->win, x, y);
+		if (x >= WIDTH - 2 || x <= 2)
+		{
+			if (x >= WIDTH - 2)
+				x = x - WIDTH + 2;
+			else if (x <= 2)
+				x = WIDTH - x - 2;
+			mlx_mouse_move(data->mlx, data->win, x, y);
+		}
 		data->hook.old_x = x;
 	}
-	x = 0;
-	y = 0;
-	y -= data->hook.move_forward;
-	y += data->hook.move_back;
-	x += data->hook.move_right;
-	x -= data->hook.move_left;
+	x = data->hook.move_right - data->hook.move_left;
+	y = data->hook.move_back - data->hook.move_forward;
 	data->angle -= data->calculs.rotate_speed * data->hook.rotate_right;
 	data->angle += data->calculs.rotate_speed * data->hook.rotate_left;
 	data->angle = fmod(data->angle, data->calculs.north);
