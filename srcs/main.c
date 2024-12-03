@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:03 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:59:38 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:12:33 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ void	data_init(t_data *data)
 	data->raycast.e_wall.img = NULL;
 	data->raycast.s_wall.img = NULL;
 	data->raycast.w_wall.img = NULL;
-	data->raycast.floor_color = 0;
-	data->raycast.ceiling_color = 0;
+	data->raycast.floor_color = -1;
+	data->raycast.ceiling_color = -1;
 	data->map = NULL;
 	init_calculs(data);
 }
