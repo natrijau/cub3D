@@ -143,7 +143,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 // init_data_utils.c
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
-double		get_angle(char direction);
+double		get_angle(t_data *data, char direction);
 
 //main.c
 int			cub_close(t_data *data);

@@ -1,11 +1,11 @@
 #include "cub3d_bonus.h"
 
-int	check_zero_inside(char **tab, int start)
+int	check_zero_inside(char **tab)
 {
 	int	i;
 	int	j;
 
-	i = start + 1;
+	i = 1;
 	while (tab[i])
 	{
 		j = 1;
@@ -25,12 +25,12 @@ int	check_zero_inside(char **tab, int start)
 	return (0);
 }
 
-int	valid_zero_map(int start, char **tab)
+int	valid_zero_map(char **tab)
 {
 	int	i;
 
-	i = start;
-	if (ft_strchr(tab[start], '0') || ft_strchr(tab[ft_strtablen(tab)], '0'))
+	i = 0;
+	if (ft_strchr(tab[i], '0') || ft_strchr(tab[ft_strtablen(tab)], '0'))
 		return (-1);
 	i++;
 	while (tab[i])
@@ -39,7 +39,7 @@ int	valid_zero_map(int start, char **tab)
 			return (-1);
 		i++;
 	}
-	if (check_zero_inside(tab, start) == -1)
+	if (check_zero_inside(tab) == -1)
 		return (-1);
 	return (0);
 }
@@ -49,50 +49,38 @@ char	**init_map(char **map_off)
 {
 	char	**map;
 	int		i;
-	int		j;
-	int		max_len;
 
 	map = ft_calloc(sizeof(char *), (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
 	i = -1;
-	max_len = get_max_tab_len(map_off);
 	while (map_off[++i])
-	{
-		map[i] = ft_calloc(sizeof(char), (max_len + 1));
-		if (!map[i])
-		{
-			map_clear(map);
-			return (NULL);
-		}
-		j = -1;
-		while (++j < max_len)
-			map[i][j] = '1';
-	}
+		map[i] = map_off[i];
+	map_off[0] = NULL;
 	return (map);
 }
 
-// Recursive parsing function to validate and format map
-int	flood_fil(t_data *data, char **map, int x, int i)
-{
-	if ((!x || !i || x >= ft_strtablen(map) - 1
-			|| i >= ft_strlen(map[x]) - 1 || map[x][i] == ' '))
-		return (-1);
-	if (map[x][i] == 'D' && !data->raycast.Door.img)
-		map[x][i] = '0';
-	data->map[x][i] = map[x][i];
-	map[x][i] = '1';
-	if (map[x][i + 1] && map[x][i + 1] != '1'
-		&& flood_fil(data, map, x, i + 1))
-		return (-1);
-	if (map[x + 1][i] && map[x + 1][i] != '1'
-		&& flood_fil(data, map, x + 1, i))
-		return (-1);
-	if (map[x][i - 1] && map[x][i - 1] != '1'
-		&& flood_fil(data, map, x, i - 1))
-		return (-1);
-	if (map[x - 1][i] && map[x - 1][i] != '1'
-		&& flood_fil(data, map, x - 1, i))
-		return (-1);
-	return (0);
-}
+// // Recursive parsing function to validate and format map
+// int	flood_fil(t_data *data, char **map, int x, int i)
+// {
+// 	if ((!x || !i || x >= ft_strtablen(map) - 1
+// 			|| i >= ft_strlen(map[x]) - 1 || map[x][i] == ' '))
+// 		return (-1);
+// 	if (map[x][i] == 'D' && !data->raycast.Door.img)
+// 		map[x][i] = '0';
+// 	data->map[x][i] = map[x][i];
+// 	map[x][i] = '1';
+// 	if (map[x][i + 1] && map[x][i + 1] != '1'
+// 		&& flood_fil(data, map, x, i + 1))
+// 		return (-1);
+// 	if (map[x + 1][i] && map[x + 1][i] != '1'
+// 		&& flood_fil(data, map, x + 1, i))
+// 		return (-1);
+// 	if (map[x][i - 1] && map[x][i - 1] != '1'
+// 		&& flood_fil(data, map, x, i - 1))
+// 		return (-1);
+// 	if (map[x - 1][i] && map[x - 1][i] != '1'
+// 		&& flood_fil(data, map, x - 1, i))
+// 		return (-1);
+// 	return (0);
+// }

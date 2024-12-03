@@ -14,27 +14,32 @@
 # endif
 # define BUFFER_SIZE 100
 # define MOOVE_SPEED 2
-# define ROTATE_SPEED (2 * M_PI / 90)
 # define FOV 80
 # define CASE 12
-# define CASE_DIV_TWO CASE / 2
-# define CASE_MULT_TWO CASE * 2
 # define WIDTH 1920
-# define HEIGHT 960
-# define H_DIV_TEN HEIGHT / 10
-# define H_DIV_FIVE HEIGHT / 5
-# define MINIMAP_POS_X WIDTH - H_DIV_FIVE
-# define MINIMAP_POS_Y HEIGHT - H_DIV_FIVE
-# define RAY_POS_X MINIMAP_POS_X + H_DIV_TEN
-# define RAY_POS_Y MINIMAP_POS_Y + H_DIV_TEN
-# define PLAYER_POS_X WIDTH - H_DIV_TEN - CASE_DIV_TWO
-# define PLAYER_POS_Y HEIGHT - H_DIV_TEN - CASE_DIV_TWO
+# define HEIGHT 1080
 # define TRUE 1
 # define FALSE 0
 # define N (M_PI * 2)
 # define E (M_PI * 1.5)
 # define S (M_PI * 1)
 # define W (M_PI * 0.5)
+
+typedef struct s_calculs
+{
+	double	rotate_speed;
+	int		case_div_two;
+	int		h_div_ten;
+	int		h_div_five;
+	int		minimap_pos_x;
+	int		minimap_pos_y;
+	int		ray_pos_x;
+	int		ray_pos_y;
+	double	north;
+	double	east;
+	double	south;
+	double	west;
+}				t_calculs;
 
 typedef struct s_image
 {
@@ -101,6 +106,7 @@ typedef struct s_data
 	t_image		img_win;
 	t_minimap	minimap;
 	t_raycast	raycast;
+	t_calculs	calculs;
 	t_hook		hook;
 	int			**tab_door;
 	int			change_state_door;
@@ -162,8 +168,8 @@ void		draw_minimap(t_data *data, double distance, int x, int y);
 void		init_minimap(t_data *data);
 
 //map.c
-int			check_zero_inside(char **tab, int start);
-int			valid_zero_map(int start, char **tab);
+int			check_zero_inside(char **tab);
+int			valid_zero_map(char **tab);
 char		**init_map(char **map_off);
 int			flood_fil(t_data *data, char **map, int x, int i);
 
@@ -182,7 +188,8 @@ int			init_data(t_data *data, char **tab, int map_start);
 // init_data_utils.c
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
-double		get_angle(char direction);
+double		get_angle(t_data* data, char direction);
+void		init_calculs(t_data *data);
 
 //main.c
 int			cub_close(t_data *data);

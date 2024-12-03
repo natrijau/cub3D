@@ -69,13 +69,14 @@ int	parsing(t_data *data, char *path_file)
 	map_start = find_map_start(file) + 1;
 	if (init(data, file, map_start) == -1)
 		return (-1);
-	if (valid_zero_map(map_start, file) || flood_fil(data, &file[map_start],
-			data->y / CASE, data->x / CASE))
+	if (valid_zero_map(data->map) /*|| flood_fil(data, &file[map_start],
+			data->y / CASE, data->x / CASE)*/)
 	{
 		printf("Error\nInvalid map\n");
 		map_clear(file);
 		return (-1);
 	}
+	
 	data->tab_door = init_door_tab(data->map);
 	map_clear(file);
 	if (check_texture(data) == -1)

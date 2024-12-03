@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/11/29 17:19:04 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/03 12:29:25 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ void	data_init(t_data *data)
 	data->change_state_door = FALSE;
 	data->map = NULL;
 	data->tab_door = NULL;
+	init_calculs(data);
 }
 
 // Move the character according to user input
@@ -63,9 +64,9 @@ void	shift(t_data *data, int y, int x)
 	double	new_y;
 
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
-	new_x += (cos(data->angle + W) * MOOVE_SPEED) * y;
+	new_x += (cos(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
-	new_y += (sin(data->angle + W) * MOOVE_SPEED) * y;
+	new_y += (sin(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	shift_collision(data, new_x, new_y);
 	init_img_win(data);
 	init_minimap(data);

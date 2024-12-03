@@ -85,9 +85,9 @@ int	update_move(t_data *data)
 	y += data->hook.move_back;
 	x += data->hook.move_right;
 	x -= data->hook.move_left;
-	data->angle -= ROTATE_SPEED * data->hook.rotate_right;
-	data->angle += ROTATE_SPEED * data->hook.rotate_left;
-	data->angle = fmod(data->angle, N);
+	data->angle -= data->calculs.rotate_speed * data->hook.rotate_right;
+	data->angle += data->calculs.rotate_speed * data->hook.rotate_left;
+	data->angle = fmod(data->angle, data->calculs.north);
 	shift(data, y, x);
 	return (0);
 }

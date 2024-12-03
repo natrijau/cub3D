@@ -2,26 +2,26 @@
 
 void	draw_minimap(t_data *data, double distance, int x, int y)
 {
-	if (distance <= CASE_DIV_TWO)
+	if (distance <= data->calculs.case_div_two)
 		ft_mlx_pixel_put(&data->img_win,
-			MINIMAP_POS_X + x, MINIMAP_POS_Y + y, 0x00FF0000);
-	else if (distance <= H_DIV_TEN)
+			data->calculs.minimap_pos_x + x, data->calculs.minimap_pos_y + y, 0x00FF0000);
+	else if (distance <= data->calculs.h_div_ten)
 	{
-		if (x + data->x - H_DIV_TEN >= 0
-			&& y + data->y - H_DIV_TEN >= 0
-			&& x + data->x - H_DIV_TEN < data->width_and_case
-			&& y + data->y - H_DIV_TEN < data->height_and_case
-			&& data->map[(int)((y + data->y - H_DIV_TEN) / CASE)]
-			[(int)((x + data->x - H_DIV_TEN) / CASE)] == '0')
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-				MINIMAP_POS_Y + y, 0x00A0A0A0);
+		if (x + data->x - data->calculs.h_div_ten >= 0
+			&& y + data->y - data->calculs.h_div_ten >= 0
+			&& x + data->x - data->calculs.h_div_ten < data->width_and_case
+			&& y + data->y - data->calculs.h_div_ten < data->height_and_case
+			&& data->map[(int)((y + data->y - data->calculs.h_div_ten) / CASE)]
+			[(int)((x + data->x - data->calculs.h_div_ten) / CASE)] == '0')
+			ft_mlx_pixel_put(&data->img_win, data->calculs.minimap_pos_x + x,
+				data->calculs.minimap_pos_y + y, 0x00A0A0A0);
 		else
-			ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-				MINIMAP_POS_Y + y, 0x00000000);
+			ft_mlx_pixel_put(&data->img_win, data->calculs.minimap_pos_x + x,
+				data->calculs.minimap_pos_y + y, 0x00000000);
 	}
-	else if (distance <= H_DIV_TEN + 1)
-		ft_mlx_pixel_put(&data->img_win, MINIMAP_POS_X + x,
-			MINIMAP_POS_Y + y, 0x00FFFFFF);
+	else if (distance <= data->calculs.h_div_ten + 1)
+		ft_mlx_pixel_put(&data->img_win, data->calculs.minimap_pos_x + x,
+			data->calculs.minimap_pos_y + y, 0x00FFFFFF);
 }
 
 // Fonction pour initialiser l'image représentant l'espace de la minimap
@@ -32,12 +32,12 @@ void	init_minimap(t_data *data)
 	int		y;
 
 	y = 0;
-	while (y < H_DIV_FIVE)
+	while (y < data->calculs.h_div_five)
 	{
 		x = 0;
-		while (x < H_DIV_FIVE)
+		while (x < data->calculs.h_div_five)
 		{
-			distance = sqrt(pow(x - H_DIV_TEN, 2) + pow(y - H_DIV_TEN, 2));
+			distance = sqrt(pow(x - data->calculs.h_div_ten, 2) + pow(y - data->calculs.h_div_ten, 2));
 			draw_minimap(data, distance, x, y);
 			++x;
 		}

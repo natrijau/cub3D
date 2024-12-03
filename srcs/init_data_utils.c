@@ -46,7 +46,7 @@ int	get_wall(t_image *dest, t_data *data, char *str, char *direction)
 }
 
 // returns the starting angle based on the direction
-double	get_angle(char direction)
+double	get_angle(t_data *data, char direction)
 {
 	if (direction == 'N')
 		return (N);

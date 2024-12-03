@@ -1,5 +1,21 @@
 #include "cub3d_bonus.h"
 
+void	init_calculs(t_data *data)
+{
+	data->calculs.rotate_speed = (2 * M_PI / 90);
+	data->calculs.case_div_two = CASE / 2;
+	data->calculs.h_div_ten = HEIGHT / 10;
+	data->calculs.h_div_five = HEIGHT / 5;
+	data->calculs.minimap_pos_x = WIDTH - data->calculs.h_div_five;
+	data->calculs.minimap_pos_y = HEIGHT - data->calculs.h_div_five;
+	data->calculs.ray_pos_x = data->calculs.minimap_pos_x + data->calculs.h_div_ten;
+	data->calculs.ray_pos_y = data->calculs.minimap_pos_y + data->calculs.h_div_ten;
+	data->calculs.north = M_PI * 2;
+	data->calculs.east = M_PI * 1.5;
+	data->calculs.south = M_PI * 1;
+	data->calculs.west = M_PI * 0.5;
+}
+
 int	check_color_value(char **tab)
 {
 	int	i;
@@ -46,16 +62,16 @@ int	get_wall(t_image *dest, t_data *data, char *str, char *direction)
 }
 
 // returns the starting angle based on the direction
-double	get_angle(char direction)
+double	get_angle(t_data *data, char direction)
 {
 	if (direction == 'N')
-		return (N);
+		return (data->calculs.north);
 	if (direction == 'E')
-		return (W);
+		return (data->calculs.west);
 	if (direction == 'S')
-		return (S);
+		return (data->calculs.south);
 	if (direction == 'W')
-		return (E);
+		return (data->calculs.west);
 	printf("Error\nInvalid player direction: %c\n", direction);
 	return (-1);
 }
