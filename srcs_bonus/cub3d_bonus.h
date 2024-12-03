@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:21:59 by natrijau          #+#    #+#             */
-/*   Updated: 2024/12/03 13:23:42 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/03 13:24:36 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -196,7 +196,7 @@ int			init_data(t_data *data, char **tab, int map_start);
 // init_data_utils.c
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
-double		get_angle(t_data* data, char direction);
+double		get_angle(t_data *data, char direction);
 void		init_calculs(t_data *data);
 
 //main.c
