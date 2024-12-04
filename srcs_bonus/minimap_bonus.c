@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:52:05 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:52:58 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:10:08 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,20 @@
 
 void	draw_minimap(t_data *data, double distance, int x, int y)
 {
+	int	x_case;
+	int	y_case;
+
 	if (distance <= data->calculs.case_div_two)
 		ft_mlx_pixel_put(&data->img_win,
 			data->calculs.minimap_pos_x + x,
 			data->calculs.minimap_pos_y + y, 0x00FF0000);
 	else if (distance <= data->calculs.h_div_ten)
 	{
-		if (x + data->x - data->calculs.h_div_ten >= 0
-			&& y + data->y - data->calculs.h_div_ten >= 0
-			&& x + data->x - data->calculs.h_div_ten < data->width_and_case
-			&& y + data->y - data->calculs.h_div_ten < data->height_and_case
-			&& data->map[(int)((y + data->y - data->calculs.h_div_ten) / CASE)]
-			[(int)((x + data->x - data->calculs.h_div_ten) / CASE)] == '0')
+		x_case = (int)((x + data->x - data->calculs.h_div_ten) / CASE);
+		y_case = (int)((y + data->y - data->calculs.h_div_ten) / CASE);
+		if (x_case >= 0 && y_case >= 0 && y_case < data->minimap.height
+			&& x_case < ft_strlen(data->map[y_case])
+			&& data->map[y_case][x_case] == '0')
 			ft_mlx_pixel_put(&data->img_win, data->calculs.minimap_pos_x + x,
 				data->calculs.minimap_pos_y + y, 0x00A0A0A0);
 		else
