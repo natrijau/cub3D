@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:51:57 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:51:58 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:35:41 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	check_zero_inside(char **tab)
 		j = 1;
 		while (tab[i][j + 1])
 		{
-			if (tab[i][j] == '0' && (j >= ft_strlen(tab[i - 1])
+			if ((tab[i][j] == '0' || tab[i][j] == 'D')  && (j >= ft_strlen(tab[i - 1])
 				|| !ft_strchr("D01", tab[i - 1][j]) || !tab[i + 1]
 				|| j >= ft_strlen(tab[i + 1])
 				|| !ft_strchr("D01", tab[i + 1][j])
@@ -42,12 +42,14 @@ int	valid_zero_map(char **tab)
 	int	i;
 
 	i = 0;
-	if (ft_strchr(tab[i], '0') || ft_strchr(tab[ft_strtablen(tab)], '0'))
+	if (ft_strchr(tab[i], '0') || ft_strchr(tab[ft_strtablen(tab)], '0')
+		|| ft_strchr(tab[i], 'D') || ft_strchr(tab[ft_strtablen(tab)], 'D'))
 		return (-1);
 	i++;
 	while (tab[i])
 	{
-		if (tab[i][0] == '0' || tab[i][ft_strlen(tab[i]) - 1] == '0')
+		if (tab[i][0] == '0' || tab[i][ft_strlen(tab[i]) - 1] == '0'
+			|| tab[i][0] == 'D' || tab[i][ft_strlen(tab[i]) - 1] == 'D')
 			return (-1);
 		i++;
 	}

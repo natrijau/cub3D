@@ -1,7 +1,7 @@
 NAME=cub3D
 NAME_BONUS=cub3D_bonus
 CC=gcc
-CFLAGS=-Wall -Wextra -Werror -g
+CFLAGS=-Wall -Wextra -Werror -g -O3
 SRCS_FOLDER=srcs/
 SRCS_BONUS_FOLDER=srcs_bonus/
 SRCS=main.c parsing.c raycast.c init_cub3d.c init_data.c init_data_utils.c utils.c utils_map.c utils_shift.c map.c
