@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:21:59 by natrijau          #+#    #+#             */
-/*   Updated: 2024/12/04 13:50:51 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:24:47 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@
 # define MOOVE_SPEED 2
 # define FOV 80
 # define CASE 12
-# define WIDTH 1920
-# define HEIGHT 1080
+# define WIDTH 1360
+# define HEIGHT 700
 # define TRUE 1
 # define FALSE 0
 
@@ -118,9 +118,11 @@ typedef struct s_data
 	t_hook		hook;
 	int			**tab_door;
 	int			change_state_door;
+	int			door_frame;
 	int			height_and_case;
 	int			width_and_case;
 	double		angle;
+	double		old_angle;
 	double		fov_rad;
 	double		first_rayangle;
 	double		angle_step;
@@ -164,7 +166,8 @@ int			parsing(t_data *data, char *path_file);
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
 void		draw_wall(t_data *data, t_raycast raycast, int x);
-void		raycast_projection(t_data *data, t_ray *ray, int check_wall);
+void		raycast_projection(t_data *data, t_ray *ray, int i_ray,
+				int check_wall);
 void		raycast(t_data *data);
 
 //raycast_utils.c

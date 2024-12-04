@@ -72,7 +72,7 @@ double	get_angle(t_data *data, char direction)
 	if (direction == 'N')
 		return (data->calculs.north);
 	if (direction == 'E')
-		return (data->calculs.west);
+		return (data->calculs.east);
 	if (direction == 'S')
 		return (data->calculs.south);
 	if (direction == 'W')

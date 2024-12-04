@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:46 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 14:43:32 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:25:25 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,8 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 	while (data->map[(int)ray->y / CASE][(int)ray->x / CASE] == '0'
 		&& (data->map[(int)(ray->y - ray->y_step) / CASE]
 		[(int)ray->x / CASE] == '0' || data->map[(int)ray->y / CASE]
-		[(int)(ray->x - ray->x_step) / CASE] == '0'))
+		[(int)(ray->x - ray->x_step) / CASE] == '0')
+		&& data->raycast.distance < 50 * CASE)
 	{
 		if (data->raycast.distance <= data->calculs.h_div_ten)
 		{
@@ -61,8 +62,8 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 		}
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
-		data->raycast.distance = sqrt(pow(ray->x - data->x, 2)
-				+ pow(ray->y - data->y, 2));
+		data->raycast.distance = sqrt(pow(data->x - ray->x, 2)
+				+ pow(data->y - ray->y, 2));
 		if (*check_wall && data->raycast.distance <= CASE
 			&& change_door_case(data, (int)ray->x / CASE, (int)ray->y / CASE))
 			*check_wall = FALSE;
@@ -71,20 +72,23 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 
 /* vérifie que le rayon ne sort pas de la carte ou 
 ne rencontre pas un espace vide ( collision) ? */
-void	raycast_projection(t_data *data, t_ray *ray, int check_wall)
+void	raycast_projection(t_data *data, t_ray *ray, int i_ray, int check_wall)
 {
-	data->raycast.distance = sqrt(pow(ray->x - data->x, 2)
-			+ pow(ray->y - data->y, 2));
+	if (i_ray != WIDTH >> 1 || !data->change_state_door)
+		check_wall = FALSE;
+	data->raycast.distance = sqrt(pow(data->x - ray->x, 2)
+			+ pow(data->y - ray->y, 2));
 	ray->x_fabs_step = fabs(ray->x_step);
 	ray->y_fabs_step = fabs(ray->y_step);
 	steps_progression(data, ray, &check_wall);
-	if (ray->x_fabs_step > 0.01 || ray->y_fabs_step > 0.01)
+	if ((ray->x_fabs_step > 0.01 || ray->y_fabs_step > 0.01)
+		&& data->raycast.distance < 50 * CASE)
 	{
 		ray->x -= ray->x_step;
 		ray->y -= ray->y_step;
 		ray->x_step *= 0.1;
 		ray->y_step *= 0.1;
-		raycast_projection(data, ray, check_wall);
+		raycast_projection(data, ray, i_ray, check_wall);
 	}
 }
 
@@ -106,14 +110,14 @@ void	raycast(t_data *data)
 				+ sin(ray.angle + data->calculs.east)) * 0.1;
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
-		if (i_ray == WIDTH >> 1 && data->change_state_door)
-			raycast_projection(data, &ray, TRUE);
-		else
-			raycast_projection(data, &ray, FALSE);
-		data->raycast.distance *= cos(fmod(ray.angle
-					- (data->angle + (M_PI / 4)), data->calculs.north));
-		set_texture_config(data, ray, &data->raycast);
-		draw_wall(data, data->raycast, i_ray);
+		raycast_projection(data, &ray, i_ray, TRUE);
+		if (data->raycast.distance < 50 * CASE)
+		{
+			data->raycast.distance *= cos(fmod(ray.angle
+						- (data->angle + (M_PI / 4)), data->calculs.north));
+			set_texture_config(data, ray, &data->raycast);
+			draw_wall(data, data->raycast, i_ray);
+		}
 		++i_ray;
 		ray.angle += data->angle_step;
 	}

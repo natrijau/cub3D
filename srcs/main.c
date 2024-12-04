@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:03 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 13:44:55 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:19:27 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	check_type(char *str)
 	int	i;
 
 	i = ft_strlen(str) - 4;
-	if (str[i] != '.' || str[i + 1] != 'c'
+	if (i < 0 || str[i] != '.' || str[i + 1] != 'c'
 		|| str[i + 2] != 'u' || str[i + 3] != 'b')
 		return (-1);
 	return (0);

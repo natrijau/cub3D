@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 13:07:41 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 14:21:54 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:25:10 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	data_init(t_data *data)
 	data->raycast.floor_color = 0x606060;
 	data->raycast.ceiling_color = 0x3399ff;
 	data->change_state_door = FALSE;
+	data->door_frame = FALSE;
 	data->map = NULL;
 	data->tab_door = NULL;
 	init_calculs(data);
@@ -63,6 +64,11 @@ void	shift(t_data *data, int y, int x)
 	double	new_x;
 	double	new_y;
 
+	if ((!x && !y && data->angle == data->old_angle
+			&& !data->change_state_door) && !data->door_frame)
+		return ;
+	data->door_frame = FALSE;
+	data->old_angle = data->angle;
 	new_x = (cos(data->angle) * MOOVE_SPEED) * x;
 	new_x += (cos(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	new_y = (sin(data->angle) * MOOVE_SPEED) * x;
@@ -79,7 +85,7 @@ int	check_type(char *str)
 	int	i;
 
 	i = ft_strlen(str) - 4;
-	if (str[i] != '.' || str[i + 1] != 'c'
+	if (i < 0 || str[i] != '.' || str[i + 1] != 'c'
 		|| str[i + 2] != 'u' || str[i + 3] != 'b')
 		return (-1);
 	return (0);

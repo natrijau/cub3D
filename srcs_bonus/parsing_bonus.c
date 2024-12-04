@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:06 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 13:50:35 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 15:21:52 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	**get_file(char *file)
 	int		i;
 
 	fd = open(file, O_RDONLY);
-	if (fd < 0 && printf("Error\nInvalid file type\n"))
+	if (fd < 0 && printf("Error\nInvalid file\n"))
 		return (NULL);
 	map = malloc(sizeof(char *) * (map_len(file) + 1));
 	i = 0;

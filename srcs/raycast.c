@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:50 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 13:00:07 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:23:28 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,15 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 }
 
 /*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
-void	draw_wall(t_data *data, int x)
+void	draw_wall(t_data *data, t_ray ray, int x)
 {
 	t_raycast	raycast;
 	double		factor;
 	double		y;
 
 	raycast = data->raycast;
+	raycast.distance *= cos(fmod(ray.angle
+				- (data->angle + (M_PI / 4)), data->calculs.north));
 	raycast.distance = (CASE / raycast.distance) * ((WIDTH >> 1)
 			/ tan(data->fov_rad / 2));
 	factor = (double)raycast.actual_wall.height / raycast.distance;
@@ -85,6 +87,10 @@ void	raycast_projection(t_data *data, t_ray *ray)
 	{
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
+		data->raycast.distance = sqrt(pow(data->x - ray->x, 2)
+				+ pow(data->y - ray->y, 2));
+		if (data->raycast.distance >= 50 * CASE)
+			return ;
 	}
 	if (fabs(ray->x_step) > 0.001 || fabs(ray->y_step) > 0.001)
 	{
@@ -115,11 +121,11 @@ void	raycast(t_data *data)
 		ray.x = data->x + ray.x_step;
 		ray.y = data->y + ray.y_step;
 		raycast_projection(data, &ray);
-		data->raycast.distance = sqrt(pow(data->x - ray.x, 2)
-				+ pow(data->y - ray.y, 2)) * cos(fmod(ray.angle
-					- (data->angle + (M_PI / 4)), data->calculs.north));
-		set_texture_config(data, ray, &data->raycast);
-		draw_wall(data, i_ray);
+		if (data->raycast.distance < 50 * CASE)
+		{
+			set_texture_config(data, ray, &data->raycast);
+			draw_wall(data, ray, i_ray);
+		}
 		++i_ray;
 		ray.angle += data->angle_step;
 	}

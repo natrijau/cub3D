@@ -80,6 +80,7 @@ int	find_plyr_pos(t_data *data, char *line, int y, int *find_plyr)
 			data->x = ((double)x + 0.5) * CASE;
 			data->y = ((double)y + 0.5) * CASE;
 			data->angle = get_angle(data, line[x]);
+			data->old_angle = data->angle;
 			data->fov_rad = (FOV * M_PI) / 180;
 			data->first_rayangle = (data->fov_rad / 2.0) - M_PI / 4.0;
 			data->angle_step = data->fov_rad / WIDTH;

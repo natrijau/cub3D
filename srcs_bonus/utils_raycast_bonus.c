@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:57:27 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:57:27 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:18:59 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,7 @@ int	change_door_case(t_data *data, int x, int y)
 			else
 				data->map[y][x] = 'D';
 			data->change_state_door = FALSE;
+			data->door_frame = TRUE;
 			return (1);
 		}
 		++i;

@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:58:09 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:58:43 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 17:23:04 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,7 +136,7 @@ int			parsing(t_data *data, char *path_file);
 //raycast.c
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
-void		draw_wall(t_data *data, int x);
+void		draw_wall(t_data *data, int t_ray, int x);
 void		raycast_projection(t_data *data, t_ray *ray);
 void		raycast(t_data *data);
 
