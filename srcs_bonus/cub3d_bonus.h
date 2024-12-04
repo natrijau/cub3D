@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:21:59 by natrijau          #+#    #+#             */
-/*   Updated: 2024/12/03 14:06:40 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:43:37 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,6 @@ void		init_minimap(t_data *data);
 int			check_zero_inside(char **tab);
 int			valid_zero_map(char **tab);
 char		**init_map(char **map_off);
-// int			flood_fil(t_data *data, char **map, int x, int i);
 
 //init_cub3d.c
 void		creat_image(t_image *img, void *mlx, int width, int height);
