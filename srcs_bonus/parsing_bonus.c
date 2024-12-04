@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:06 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:53:39 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:50:35 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	init(t_data *data, char **file, int map_start)
 		map_clear(file);
 		return (-1);
 	}
-	data->map = init_map(&file[map_start]);
+	data->map = init_map(data, &file[map_start]);
 	if (!data->map)
 	{
 		map_clear(file);

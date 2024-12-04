@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:03 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 13:12:33 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/04 13:44:55 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,9 @@ int	shift(t_data *data)
 	data->y += (sin(data->angle) * MOOVE_SPEED) * x;
 	data->y += (sin(data->angle + data->calculs.west) * MOOVE_SPEED) * y;
 	init_img_win(data);
-	if (data->x > sqrt(2) && data->x < data->width - sqrt(2)
-		&& data->y > sqrt(2) && data->y < data->height - sqrt(2)
+	if (data->y > sqrt(2) && data->y < data->height - sqrt(2)
+		&& data->x > sqrt(2) && data->x
+		< (ft_strlen(data->map[(int)(data->y / CASE)]) * CASE) - sqrt(2)
 		&& ft_strchr("01", data->map[(int)(data->y / CASE)]
 		[(int)(data->x / CASE)]))
 		raycast(data);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   map_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:51:57 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 13:44:08 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/04 14:01:01 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ int	check_zero_inside(char **tab)
 		j = 1;
 		while (tab[i][j + 1])
 		{
-			if ((tab[i][j] == '0' || tab[i][j] == 'D')  && (j >= ft_strlen(tab[i - 1])
+			if ((tab[i][j] == '0' || tab[i][j] == 'D')
+				&& (j >= ft_strlen(tab[i - 1])
 				|| !ft_strchr("D01", tab[i - 1][j]) || !tab[i + 1]
 				|| j >= ft_strlen(tab[i + 1])
 				|| !ft_strchr("D01", tab[i + 1][j])
@@ -59,18 +60,28 @@ int	valid_zero_map(char **tab)
 }
 
 // Add space to map to equalize the length of the lines
-char	**init_map(char **map_off)
+char	**init_map(t_data *data, char **map_off)
 {
 	char	**map;
 	int		i;
+	int		j;
 
 	map = ft_calloc(sizeof(char *), (ft_strtablen(map_off) + 1));
 	if (!map)
 		return (NULL);
-	i = -1;
-	while (map_off[++i])
+	i = 0;
+	while (map_off[i])
+	{
+		j = 0;
+		while (!data->raycast.door.img && map_off[i][j])
+		{
+			if (map_off[i][j] == 'D')
+				map_off[i][j] = '0';
+			++j;
+		}
 		map[i] = map_off[i];
+		++i;
+	}
 	map_off[0] = NULL;
 	return (map);
 }
-
