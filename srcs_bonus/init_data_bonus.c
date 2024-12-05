@@ -96,7 +96,7 @@ int	error_map_start(int start, char **tab)
 {
 	if (start == 0)
 	{
-		printf("Error\nInvalid element information\n");
+		printf("Error\nInvalid file\n");
 		return (-1);
 	}
 	else if ((!tab[start + 1]))
@@ -130,5 +130,7 @@ int	init_data(t_data *data, char **tab, int map_start)
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
+	if (!plyr_bool && printf("Error\nPlayer not found\n"))
+		return (-1);
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:58:09 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/05 12:17:35 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:30:38 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ int			init_cub3d(t_data *data);
 int			init_color(t_data *data, char *str);
 int			init_texture(t_data *data, char *str);
 int			find_plyr_pos(t_data *data, char *line, int y, int *find_plyr);
+int			error_map_start(int start, char **tab);
 int			init_data(t_data *data, char **tab, int map_start);
 
 // init_data_utils.c

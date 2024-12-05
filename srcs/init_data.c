@@ -93,7 +93,7 @@ int	error_map_start(int start, char **tab)
 {
 	if (start == 0)
 	{
-		printf("Error\nInvalid element information\n");
+		printf("Error\nInvalid file\n");
 		return (-1);
 	}
 	else if ((!tab[start + 1]))
@@ -109,11 +109,8 @@ int	init_data(t_data *data, char **tab, int map_start)
 	int	i;
 	int	plyr_bool;
 
-	if (error_map_start(map_start, tab))
-		return (-1);
 	plyr_bool = FALSE;
 	i = -1;
-	map_start--;
 	while (tab[++i])
 	{
 		if (i <= map_start)
@@ -127,6 +124,8 @@ int	init_data(t_data *data, char **tab, int map_start)
 			|| find_plyr_pos(data, tab[i], i - map_start - 1, &plyr_bool))
 			return (-1);
 	}
+	if (!plyr_bool && printf("Error\nPlayer not found\n"))
+		return (-1);
 	if ((data->raycast.floor_color == -1 || data->raycast.ceiling_color == -1)
 		&& printf("Error\nOne of the colors is not initialized\n"))
 		return (-1);

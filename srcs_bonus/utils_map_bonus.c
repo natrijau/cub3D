@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:57:24 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:57:25 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:51:20 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ int	find_map_start(char **file_content)
 	int	j;
 
 	i = ft_strtablen(file_content) - 1;
+	if (i < 6)
+		return (-1);
 	while (i >= 3)
 	{
 		j = 0;

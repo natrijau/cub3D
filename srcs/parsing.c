@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:46 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 15:21:39 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 14:37:02 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int	check_texture(t_data *data)
 
 int	init(t_data *data, char **file, int map_start)
 {
-	if (init_data(data, file, map_start) == -1)
+	if (error_map_start(map_start, file)
+		|| init_data(data, file, map_start - 1) == -1)
 	{
 		map_clear(file);
 		return (-1);
