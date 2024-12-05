@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cub3d.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:58:49 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 12:58:50 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 11:18:42 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	init_cub3d(t_data *data)
 		return (-1);
 	data->height = ft_strtablen(data->map) * CASE;
 	data->width = ft_strlen(data->map[0]) * CASE;
-	data->hook.keyboard_bool = FALSE;
+	data->hook.keyboard_bool = TRUE;
 	data->hook.move_forward = FALSE;
 	data->hook.move_back = FALSE;
 	data->hook.move_right = FALSE;
