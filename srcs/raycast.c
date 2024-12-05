@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:59:50 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 17:23:28 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:26:24 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void	set_texture_config(t_data *data, t_ray ray, t_raycast *raycast)
 	raycast->x *= (double)raycast->actual_wall.width / CASE;
 }
 
-/*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_ray ray, int x)
 {
 	t_raycast	raycast;
@@ -76,8 +75,6 @@ void	draw_wall(t_data *data, t_ray ray, int x)
 	}
 }
 
-/* vérifie que le rayon ne sort pas de la carte ou 
-ne rencontre pas un espace vide ( collision) ? */
 void	raycast_projection(t_data *data, t_ray *ray)
 {
 	while (data->map[(int)(ray->y / CASE)][(int)(ray->x / CASE)] == '0'
@@ -102,8 +99,6 @@ void	raycast_projection(t_data *data, t_ray *ray)
 	}
 }
 
-/*c'est la boucle principale qui parcourt l'écran en projetant des rayons, 
-calcul les collisions, et dessine les murs ?*/
 void	raycast(t_data *data)
 {
 	t_ray	ray;

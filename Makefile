@@ -1,7 +1,7 @@
 NAME=cub3D
 NAME_BONUS=cub3D_bonus
 CC=cc
-CFLAGS=-Wall -Wextra -Werror -O3
+CFLAGS=-Wall -Wextra -Werror
 SRCS_FOLDER=srcs/
 SRCS_BONUS_FOLDER=srcs_bonus/
 SRCS=main.c parsing.c raycast.c init_cub3d.c init_data.c init_data_utils.c utils.c utils_map.c utils_shift.c map.c
@@ -54,6 +54,4 @@ $(LIBFT):
 
 re: fclean all
 
-rebonus: fclean bonus
-
-.PHONY: all bonus fclean clean re rebonus
+.PHONY: all bonus fclean clean re

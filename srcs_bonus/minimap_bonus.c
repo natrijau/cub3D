@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:52:05 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 13:10:08 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:26:59 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	draw_minimap(t_data *data, double distance, int x, int y)
 			data->calculs.minimap_pos_y + y, 0x00FFFFFF);
 }
 
-// Fonction pour initialiser l'image représentant l'espace de la minimap
 void	init_minimap(t_data *data)
 {
 	double	distance;

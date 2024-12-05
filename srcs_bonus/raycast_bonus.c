@@ -3,16 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   raycast_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:46 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 17:25:25 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:27:13 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d_bonus.h"
 
-/*dessine le mur à la bonne distance en fonction de la projection du rayon ?*/
 void	draw_wall(t_data *data, t_raycast raycast, int x)
 {
 	double		factor;
@@ -70,8 +69,6 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 	}
 }
 
-/* vérifie que le rayon ne sort pas de la carte ou 
-ne rencontre pas un espace vide ( collision) ? */
 void	raycast_projection(t_data *data, t_ray *ray, int i_ray, int check_wall)
 {
 	if (i_ray != WIDTH >> 1 || !data->change_state_door)
@@ -92,8 +89,6 @@ void	raycast_projection(t_data *data, t_ray *ray, int i_ray, int check_wall)
 	}
 }
 
-/*c'est la boucle principale qui parcourt l'écran en projetant des rayons, 
-calcul les collisions, et dessine les murs ?*/
 void	raycast(t_data *data)
 {
 	t_ray	ray;

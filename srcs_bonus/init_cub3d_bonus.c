@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_cub3d_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:49:37 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 14:44:40 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:26:43 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ void	creat_image(t_image *img, void *mlx, int width, int height)
 			&img->line_len, &img->endian);
 }
 
-// Fonction pour placer un pixel de couleur spécifique dans une image
 void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
 	char	*dst;
@@ -28,7 +27,6 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-// Fonction pour initialiser l'image du raycasting (vue en 3D simulée)
 void	init_img_win(t_data *data)
 {
 	t_raycast	raycast;
@@ -52,7 +50,6 @@ void	init_img_win(t_data *data)
 	}
 }
 
-// Fonction pour créer et afficher la minimap et ses composants
 int	init_cub3d(t_data *data)
 {
 	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");

@@ -6,7 +6,7 @@
 /*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:58:49 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/05 11:18:42 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/05 12:25:42 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	creat_image(t_image *img, void *mlx, int width, int height)
 			&img->line_len, &img->endian);
 }
 
-// Fonction pour placer un pixel de couleur spécifique dans une image
+// Function to place a specific color pixel in an image
 void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
 	char	*dst;
@@ -28,7 +28,7 @@ void	ft_mlx_pixel_put(t_image *img, int x, int y, int color)
 	*(unsigned int *)dst = color;
 }
 
-// Fonction pour initialiser l'image du raycasting (vue en 3D simulée)
+// Function to initialize the raycasting image (simulated 3D view)
 void	init_img_win(t_data *data)
 {
 	t_raycast	raycast;
@@ -52,7 +52,7 @@ void	init_img_win(t_data *data)
 	}
 }
 
-// Fonction pour créer et afficher la minimap et ses composants
+// Function to create and display the minimap and its components
 int	init_cub3d(t_data *data)
 {
 	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");
