@@ -130,39 +130,37 @@ typedef struct s_data
 	double		y;
 }				t_data;
 
-//utils_map.c
+//utils_map_bonus.c
 int			is_map_line(char *line_map, char *str);
 char		*clear_space(char *src);
 int			map_len(char *file);
 void		map_clear(char **map);
 int			find_map_start(char **file_content);
 
-//utils_shift.c
+//utils_shift_bonus.c
 int			handle_mouse(int button, int x, int y, t_data *data);
 int			key_press(int keycode, t_data *data);
 int			key_release(int keycode, t_data *data);
 int			update_move(t_data *data);
 void		shift_collision(t_data *data, double x, double y);
 
-//utils_bonus.c
-int			find_door_in_map(char **str);
-int			malloc_door_tab(int	**tab_door, char **str);
+//door_utils_bonus.c
 int			**init_door_tab(char **str);
 
-//utils.c
+//utils_bonus.c
 void		free_door_tab(int **tab);
 int			ft_strtablen(char **map);
 int			ft_isspace(char c);
 int			is_empty_line(const char *line);
 int			get_max_tab_len(char **map);
 
-//parsing.c
+//parsing_bonus.c
 char		**get_file(char *file);
 int			check_texture(t_data *data);
 int			init(t_data *data, char **file, int map_start);
 int			parsing(t_data *data, char *path_file);
 
-//raycast.c
+//raycast_bonus.c
 int			ft_mlx_get_pixel_color(t_image *img, int x, int y);
 void		set_texture_config(t_data *data, t_ray ray, t_raycast *raycast);
 void		draw_wall(t_data *data, t_raycast raycast, int x);
@@ -170,38 +168,38 @@ void		raycast_projection(t_data *data, t_ray *ray, int i_ray,
 				int check_wall);
 void		raycast(t_data *data);
 
-//raycast_utils.c
+//raycast_utils_bonus.c
 void		steps_progression(t_data *data, t_ray *ray, int *check_wall);
 int			change_door_case(t_data *data, int x, int y);
 
-//minimap.c
+//minimap_bonus.c
 void		draw_minimap(t_data *data, double distance, int x, int y);
 void		init_minimap(t_data *data);
 
-//map.c
+//map_bonus.c
 int			check_zero_inside(char **tab);
 int			valid_zero_map(char **tab);
 char		**init_map(t_data *data, char **map_off);
 
-//init_cub3d.c
+//init_cub3d_bonus.c
 void		creat_image(t_image *img, void *mlx, int width, int height);
 void		ft_mlx_pixel_put(t_image *img, int x, int y, int color);
 void		init_img_win(t_data *data);
 int			init_cub3d(t_data *data);
 
-//init_data.c
+//init_data_bonus.c
 int			init_color(t_data *data, char *str);
 int			init_texture(t_data *data, char *str);
 int			find_plyr_pos(t_data *data, char *line, int y, int *find_plyr);
 int			init_data(t_data *data, char **tab, int map_start);
 
-// init_data_utils.c
+// init_data_utils_bonus.c
 int			check_color_value(char **tab);
 int			get_wall(t_image *dest, t_data *data, char *str, char *direction);
 double		get_angle(t_data *data, char direction);
 void		init_calculs(t_data *data);
 
-//main.c
+//main_bonus.c
 int			cub_close(t_data *data);
 void		data_init(t_data *data);
 void		shift(t_data *data, int y, int x);

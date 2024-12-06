@@ -1,5 +1,5 @@
 NAME=cub3D
-NAME_BONUS=cub3D_bonus -g -O3
+NAME_BONUS=cub3D_bonus
 CC=cc
 CFLAGS=-Wall -Wextra -Werror
 SRCS_FOLDER=srcs/

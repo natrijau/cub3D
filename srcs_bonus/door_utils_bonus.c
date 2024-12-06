@@ -12,7 +12,7 @@
 
 #include "cub3d_bonus.h"
 
-int	find_door_in_map(char **str)
+static int	find_door_in_map(char **str)
 {
 	int	i;
 	int	j;
@@ -34,7 +34,7 @@ int	find_door_in_map(char **str)
 	return (d);
 }
 
-int	malloc_door_tab(int	**tab_door, char **str)
+static int	malloc_door_tab(int	**tab_door, char **str)
 {
 	int	i;
 	int	j;
