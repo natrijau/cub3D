@@ -85,7 +85,7 @@ double	get_angle(t_data *data, char direction)
 	if (direction == 'S')
 		return (data->calculs.south);
 	if (direction == 'W')
-		return (data->calculs.west);
+		return (data->calculs.east);
 	printf("Error\nInvalid player direction: %c\n", direction);
 	return (-1);
 }

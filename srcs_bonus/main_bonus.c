@@ -77,6 +77,8 @@ void	shift(t_data *data, int y, int x)
 	init_img_win(data);
 	init_minimap(data);
 	raycast(data);
+	if (data->change_state_door == TRUE)
+		data->change_state_door = FALSE;
 	mlx_put_image_to_window(data->mlx, data->win, data->img_win.img, 0, 0);
 }
 
@@ -107,6 +109,7 @@ int	main(int ac, char **av)
 	if (parsing(&data, av[1]) == -1 || init_cub3d(&data) == -1)
 		cub_close(&data);
 	mlx_mouse_hide(data.mlx, data.win);
+	mlx_mouse_hook(data.win, handle_mouse, &data);
 	mlx_hook(data.win, 17, 4, cub_close, &data);
 	mlx_hook(data.win, 2, 1L << 0, key_press, &data);
 	mlx_hook(data.win, 3, 1L << 1, key_release, &data);

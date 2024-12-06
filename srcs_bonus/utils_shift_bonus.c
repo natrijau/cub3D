@@ -12,10 +12,28 @@
 
 #include "cub3d_bonus.h"
 
-// switch AZERTY or QWERTY
-void	azerty_qwerty(int keycode, t_hook	*hook)
+int	handle_mouse(int button, int x, int y, t_data *data)
 {
-	if (keycode == 119 && hook->keyboard_bool == FALSE)
+	(void) x;
+	(void) y;
+	if(button == 1)
+		data->change_state_door = TRUE;
+	return (0);
+}
+
+// keyboard key events
+int	key_press(int keycode, t_data *data)
+{
+	t_hook	*hook;
+
+	hook = &data->hook;
+	if (keycode == 65363)
+		hook->rotate_left = TRUE;
+	else if (keycode == 65361)
+		hook->rotate_right = TRUE;
+	else if (keycode == 65307)
+		cub_close(data);
+	else if (keycode == 119 && hook->keyboard_bool == FALSE)
 		hook->keyboard_bool = TRUE;
 	else if (keycode == 122 && hook->keyboard_bool == TRUE)
 		hook->keyboard_bool = FALSE;
@@ -30,23 +48,6 @@ void	azerty_qwerty(int keycode, t_hook	*hook)
 		hook->move_back = TRUE;
 	else if (keycode == 100)
 		hook->move_right = TRUE;
-}
-
-// keyboard key events
-int	key_press(int keycode, t_data *data)
-{
-	t_hook	*hook;
-
-	hook = &data->hook;
-	if (keycode == 65293)
-		data->change_state_door = TRUE;
-	else if (keycode == 65363)
-		hook->rotate_left = TRUE;
-	else if (keycode == 65361)
-		hook->rotate_right = TRUE;
-	else if (keycode == 65307)
-		cub_close(data);
-	azerty_qwerty(keycode, hook);
 	return (0);
 }
 
@@ -55,9 +56,7 @@ int	key_release(int keycode, t_data *data)
 	t_hook	*hook;
 
 	hook = &data->hook;
-	if (keycode == 65293)
-		data->change_state_door = FALSE;
-	else if ((keycode == 119 && hook->keyboard_bool == TRUE)
+	if ((keycode == 119 && hook->keyboard_bool == TRUE)
 		|| (keycode == 122 && hook->keyboard_bool == FALSE))
 		hook->move_forward = FALSE;
 	else if (keycode == 97 && hook->keyboard_bool == TRUE)

@@ -138,7 +138,7 @@ void		map_clear(char **map);
 int			find_map_start(char **file_content);
 
 //utils_shift.c
-void		azerty_qwerty(int keycode, t_hook *hook);
+int			handle_mouse(int button, int x, int y, t_data *data);
 int			key_press(int keycode, t_data *data);
 int			key_release(int keycode, t_data *data);
 int			update_move(t_data *data);
