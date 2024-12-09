@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minimap_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:52:05 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/05 12:26:59 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:22:21 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	draw_minimap(t_data *data, double distance, int x, int y)
 	int	x_case;
 	int	y_case;
 
-	if (distance <= data->calculs.case_div_two)
+	if (distance < data->calculs.case_div_two)
 		ft_mlx_pixel_put(&data->img_win,
 			data->calculs.minimap_pos_x + x,
 			data->calculs.minimap_pos_y + y, 0x00FF0000);
@@ -46,10 +46,10 @@ void	init_minimap(t_data *data)
 	int		y;
 
 	y = 0;
-	while (y < data->calculs.h_div_five)
+	while (y <= data->calculs.h_div_five)
 	{
 		x = 0;
-		while (x < data->calculs.h_div_five)
+		while (x <= data->calculs.h_div_five)
 		{
 			distance = sqrt(pow(x - data->calculs.h_div_ten, 2)
 					+ pow(y - data->calculs.h_div_ten, 2));

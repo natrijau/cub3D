@@ -18,8 +18,8 @@ void	init_calculs(t_data *data)
 	data->calculs.case_div_two = CASE / 2;
 	data->calculs.h_div_ten = HEIGHT / 10;
 	data->calculs.h_div_five = HEIGHT / 5;
-	data->calculs.minimap_pos_x = WIDTH - data->calculs.h_div_five;
-	data->calculs.minimap_pos_y = HEIGHT - data->calculs.h_div_five;
+	data->calculs.minimap_pos_x = WIDTH - data->calculs.h_div_five - 1;
+	data->calculs.minimap_pos_y = HEIGHT - data->calculs.h_div_five - 1;
 	data->calculs.ray_pos_x = data->calculs.minimap_pos_x
 		+ data->calculs.h_div_ten;
 	data->calculs.ray_pos_y = data->calculs.minimap_pos_y

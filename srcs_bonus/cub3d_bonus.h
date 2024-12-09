@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 13:21:59 by natrijau          #+#    #+#             */
-/*   Updated: 2024/12/05 12:11:36 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:27:21 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,8 +68,6 @@ typedef struct s_ray
 	double	y;
 	double	x_step;
 	double	y_step;
-	double	x_fabs_step;
-	double	y_fabs_step;
 }				t_ray;
 
 typedef struct s_raycast

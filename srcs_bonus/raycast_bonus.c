@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycast_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:46 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/09 13:02:45 by natrijau         ###   ########.fr       */
+/*   Updated: 2024/12/09 14:28:15 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,14 +27,14 @@ void	draw_wall(t_data *data, t_raycast raycast, int x)
 	raycast.y = (y - (HEIGHT >> 1) + raycast.distance / 2) * factor;
 	if (raycast.y < 0)
 		raycast.y = 0;
-	x_pow = pow(x - (WIDTH - data->calculs.h_div_ten), 2);
+	x_pow = pow(x + 1 - (WIDTH - data->calculs.h_div_ten), 2);
 	while (++y < (HEIGHT >> 1) + raycast.distance / 2 && y <= HEIGHT)
 	{
 		raycast.wall_color = ft_mlx_get_pixel_color(&raycast.actual_wall,
 				raycast.x, raycast.y);
 		if ((x < data->calculs.minimap_pos_x && y < data->calculs.minimap_pos_y)
-			|| sqrt(x_pow + pow(y - (HEIGHT - data->calculs.h_div_ten), 2))
-			> data->calculs.h_div_ten + 1)
+			|| sqrt(x_pow + pow(y + 1 - (HEIGHT - data->calculs.h_div_ten), 2))
+			> data->calculs.h_div_ten + 2)
 			ft_mlx_pixel_put(&data->img_win, x, y, raycast.wall_color);
 		raycast.y += factor;
 	}
@@ -49,16 +49,9 @@ void	steps_progression(t_data *data, t_ray *ray, int *check_wall)
 		&& data->raycast.distance < 50 * CASE)
 	{
 		if (data->raycast.distance <= data->calculs.h_div_ten)
-		{
-			if (ray->x_fabs_step > 1 || ray->y_fabs_step > 1)
-				ft_mlx_pixel_put(&data->img_win, data->calculs.ray_pos_x
-					+ (ray->x - data->x) - ray->x_step / 2,
-					data->calculs.ray_pos_y + (ray->y - data->y)
-					- ray->y_step / 2, 0x00FFFFFF);
 			ft_mlx_pixel_put(&data->img_win, data->calculs.ray_pos_x
 				+ (ray->x - data->x), data->calculs.ray_pos_y
 				+ (ray->y - data->y), 0x00FFFFFF);
-		}
 		ray->x += ray->x_step;
 		ray->y += ray->y_step;
 		data->raycast.distance = sqrt(pow(data->x - ray->x, 2)
@@ -75,10 +68,8 @@ void	raycast_projection(t_data *data, t_ray *ray, int i_ray, int check_wall)
 		check_wall = FALSE;
 	data->raycast.distance = sqrt(pow(data->x - ray->x, 2)
 			+ pow(data->y - ray->y, 2));
-	ray->x_fabs_step = fabs(ray->x_step);
-	ray->y_fabs_step = fabs(ray->y_step);
 	steps_progression(data, ray, &check_wall);
-	if ((ray->x_fabs_step > 0.01 || ray->y_fabs_step > 0.01)
+	if ((fabs(ray->x_step) > 0.01 || fabs(ray->y_step) > 0.01)
 		&& data->raycast.distance < 50 * CASE)
 	{
 		ray->x -= ray->x_step;
