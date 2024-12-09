@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   utils_shift_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
+/*   By: natrijau <natrijau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:57:30 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/03 14:27:06 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/09 12:42:45 by natrijau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	handle_mouse(int button, int x, int y, t_data *data)
 {
 	(void) x;
 	(void) y;
-	if(button == 1)
+	if (button == 1)
 		data->change_state_door = TRUE;
 	return (0);
 }
