@@ -39,6 +39,31 @@ int	init_color(t_data *data, char *str)
 	return (0);
 }
 
+void	init_fire_texture(t_data *data)
+{
+	//data->raycast.fire1 = NULL;
+	//data->raycast.fire2 = NULL;
+	//data->raycast.fire3 = NULL;
+	//data->raycast.fire4 = NULL;
+	//data->raycast.fire5 = NULL;
+	
+	data->raycast.fire[0].img = mlx_xpm_file_to_image(data->mlx, "textures/Fire_1-1.xpm", &data->raycast.fire[0].width, &data->raycast.fire[0].height);
+	data->raycast.fire[0].addr = mlx_get_data_addr(data->raycast.fire[0].img, &data->raycast.fire[0].bpp, &data->raycast.fire[0].line_len, &data->raycast.fire[0].endian);
+	
+	data->raycast.fire[1].img = mlx_xpm_file_to_image(data->mlx, "textures/Fire_1-2.xpm", &data->raycast.fire[1].width, &data->raycast.fire[1].height);
+	data->raycast.fire[1].addr = mlx_get_data_addr(data->raycast.fire[1].img, &data->raycast.fire[1].bpp, &data->raycast.fire[1].line_len, &data->raycast.fire[1].endian);
+	
+	data->raycast.fire[2].img = mlx_xpm_file_to_image(data->mlx, "textures/Fire_1-3.xpm", &data->raycast.fire[2].width, &data->raycast.fire[2].height);
+	data->raycast.fire[2].addr = mlx_get_data_addr(data->raycast.fire[2].img, &data->raycast.fire[2].bpp, &data->raycast.fire[2].line_len, &data->raycast.fire[2].endian);
+	
+	data->raycast.fire[3].img = mlx_xpm_file_to_image(data->mlx, "textures/Fire_1-4.xpm", &data->raycast.fire[3].width, &data->raycast.fire[3].height);
+	data->raycast.fire[3].addr = mlx_get_data_addr(data->raycast.fire[3].img, &data->raycast.fire[3].bpp, &data->raycast.fire[3].line_len, &data->raycast.fire[3].endian);
+	
+	data->raycast.fire[4].img = mlx_xpm_file_to_image(data->mlx, "textures/Fire_1-5.xpm", &data->raycast.fire[4].width, &data->raycast.fire[4].height);
+	data->raycast.fire[4].addr = mlx_get_data_addr(data->raycast.fire[4].img, &data->raycast.fire[4].bpp, &data->raycast.fire[4].line_len, &data->raycast.fire[4].endian);
+
+}
+
 int	init_texture(t_data *data, char *str)
 {
 	if (str[0] == 'F' || str[0] == 'C')
@@ -60,6 +85,8 @@ int	init_texture(t_data *data, char *str)
 		return (-1);
 	if (get_wall(&data->raycast.door, data, str, "DO") == -1)
 		return (-1);
+	// test
+	init_fire_texture(data);
 	return (0);
 }
 

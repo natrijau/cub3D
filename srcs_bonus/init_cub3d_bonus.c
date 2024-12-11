@@ -50,6 +50,16 @@ void	init_img_win(t_data *data)
 	}
 }
 
+void	show_animation(t_data *data)
+{
+	static double	i = 0;
+
+	mlx_put_image_to_window(data->mlx, data->win, data->raycast.fire[(int)i].img, 100, 100);
+	i += 0.03;
+	if (i > 5)
+		i = 0;
+}
+
 int	init_cub3d(t_data *data)
 {
 	data->win = mlx_new_window(data->mlx, WIDTH, HEIGHT, "Cub3D");

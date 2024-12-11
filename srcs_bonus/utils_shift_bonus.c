@@ -78,7 +78,7 @@ int	update_move(t_data *data)
 {
 	int	x;
 	int	y;
-
+	show_animation(data);
 	mlx_mouse_get_pos(data->mlx, data->win, &x, &y);
 	if (x != data->hook.old_x)
 	{

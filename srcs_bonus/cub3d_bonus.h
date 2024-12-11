@@ -76,6 +76,7 @@ typedef struct s_raycast
 	t_image	e_wall;
 	t_image	s_wall;
 	t_image	w_wall;
+	t_image	fire[5];
 	t_image	door;
 	t_image	actual_wall;
 	int		floor_color;
@@ -127,6 +128,9 @@ typedef struct s_data
 	double		x;
 	double		y;
 }				t_data;
+
+void	show_animation(t_data *data);
+
 
 //utils_map_bonus.c
 int			is_map_line(char *line_map, char *str);
