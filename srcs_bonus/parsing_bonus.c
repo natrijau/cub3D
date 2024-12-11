@@ -6,7 +6,7 @@
 /*   By: yanolive <yanolive@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/03 12:53:06 by yanolive          #+#    #+#             */
-/*   Updated: 2024/12/04 15:21:52 by yanolive         ###   ########.fr       */
+/*   Updated: 2024/12/11 15:02:38 by yanolive         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ int	check_texture(t_data *data)
 
 int	init(t_data *data, char **file, int map_start)
 {
-	if (init_data(data, file, map_start) == -1)
+	if (error_map_start(map_start, file)
+		|| init_data(data, file, map_start - 1) == -1)
 	{
 		map_clear(file);
 		return (-1);
@@ -81,14 +82,13 @@ int	parsing(t_data *data, char *path_file)
 	map_start = find_map_start(file) + 1;
 	if (init(data, file, map_start) == -1)
 		return (-1);
+	map_clear(file);
 	if (valid_zero_map(data->map))
 	{
 		printf("Error\nInvalid map\n");
-		map_clear(file);
 		return (-1);
 	}
 	data->tab_door = init_door_tab(data->map);
-	map_clear(file);
 	if (check_texture(data) == -1)
 		return (-1);
 	return (0);

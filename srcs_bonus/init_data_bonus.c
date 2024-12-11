@@ -22,7 +22,7 @@ int	init_color(t_data *data, char *str)
 	if (str[0] != 'F' && str[0] != 'C')
 		return (0);
 	tab = ft_split(&str[1], ',');
-	if (check_color_value(tab))
+	if (check_color_value(tab) || ft_strtablen(tab) != 3)
 	{
 		map_clear(tab);
 		printf("Error\nInvalid color value\n");
@@ -112,11 +112,8 @@ int	init_data(t_data *data, char **tab, int map_start)
 	int	i;
 	int	plyr_bool;
 
-	if (error_map_start(map_start, tab))
-		return (-1);
 	plyr_bool = FALSE;
 	i = -1;
-	map_start--;
 	while (tab[++i])
 	{
 		if (i <= map_start)
@@ -131,6 +128,9 @@ int	init_data(t_data *data, char **tab, int map_start)
 			return (-1);
 	}
 	if (!plyr_bool && printf("Error\nPlayer not found\n"))
+		return (-1);
+	if ((data->raycast.floor_color == -1 || data->raycast.ceiling_color == -1)
+		&& printf("Error\nOne of the colors is not initialized\n"))
 		return (-1);
 	return (0);
 }
