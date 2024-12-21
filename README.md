@@ -63,4 +63,4 @@ Pour une introduction sur le raycasting, référez-vous à [l'article Wikipédia
 
   ## Mon projet
 
-  ![Démonstration](cub3D/Screencast.gif)
+  ![Démonstration](Screencast.gif)
