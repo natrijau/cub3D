@@ -63,4 +63,4 @@ Pour une introduction sur le raycasting, référez-vous à [l'article Wikipédia
 
   ## Mon projet
 
-  [![Démonstration]([https://img.youtube.com/vi/<ID_DE_LA_VIDEO>/0.jpg](https://www.youtube.com/watch?v=7nkBCA-63H0))](https://www.youtube.com/watch?v=7nkBCA-63H0)
+  [![Démonstration](./Screencast from 12-21-2024 02_09_22 PM (online-video-cutter.com).gif)
